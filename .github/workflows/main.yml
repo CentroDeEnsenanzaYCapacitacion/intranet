@@ -10,6 +10,10 @@ jobs:
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v3
+
+    - name: 📁 Update assets
+      run: |
+        tar -cf - public/assets | (cd public_html/intranet/; tar -xf -)
     
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -18,6 +22,3 @@ jobs:
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.ftp_prod_path }}
-    - name: 📁 Update assets
-      run: |
-        cp -R public/assets public_html/intranet/assets
