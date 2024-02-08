@@ -1,7 +1,7 @@
 @extends('layout.mainLayout')
 @section('title','dashboard')
 @section('content')
-<div class="row d-flex text-center mt-5">
+<div class="row d-flex text-center mt-content">
     <div class="col">
         <a  href="{{route('adminFunctions')}}"><img class="menu_icon" src="{{asset('assets/img/administrator.png')}}"></a><br>
         Funciones de administrador
