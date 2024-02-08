@@ -20,7 +20,7 @@ return new class () extends Migration {
             $table->bigInteger('crew_id');
             $table->string('phone', 15)->nullable();
             $table->string('cel_phone', 15)->nullable();
-            $table->string('genre', 1);
+            $table->string('genre', 2);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();

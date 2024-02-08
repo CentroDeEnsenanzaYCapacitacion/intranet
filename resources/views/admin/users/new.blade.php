@@ -77,7 +77,7 @@
     </div>
     <div class="row d-flex text-center mt-content">
         <div class="col">
-            <button type="submit" class="btn bg-orange text-white w-25">Guardar Usuario</button>
+            <button type="submit" onclick="showLoader(true)" class="btn bg-orange text-white w-25">Guardar Usuario</button>
         </div>
     </div>
 </form>
