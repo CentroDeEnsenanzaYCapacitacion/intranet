@@ -16,7 +16,7 @@
       }
     };
   </script>
-<script src={{asset("assets/plugins/jquery/jquery.min.js")}}></script>
+<script src="{{asset("assets/plugins/jquery/jquery.min.js")}}"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="hold-transition login-page">

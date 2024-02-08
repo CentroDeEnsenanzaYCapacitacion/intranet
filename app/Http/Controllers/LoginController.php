@@ -13,16 +13,17 @@ class LoginController extends Controller
     {
         return view('login');
     }
-    public function attemptLogin(LoginRequest $request){
+    public function attemptLogin(LoginRequest $request)
+    {
 
-        $credentials = $request->only('username','password');
+        $credentials = $request->only('username', 'password');
 
-        if(Auth::attempt($credentials)){
-            session::put('last_heartbeat',time());
+        if(Auth::attempt($credentials)) {
+            //session::put('last_heartbeat',time());
             return redirect()->intended(route('dashboard'));
         }
 
-        return redirect(route('login'))->with('error','credenciales incorrectas');
+        return redirect(route('login'))->with('error', 'credenciales incorrectas');
 
     }
 }

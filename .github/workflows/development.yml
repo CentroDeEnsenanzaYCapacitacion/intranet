@@ -18,3 +18,7 @@ jobs:
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.ftp_dev_path }}
+
+    - name: 📁 Update assets
+      run: |
+        cp -R public/assets public_html/intranet_dev/assets
