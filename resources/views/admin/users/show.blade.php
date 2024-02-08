@@ -1,5 +1,5 @@
 @extends('layout.mainLayout')
-@section('title','Gestión de usuarios')
+@section('title','usuarios registrados')
 @section('content')
 <div class="row d-flex text-center mt-content">
     <div class="col">
@@ -43,6 +43,7 @@
                 </tbody>
             </table>
         </div>
-        <button type="submit" class="btn bg-orange text-white mt-content">Nuevo Usuario</button>
+        <a href="{{ route('admin.users.new') }}"  class="btn bg-orange text-white mt-content">Nuevo Usuario</a>
     </div>
 </div>
+@endsection

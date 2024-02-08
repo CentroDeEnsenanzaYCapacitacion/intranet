@@ -26,5 +26,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('adminFunctions');
     
     Route::get('/admin/users', [UserController::class,'getUsers'])->name('admin.users.show');
+    Route::get('/admin/users/new', [UserController::class,'newUser'])->name('admin.users.new');
+    Route::post('/admin/users/insert', [UserController::class,'insertUser'])->name('admin.users.insert');
 });
 

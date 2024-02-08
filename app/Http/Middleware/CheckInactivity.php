@@ -15,7 +15,7 @@ class CheckInactivity
 
         if (time() - session('last_heartbeat') > $timeout) {
             Session::flush();
-            return redirect(route('login'));
+            return redirect()->route('login');
         }
 
         session(['last_heartbeat' => time()]);
