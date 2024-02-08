@@ -6,10 +6,6 @@ function showLoader(visible){
     }
 }
 
-function goBack() {
-    window.history.back();
-}
-
 window.addEventListener('load', (event) => {
     showLoader(false);
 });
