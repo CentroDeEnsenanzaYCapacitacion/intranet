@@ -27,9 +27,10 @@
     </div>
     <div class="card-body">
       <p class="login-box-msg">Bienvenid@</p>
-      <form method="post" class="needs-validation" novalidate >
+      <form method="POST" class="needs-validation" novalidate action="{{route('attemptLogin')}}" >
+        @csrf
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Usuario" name="user" onchange="validateInput(event,'text')" required>
+          <input type="text" class="form-control" placeholder="Usuario" name="username" onchange="validateInput(event,'text')" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -39,7 +40,7 @@
           <div class="invalid-feedback">Campo obligatorio.</div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="ContraseÃ±a" name="pass" required>
+          <input type="password" class="form-control" placeholder="Contraseña" name="password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
