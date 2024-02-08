@@ -12,8 +12,13 @@ jobs:
       uses: actions/checkout@v3
 
     - name: 📁 Update assets
-      run: |
-        tar -cf - public/assets | (cd public_html/intranet_dev/; tar -xf -)
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cp -R /path/to/public_html/assets /path/to/public_html/intranet_dev/assets
     
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
