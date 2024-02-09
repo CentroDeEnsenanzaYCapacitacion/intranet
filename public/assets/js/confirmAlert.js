@@ -11,8 +11,6 @@ function confirmDelete(origin,userId) {
     }
     if (confirm(message)) {
         showLoader(true);
-        setTimeout(function() {
-            document.getElementById(formId).submit();
-        }, 100);
+        document.getElementById(formId).submit();
     }
 }
