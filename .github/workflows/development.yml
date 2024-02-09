@@ -1,4 +1,4 @@
-on:
+local-dir: ${{ secrets.local_dir }}on:
   push:
     branches:
       - development
@@ -11,19 +11,26 @@ jobs:
     - name: 🚚 Get latest code
       uses: actions/checkout@v3
     
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.ftp_url }}
-        username: ${{ secrets.ftp_username }}
-        password: ${{ secrets.ftp_password }}
-        server-dir: ${{ secrets.ftp_dev_path }}
+    # - name: 📂 Sync files
+    #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+    #   with:
+    #     server: ${{ secrets.ftp_url }}
+    #     username: ${{ secrets.ftp_username }}
+    #     password: ${{ secrets.ftp_password }}
+    #     server-dir: ${{ secrets.ftp_dev_path }}
 
-    - name: 📁 Update assets
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.ftp_url }}
-        username: ${{ secrets.ftp_username }}
-        password: ${{ secrets.ftp_password }}
-        server-dir: ${{ secrets.ftp_dev_assets_path }}
-        local-dir: ${{ secrets.local_dir }}
+    # - name: 📁 Update assets
+    #   uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+    #   with:
+    #     server: ${{ secrets.ftp_url }}
+    #     username: ${{ secrets.ftp_username }}
+    #     password: ${{ secrets.ftp_password }}
+    #     server-dir: ${{ secrets.ftp_dev_assets_path }}
+    - name: Instalar git-ftp
+      run: sudo apt-get update && sudo apt-get install git-ftp
+
+    - name: Despliegue FTP con git-ftp
+      run: |
+        git ftp push --syncroot ./ --remote-root ${{ secrets.ftp_prod_path }} --user ${{ secrets.ftp_username }} --passwd ${{ secrets.ftp_password }}
+
+        
