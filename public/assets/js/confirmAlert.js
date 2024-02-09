@@ -1,3 +1,4 @@
+import { showLoader } from './loader.js';
 function confirmDelete(origin,userId) {
     var message;
     var formId;
