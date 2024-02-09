@@ -73,7 +73,7 @@
     </div>
     <div class="row d-flex text-center mt-content">
         <div class="col">
-            <button type="submit" class="btn bg-orange text-white w-25">Modificar Usuario</button><br><br>
+            <button type="submit" onclick="showLoader(true)" class="btn bg-orange text-white w-25">Modificar Usuario</button><br><br>
         </div>
     </div>
 </form><br>
