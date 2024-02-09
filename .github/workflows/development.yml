@@ -1,4 +1,4 @@
-local-dir: ${{ secrets.local_dir }}on:
+on:
   push:
     branches:
       - development
@@ -12,15 +12,17 @@ jobs:
       uses: actions/checkout@v3
     
     - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.2.0
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ secrets.ftp_url }}
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.ftp_dev_path }}
+        exclude: |
+          **/public/**
 
     - name: 📁 Update assets
-      uses: SamKirkland/FTP-Deploy-Action@v4.2.0
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ secrets.ftp_url }}
         username: ${{ secrets.ftp_username }}
