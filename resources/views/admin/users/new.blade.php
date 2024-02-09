@@ -80,5 +80,14 @@
             <button type="submit" onclick="showLoader(true)" class="btn bg-orange text-white w-25">Guardar Usuario</button>
         </div>
     </div>
-</form>
+</form><br>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 @endsection

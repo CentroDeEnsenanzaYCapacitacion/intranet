@@ -26,4 +26,9 @@ class LoginController extends Controller
         return redirect(route('login'))->with('error', 'credenciales incorrectas');
 
     }
+    public function logout()
+    {
+        session::flush();
+        return redirect()->route('login');
+    }
 }
