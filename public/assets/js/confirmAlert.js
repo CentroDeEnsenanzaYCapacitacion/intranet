@@ -1,4 +1,4 @@
-import { showLoader } from './loader.js';
+
 function confirmDelete(origin,userId) {
     var message;
     var formId;
@@ -10,7 +10,6 @@ function confirmDelete(origin,userId) {
             break;
     }
     if (confirm(message)) {
-        showLoader(true);
         document.getElementById(formId).submit();
     }
 }
