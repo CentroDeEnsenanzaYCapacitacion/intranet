@@ -30,5 +30,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/user/edit/{id}', [UserController::class,'editUser'])->name('admin.users.edit');
     Route::post('/admin/user/insert', [UserController::class,'insertUser'])->name('admin.users.insert');
     Route::put('/admin/user/update/{id}', [UserController::class,'updateUser'])->name('admin.users.update');
-    Route::delete('/admin/user/delete/{id}', [UserController::class,'deleteUser'])->name('admin.users.delete');
+    Route::delete('/admin/user/block/{id}', [UserController::class,'blockUser'])->name('admin.users.block');
 });

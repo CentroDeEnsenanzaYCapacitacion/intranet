@@ -23,5 +23,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/js/loader.js')}}"></script>
+    <script src="{{asset('assets/js/confirmAlert.js')}}"></script>
 </body>
 </html>

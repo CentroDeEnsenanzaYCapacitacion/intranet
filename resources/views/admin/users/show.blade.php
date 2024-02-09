@@ -34,9 +34,13 @@
                         <td class="text-uppercase">{{$user->genre}}</td>
                         <td class="text-uppercase">{{$user->role->name}}</td>
                         <td class="text-uppercase">{{$user->crew->name}}</td>
-                        <td class="text-center">
+                        <td class="d-flex justify-content-center">
                             <span class="material-symbols-outlined bg-edit"><a href="{{ route('admin.users.edit',['id' => $user->id]) }}">edit</a></span>
-                            <span class="material-symbols-outlined bg-red"><a href="{{ route('admin.users.delete',['id' => $user->id]) }}">block</a></span>
+                            <form method="POST" action="{{ route('admin.users.block',['id' => $user->id]) }}" id="delete-user-{{ $user->id }}">
+                                @csrf
+                                @method('DELETE')
+                                <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('user',{{ $user->id }})">block</a></span>
+                            </form>
                         </td>                      
                     </tr>
                     @endforeach

@@ -56,6 +56,7 @@ input[type="radio"]:checked + .btn-outline-orange {
 a{
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 }
 
 .modal {

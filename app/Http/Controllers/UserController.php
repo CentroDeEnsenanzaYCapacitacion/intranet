@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function getUsers()
     {
-        $users = User::all()->skip(1);
+        $users = User::all()->where('is_active',true)->skip(1);
         return view('admin.users.show', compact('users'));
     }
 
@@ -54,7 +54,7 @@ class UserController extends Controller
 
     public function updateUser(UserRequest $request,$id){
         $user = User::find($id);
-        $wasChanged = $user ->update([
+        $wasUpdated = $user ->update([
             'name' => $request->name,
             'surnames' => $request->surnames,
             'email' => $request->email,
@@ -65,12 +65,21 @@ class UserController extends Controller
             'genre' => $request->genre
         ]);
 
-        if ($wasChanged) {
+        if ($wasUpdated) {
             return redirect()->route('admin.users.show');
         } else {
             $roles = Role::all();
             $crews = Crew::all();
             return redirect()->route('admin.users.edit', compact('user','roles','crews'))->with('error', 'No se detectaron cambios en la información del usuario.');
         }
+    }
+
+    public function blockUser($id){
+        $user = User::find($id);
+        $user->update([
+            'is_active' => false
+        ]); 
+
+        return redirect()->route('admin.users.show');
     }
 }
