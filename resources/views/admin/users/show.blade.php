@@ -35,7 +35,7 @@
                         <td class="text-uppercase">{{$user->role->name}}</td>
                         <td class="text-uppercase">{{$user->crew->name}}</td>
                         <td class="d-flex justify-content-center">
-                            <span class="material-symbols-outlined bg-edit"><a href="{{ route('admin.users.edit',['id' => $user->id]) }}">edit</a></span>
+                            <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)" href="{{ route('admin.users.edit',['id' => $user->id]) }}">edit</a></span>
                             <form method="POST" action="{{ route('admin.users.block',['id' => $user->id]) }}" id="delete-user-{{ $user->id }}">
                                 @csrf
                                 @method('DELETE')

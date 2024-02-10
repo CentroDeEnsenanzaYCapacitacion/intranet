@@ -10,6 +10,7 @@ function confirmDelete(origin,userId) {
             break;
     }
     if (confirm(message)) {
+        showLoader(true);
         document.getElementById(formId).submit();
     }
 }
