@@ -4,11 +4,11 @@
 <div class="container">
     <div class="row d-flex text-center mt-content">
         <div class="col">
-            <a id="adminUsers" href="{{route('admin.users.show')}}"><img class="menu_icon" src="{{asset('assets/img/users.png')}}"></a><br>
+            <a id="adminUsers" href=" {{route('admin.users.show') }}"><img class="menu_icon" src="{{asset('assets/img/users.png')}}"></a><br>
             Gestión de usuarios
         </div>
         <div class="col">
-            <a href="../admin/adminCatalogues.php"><img class="menu_icon" src="{{asset('assets/img/cataloges.png')}}"></a><br>
+            <a id="adminUsers" href=" {{route('admin.catalogues.menu') }}"><img class="menu_icon" src="{{asset('assets/img/catalogues.png')}}"></a><br>
             Catálogos
         </div>
         <div class="col">
@@ -40,6 +40,9 @@
     </div> -->
     <script>
         document.getElementById('adminUsers').addEventListener('click', function() {
+            showLoader(true);
+        });
+        document.getElementById('cataloguesMenu').addEventListener('click', function() {
             showLoader(true);
         });
     </script>

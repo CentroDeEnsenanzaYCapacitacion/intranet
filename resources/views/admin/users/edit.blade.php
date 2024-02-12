@@ -12,7 +12,7 @@
     <div class="row d-flex text-center mt-5">
         <div class="col">
             <div class="form-group">
-                <label for="name"><b>Nombre(s):</b>{{ $user->id }}</label>
+                <label for="name"><b>Nombre(s):</b></label>
                 <input type="text" class="form-control text-uppercase" id="name" placeholder="Nombre(s)" name="name" value='{{ $user->name }}'>
                 <span class="error-message" id="name-error"></span>
             </div>
@@ -74,6 +74,7 @@
     <div class="row d-flex text-center mt-content">
         <div class="col">
             <button type="submit" onclick="showLoader(true)" class="btn bg-orange text-white w-25">Modificar Usuario</button><br><br>
+            <a href="{{ route('admin.users.show') }}"><button type="button" class="btn btn-outline-orange text-white w-25">Volver</button></a>
         </div>
     </div>
 </form><br>

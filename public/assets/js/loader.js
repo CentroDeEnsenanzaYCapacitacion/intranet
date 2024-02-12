@@ -6,7 +6,7 @@ function showLoader(visible){
     }
 }
 
-window.addEventListener('load', (event) => {
+window.addEventListener('pageshow', (event) => {
     showLoader(false);
 });
 
