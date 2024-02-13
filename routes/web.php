@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\StatsController;
 use Illuminate\Support\Facades\Session;
 
 Route::post('/heartbeat', function () {
@@ -33,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/user/insert', [UserController::class,'insertUser'])->name('admin.users.insert');
     Route::put('/admin/user/update/{id}', [UserController::class,'updateUser'])->name('admin.users.update');
     Route::delete('/admin/user/block/{id}', [UserController::class,'blockUser'])->name('admin.users.block');
-    
+
     #Catalogues
     Route::get('/admin/catalogues_menu', function () {
         return view('admin.catalogues.menu');
@@ -45,4 +46,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/catalogues/course/insert', [CourseController::class,'insertCourse'])->name('admin.catalogues.courses.insert');
     Route::put('/admin/catalogues/course/update/{id}', [CourseController::class,'updateCourse'])->name('admin.catalogues.courses.update');
     Route::delete('/admin/catalogues/course/delete/{id}', [CourseController::class,'deleteCourse'])->name('admin.catalogues.courses.delete');
+
+    #Stats
+    Route::get('/admin/stats_menu', function () {
+        return view('admin.stats.menu');
+    })->name('admin.stats.menu');
+
+    Route::get('/admin/stats/reports/{period}', [StatsController::class,'reports'])->name('admin.stats.reports');
 });

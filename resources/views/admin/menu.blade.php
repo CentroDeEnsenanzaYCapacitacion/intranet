@@ -12,7 +12,7 @@
             Catálogos
         </div>
         <div class="col">
-            <a href="../admin/statistics.php"><img class="menu_icon" src="{{asset('assets/img/graphs.png')}}"></a><br>
+            <a href="{{ route('admin.stats.menu') }}"><img class="menu_icon" src="{{asset('assets/img/graphs.png')}}"></a><br>
             Estadísticas
         </div>
         <!--<div class="col">
