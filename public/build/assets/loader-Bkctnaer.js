@@ -1,1 +1,0 @@
-window.showLoader=function(e){e?document.getElementById("loader-container").style.display="block":document.getElementById("loader-container").style.display="none"};window.addEventListener("pageshow",e=>{showLoader(!1)});

@@ -1,1 +1,0 @@
-window.confirmDelete=function(e,t){var s,r;switch(e){case"user":s="¿Estás seguro de que deseas bloquear este usuario?",r="delete-"+e+"-"+t;break;case"course":s="¿Estás seguro de que deseas eliminar este curso?",r="delete-"+e+"-"+t;break}confirm(s)&&(showLoader(!0),document.getElementById(r).submit())};
