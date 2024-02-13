@@ -1,0 +1,170 @@
+.bg-orange{
+    background-color: #ff6900 ;
+}
+.navbar{
+    height: 60px;
+}
+.text-white{
+    color: white;
+}
+
+.btn-outline-orange{
+    color: #ff6900 !important; 
+    border-color: #ff6900 !important; 
+}
+
+.btn-outline-orange-selected{
+    color: #fff !important; 
+    background-color: #ff6900 !important; 
+    border-color: #ff6900 !important; 
+}
+
+.btn-outline-orange:hover {
+    color: #fff !important; 
+    background-color: #ff6900 !important; 
+    border-color: #ff6900 !important; 
+}
+
+.btn-outline-orange:focus, .btn-outline-orange:active {
+    color: #fff !important; 
+    background-color: #ff6900 !important; 
+    border-color: #ff6900 !important; 
+}
+
+input[type="radio"]:checked + .btn-outline-orange {
+    color: #fff !important; 
+    background-color: #ff6900 !important; 
+    border-color: #ff6900 !important; 
+}
+
+.header-fixed{
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    z-index: 1000; 
+}
+
+.bg-edit{
+    color: darkblue !important;
+}
+
+.bg-red{
+    color: red;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    position: fixed;
+    background: white;
+    width: 300px;
+    height: 200px;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    /* Asegúrate de que la transformación comience desde el centro */
+    transform: translate(0, 0);
+}
+
+.modal-dialog {
+    position: fixed; /* Usar fixed para posicionar en relación a la ventana del navegador */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Ajustar tanto horizontal como verticalmente */
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center; /* Alinea los elementos verticalmente */
+}
+
+.clean-button{
+    border: none;
+    background-color: white;
+}
+
+.form-check-input:checked {
+    background-color: #ff6900;
+    border-color: #ff6900;
+}
+
+#loader-container {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    background: rgba(255, 255, 255, 0.9); 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000;
+}
+
+
+#loading {
+    border: 5px solid #f3f3f3; 
+    border-top: 5px solid #ff6900;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -25px;
+    margin-top: -25px;
+    
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.menu_icon{
+    width: 100px;
+}
+
+.header_icon{
+    width: 25px;
+    height: 25px;
+    margin-left: 25px;
+}
+
+@media (min-width: 992px) {
+    .navbar {
+        flex-wrap: nowrap;
+    }
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 12px;
+    display: none;
+}
+
+.mt-content{
+    margin-top: 5rem;
+}
+
+

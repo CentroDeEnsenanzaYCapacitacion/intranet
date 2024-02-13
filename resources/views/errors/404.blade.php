@@ -8,9 +8,9 @@
 
 	<title>404</title>
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:700,900" rel="stylesheet">
-	@vite(['resources/css/404.css',
-		   'resources/css/font-awesome.min.css'
-	])
+	<link type="text/css" rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}" />
+	<link type="text/css" rel="stylesheet" href="{{ asset('assets/css/404.css') }}" />
+
 </head>
 
 <body>

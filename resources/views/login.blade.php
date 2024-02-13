@@ -4,10 +4,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>IntraCEC</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  @vite(['resources/css/adminlte.min.css',
-    'resources/css/template.css',
-    'resources/js/all.min.js',
-    ])
+  <link rel="stylesheet" href="{{asset("assets/plugins/fontawesome-free/css/all.min.css")}}">
+  <link rel="stylesheet" href="{{asset("assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css")}}">
+  <link rel="stylesheet" href="{{asset("assets/plugins/adminlte/css/adminlte.min.css")}}">
+  <link rel="stylesheet" href="{{asset("assets/custom/template/template.css")}}">
   <script>
     window.onload = function() {
       var isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(navigator.userAgent);
@@ -16,6 +16,7 @@
       }
     };
   </script>
+<script src="{{asset("assets/plugins/jquery/jquery.min.js")}}"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="hold-transition login-page">
@@ -65,5 +66,13 @@
     @endif
   </div>
 </div>
+<script src="{{asset("assets/plugins/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
+<script src="{{asset("assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js")}}"></script>
+<script src="{{asset("assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js")}}"></script>
+<script src="{{asset("assets/plugins/adminlte/js/adminlte.min.js")}}"></script>
+<script src="{{asset("assets/custom/template/template.js")}}"></script>
+<script src="{{asset("assets/plugins/fontawesome-free/js/all.min.js")}}"></script>
+<script src="{{asset("assets/plugins/jquery/jquery.min.js")}}"></script>
+<script src="{{asset("assets/custom/forms/forms.js")}}"></script>
 </body>
 </html>
