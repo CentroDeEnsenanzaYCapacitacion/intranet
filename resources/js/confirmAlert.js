@@ -1,5 +1,5 @@
 
-function confirmDelete(origin,Id) {
+window.confirmDelete = function(origin,Id) {
     var message;
     var formId;
 

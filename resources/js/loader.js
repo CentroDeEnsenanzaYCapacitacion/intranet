@@ -1,4 +1,4 @@
-function showLoader(visible){
+window.showLoader=function(visible){
     if(visible){
         document.getElementById('loader-container').style.display = 'block';
     }else{

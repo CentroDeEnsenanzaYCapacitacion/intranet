@@ -74,7 +74,7 @@
     <div class="row d-flex text-center mt-content">
         <div class="col">
             <button type="submit" onclick="showLoader(true)" class="btn bg-orange text-white w-25">Modificar Usuario</button><br><br>
-            <a href="{{ route('admin.users.show') }}"><button type="button" class="btn btn-outline-orange text-white w-25">Volver</button></a>
+            <a href="{{ route('admin.users.show') }}"><button type="button" class="btn btn-outline-orange w-25">Volver</button></a>
         </div>
     </div>
 </form><br>

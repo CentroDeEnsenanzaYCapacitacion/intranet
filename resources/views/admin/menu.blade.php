@@ -4,15 +4,15 @@
 <div class="container">
     <div class="row d-flex text-center mt-content">
         <div class="col">
-            <a id="adminUsers" href=" {{route('admin.users.show') }}"><img class="menu_icon" src="{{asset('assets/img/users.png')}}"></a><br>
+            <a id="adminUsers" href=" {{route('admin.users.show') }}"><img class="menu_icon" src="{{asset('img/users.png')}}"></a><br>
             Gestión de usuarios
         </div>
         <div class="col">
-            <a id="adminUsers" href=" {{route('admin.catalogues.menu') }}"><img class="menu_icon" src="{{asset('assets/img/catalogues.png')}}"></a><br>
+            <a id="adminUsers" href=" {{route('admin.catalogues.menu') }}"><img class="menu_icon" src="{{asset('img/catalogues.png')}}"></a><br>
             Catálogos
         </div>
         <div class="col">
-            <a href="../admin/statistics.php"><img class="menu_icon" src="{{asset('assets/img/graphs.png')}}"></a><br>
+            <a href="../admin/statistics.php"><img class="menu_icon" src="{{asset('img/graphs.png')}}"></a><br>
             Estadísticas
         </div>
         <!--<div class="col">
