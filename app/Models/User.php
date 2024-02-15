@@ -58,4 +58,16 @@ class User extends Authenticatable
     public function crew() {
         return $this->belongsTo(Crew::class);
     }
+
+    public function reports() {
+        return $this->hasMany(Report::class);
+    }
+
+    public function recipes() {
+        return $this->hasMany(Recipe::class);
+    }
+
+    public function request() {
+        return $this->hasMany(Request::class);
+    }
 }

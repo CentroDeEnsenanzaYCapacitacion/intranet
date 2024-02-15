@@ -15,9 +15,9 @@ return new class () extends Migration {
             $table->string('name', 100);
             $table->string('surnames', 100);
             $table->string('username', 50)->unique()->nullable();
-            $table->bigInteger('role_id');
+            $table->unsignedBigInteger('role_id');
             $table->boolean('is_active')->default(1);
-            $table->bigInteger('crew_id');
+            $table->unsignedBigInteger('crew_id');
             $table->string('phone', 15)->nullable();
             $table->string('cel_phone', 15)->nullable();
             $table->string('genre', 2);
@@ -26,6 +26,8 @@ return new class () extends Migration {
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('crew_id')->references('id')->on('crews');
         });
     }
 

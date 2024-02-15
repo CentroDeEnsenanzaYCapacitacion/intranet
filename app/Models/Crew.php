@@ -18,4 +18,12 @@ class Crew extends Model
     public function courses() {
         return $this->hasMany(Course::class);
     }
+
+    public function reports() {
+        return $this->hasMany(Report::class);
+    }
+
+    public function recipes() {
+        return $this->hasMany(Recipe::class);
+    }
 }

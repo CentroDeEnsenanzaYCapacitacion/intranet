@@ -5,17 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Student extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function crew() {
-        return $this->belongsTo(Crew::class);
-    }
-
-    public function reports() {
-        return $this->hasMany(Report::class);
+    public function recipes() {
+        return $this->hasMany(Recipe::class);
     }
 }
