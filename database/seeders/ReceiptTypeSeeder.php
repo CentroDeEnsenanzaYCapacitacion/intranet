@@ -2,24 +2,25 @@
 
 namespace Database\Seeders;
 
+use App\Models\ReceiptType;
 use App\Models\RecipeType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RecipeTypeSeeder extends Seeder
+class ReceiptTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        RecipeType::create([
+        ReceiptType::create([
             'name'=>'Inscripción'
         ]);
-        RecipeType::create([
+        ReceiptType::create([
             'name'=>'Colegiatura'
         ]);
-        RecipeType::create([
+        ReceiptType::create([
             'name'=>'Ingreso',
             'is_global'=>true
         ]);

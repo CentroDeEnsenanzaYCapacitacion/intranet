@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Amount extends Model
 {
     use HasFactory;
 
@@ -15,11 +15,11 @@ class Course extends Model
         return $this->belongsTo(Crew::class);
     }
 
-    public function reports() {
-        return $this->hasMany(Report::class);
+    public function course() {
+        return $this->belongsTo(Course::class);
     }
 
-    public function amounts() {
-        return $this->hasMany(Amount::class);
+    public function recipeType() {
+        return $this->belongsTo(ReceiptType::class);
     }
 }

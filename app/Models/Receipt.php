@@ -5,29 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Recipe extends Model
+class Receipt extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function crew() {
+    public function crew()
+    {
         return $this->belongsTo(Crew::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function recipeType() {
-        return $this->belongsTo(RecipeType::class);
+    public function recipeType()
+    {
+        return $this->belongsTo(ReceiptType::class);
     }
 
-    public function payment() {
+    public function payment()
+    {
         return $this->belongsTo(PaymentType::class);
     }
 
-    public function student() {
+    public function student()
+    {
         return $this->belongsTo(Student::class);
     }
 }

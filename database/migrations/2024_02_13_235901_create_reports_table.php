@@ -15,13 +15,13 @@ return new class () extends Migration {
             $table->string('name')->require;
             $table->string('surnames')->require;
             $table->string('email')->require;
-            $table->string('phone');
-            $table->string('cel_phone');
+            $table->string('phone')->nullable();
+            $table->string('cel_phone')->nullable();
             $table->unsignedBigInteger('course_id')->require;
             $table->unsignedBigInteger('marketing_id')->require;
             $table->unsignedBigInteger('crew_id')->require;
             $table->unsignedBigInteger('responsible_id')->require;
-            $table->string('genre',2)->require;
+            $table->string('genre', 2)->require;
             $table->boolean('presigned')->default(0);
             $table->boolean('signed')->default(0);
             $table->boolean('approval_pending')->default(0);

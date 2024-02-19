@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             MarketingSeeder::class,
             CourseSeeder::class,
             RequestTypeSeeder::class,
-            RecipeTypeSeeder::class,
+            ReceiptTypeSeeder::class,
             PaymentTypeSeeder::class
             
         ]);

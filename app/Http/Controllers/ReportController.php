@@ -6,29 +6,47 @@ use App\Http\Requests\ReportRequest;
 use App\Models\Course;
 use App\Models\Crew;
 use App\Models\Marketing;
+use App\Models\Receipt;
+use App\Models\Recipe;
 use App\Models\Report;
-use Illuminate\Http\Request;
+use App\Models\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
     public function getReports()
     {
-        if(Auth::user()->role_id == 1){
+        if(Auth::user()->role_id == 1) {
             $crew_reports = Report::all();
-        }else{
-            $crew_reports = Report::where('crew_id',Auth::user()->crew_id)->get();
+        } else {
+            $crew_reports = Report::where('crew_id', Auth::user()->crew_id)->get();
         }
 
         return view('system.reports.show', compact('crew_reports'));
     }
 
-    public function recipeOrRequest(Request $request){
+    public function recipeOrRequest(Request $request)
+    {
 
-        if($request->discount==0){
-            //REGISTRAR PAGO
-        }else{
-            //GENERAR PETICION
+        if($request->discount == 0) {
+            $report = Report::find($request->report_id);
+            $amount = 1000; // TODO: obtener costo de tabla de precios
+            Receipt::create([
+                'crew_id' => $report->crew_id,
+                'responsible_id' => Auth::user()->id,
+                'recipe_type_id' => 1,
+                'payment_type_id' => $request->has('card_payment') ? 2 : 1,
+                'concept' => 'Inscripción '.$report->course->name,
+                'amount' => $amount,
+
+            ]);
+        } else {
+            Request::create([
+                'request_type_id' => 1,
+                'description' => $request->discount."% - ".$request->reason,
+                'user_id' => Auth::user()->id,
+                'report_id' => $request->report_id
+            ]);
         }
 
         return ('yuhuuuu');
@@ -37,7 +55,7 @@ class ReportController extends Controller
 
     public function signDiscount($report_id)
     {
-        return view('system.reports.sign_discount',compact('report_id'));
+        return view('system.reports.sign_discount', compact('report_id'));
     }
 
     public function newReport()
