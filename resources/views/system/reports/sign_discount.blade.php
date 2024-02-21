@@ -3,7 +3,7 @@
 @section('content')
 <div class="row d-flex text-center mt-content">
     <div class="col">
-        <h1>Selecciona un descuento para esta preinscripción</h1>
+        <h1>Selecciona un descuento para esta preinscripción {{ $report_id }}</h1>
     </div>
 </div>
 <form action="{{ route('system.report.recipeorrequest') }}" method="POST">

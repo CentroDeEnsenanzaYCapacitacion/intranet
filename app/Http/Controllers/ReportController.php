@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CreateReceiptEvent;
 use App\Http\Requests\ReportRequest;
 use App\Models\Course;
 use App\Models\Crew;
 use App\Models\Marketing;
 use App\Models\Receipt;
-use App\Models\Recipe;
 use App\Models\Report;
-use App\Models\Request;
+use App\Models\SysRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PdfController;
 
 class ReportController extends Controller
 {
@@ -27,29 +29,29 @@ class ReportController extends Controller
 
     public function recipeOrRequest(Request $request)
     {
-
         if($request->discount == 0) {
             $report = Report::find($request->report_id);
-            $amount = 1000; // TODO: obtener costo de tabla de precios
+            $amount = 1000;// TODO: obtener monto de BDD
             Receipt::create([
                 'crew_id' => $report->crew_id,
                 'responsible_id' => Auth::user()->id,
-                'recipe_type_id' => 1,
+                'receipt_type_id' => 1,
                 'payment_type_id' => $request->has('card_payment') ? 2 : 1,
                 'concept' => 'Inscripción '.$report->course->name,
                 'amount' => $amount,
 
             ]);
+
+            return redirect()->route('system.reports.show');
+
         } else {
-            Request::create([
+            SysRequest::create([
                 'request_type_id' => 1,
                 'description' => $request->discount."% - ".$request->reason,
                 'user_id' => Auth::user()->id,
                 'report_id' => $request->report_id
             ]);
         }
-
-        return ('yuhuuuu');
     }
 
 
