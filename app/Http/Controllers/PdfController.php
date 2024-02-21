@@ -6,6 +6,7 @@ use App\Models\Receipt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Mike42\Escpos\EscposImage;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 
@@ -14,7 +15,7 @@ class PdfController extends Controller
     public static function generateReceipt(Receipt $receipt)
     {
         $printerName = "EPSON TM-T20II Receipt5";
-        $connector = new WindowsPrintConnector($printerName);
+        $connector = new NetworkPrintConnector('192.168.68.70', 9100);
         $printer = new Printer($connector);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $nubarel = EscposImage::load(public_path('assets/img/drac_bw.png'), false);
