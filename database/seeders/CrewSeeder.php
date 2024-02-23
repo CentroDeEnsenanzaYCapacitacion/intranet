@@ -14,16 +14,28 @@ class CrewSeeder extends Seeder
     public function run(): void
     {
         Crew::create([
-            'name' => 'Todos'
+            'name' => 'Todos',
+            'adress'=>'',
+            'mail'=>'',
+            'phone'=>''
         ]);
         Crew::create([
-            'name' => 'Chimalhuacan'
+            'name' => 'Chimalhuacan',
+            'adress'=>'AV. NEZAHUALCOYOTL #5 CABECERA MUNICIPAL',
+            'mail'=>'chimalhuacan@bachilleratocec.com',
+            'phone'=>'51138136'
         ]);
         Crew::create([
-            'name' => 'Ixtapaluca'
+            'name' => 'Ixtapaluca',
+            'adress'=>'AV CUAUHTEMOC #28 IXTAPALUCA',
+            'mail'=>'59723763',
+            'phone'=>'ixtapaluca@bachilleratocec.com'
         ]);
         Crew::create([
-            'name' => 'Texcoco'
+            'name' => 'Texcoco',
+            'adress'=>'AV. JUAREZ SUR #307 ESQ. ALDAMA CENTRO TEXCOCO',
+            'mail'=>'texcoco@bachilleratocec.com',
+            'phone'=>'(01 595) 9555607'
         ]);
     }
 }

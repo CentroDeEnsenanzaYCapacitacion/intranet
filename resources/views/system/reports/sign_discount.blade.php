@@ -6,7 +6,7 @@
         <h1>Selecciona un descuento para esta preinscripción {{ $report_id }}</h1>
     </div>
 </div>
-<form action="{{ route('system.report.recipeorrequest') }}" method="POST">
+<form id="myForm" action="{{ route('system.report.receiptorrequest') }}" method="POST">
     @csrf
     <input type="hidden" value="{{ $report_id }}" name="report_id">
     <div class="row d-flex text-center mt-5">
@@ -57,4 +57,5 @@
     </div>
 </form>
 <script src="{{ asset('assets/js/presign.js') }}"></script>
+<script src="{{ asset('assets/js/redirection.js') }}"></script>
 @endsection

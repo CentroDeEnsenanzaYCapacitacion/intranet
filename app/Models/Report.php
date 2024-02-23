@@ -28,6 +28,10 @@ class Report extends Model
     }
 
     public function request() {
-        return $this->hasMany(Request::class);
+        return $this->hasMany(SysRequest::class);
+    }
+
+    public function recipes() {
+        return $this->hasMany(Receipt::class);
     }
 }

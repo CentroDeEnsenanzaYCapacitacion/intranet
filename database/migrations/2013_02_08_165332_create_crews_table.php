@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('crews', function (Blueprint $table) {
             $table->id();
             $table->string('name')->require;
+            $table->string('adress')->require;
+            $table->string('phone')->require;
+            $table->string('mail')->require;
             $table->timestamps();
         });
     }

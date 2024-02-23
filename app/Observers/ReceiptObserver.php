@@ -10,9 +10,9 @@ class ReceiptObserver
     /**
      * Handle the Receipt "created" event.
      */
-    public function created(Receipt $receipt): void
+    public function created(Receipt $receipt)
     {
-        PdfController::generateReceipt($receipt);
+     PdfController::generateReceipt($receipt);
     }
 
     /**

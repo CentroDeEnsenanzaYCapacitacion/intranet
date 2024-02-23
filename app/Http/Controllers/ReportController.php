@@ -27,15 +27,16 @@ class ReportController extends Controller
         return view('system.reports.show', compact('crew_reports'));
     }
 
-    public function recipeOrRequest(Request $request)
+    public function receiptOrRequest(Request $request)
     {
         if($request->discount == 0) {
             $report = Report::find($request->report_id);
             $amount = 1000;// TODO: obtener monto de BDD
             Receipt::create([
                 'crew_id' => $report->crew_id,
-                'responsible_id' => Auth::user()->id,
+                'user_id' => Auth::user()->id,
                 'receipt_type_id' => 1,
+                'report_id'=> $report->id,
                 'payment_type_id' => $request->has('card_payment') ? 2 : 1,
                 'concept' => 'Inscripción '.$report->course->name,
                 'amount' => $amount,
