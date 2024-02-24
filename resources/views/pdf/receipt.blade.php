@@ -63,7 +63,7 @@
                 <tr>
                     <td width="80" align="center" style="vertical-align: middle;">
                         <div style="display: flex; align-items: center; justify-content: center;">
-                            <img src="https://capacitacioncec.edu.mx/intranet_dev/assets/img/qr.jpg">
+                            <img src="https://capacitacioncec.edu.mx/intranet_dev/assets/img/qr.png">
                         </div>
                     </td>
                     <td width="130">
