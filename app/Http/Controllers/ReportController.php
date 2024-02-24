@@ -30,10 +30,16 @@ class ReportController extends Controller
         return view('system.reports.show', compact('crew_reports'));
     }
 
-    public static function updateReport($report_id){
-        $report = Report::find($report_id);
+    public static function updateReport($report_id,$field){
         
-        $report->presigned = true;
+        $report = Report::find($report_id);
+
+        if($field=="presigned"){
+            $report->presigned = true;
+        }else{
+            $report->signed = true;
+        }
+        
         $report->save();
 
     }
@@ -69,7 +75,7 @@ class ReportController extends Controller
                 'report_id' => $request->report_id
             ]);
 
-            return redirect()->route('system.reports.show');
+            return redirect()->route('system.reports.show')->with('success','Solicitud enviada correctamente');
         }
     }
 

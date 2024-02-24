@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sysrequests', function (Blueprint $table) {
+        Schema::create('sys_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('request_type_id')->require;
             $table->string('description')->require;
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sysrequests');
+        Schema::dropIfExists('sys_requests');
     }
 };

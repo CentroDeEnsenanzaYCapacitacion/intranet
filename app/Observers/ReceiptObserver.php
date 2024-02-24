@@ -15,7 +15,7 @@ class ReceiptObserver
      */
     public function created(Receipt $receipt)
     {
-        ReportController::updateReport($receipt->report_id);
+        ReportController::updateReport($receipt->report_id,"presigned");
         Utils::generateQR(Hash::make($receipt->id));
         PdfController::generateReceipt($receipt);
     }
