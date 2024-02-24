@@ -21,7 +21,7 @@ class Utils
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
 
-        $result->saveToFile(public_path('assets/img/qr.png'));
+        $result->saveToFile(env('PUBLIC_PATH').'assets/img/qr.png');
     }
 
     public static function numberToText($number)
