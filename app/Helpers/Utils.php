@@ -21,7 +21,7 @@ class Utils
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
 
-        $url = substr(public_path(),0,-6).env('PUBLIC_PATH');
+        $url = substr(public_path(),0,-19).env('PUBLIC_PATH');
 
         $result->saveToFile($url.'assets/img/qr.png');
     }
