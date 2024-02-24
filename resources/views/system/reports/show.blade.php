@@ -1,6 +1,11 @@
 @extends('layout.mainLayout')
 @section('title','dashboard')
 @section('content')
+@if(session('success'))
+    <div id="success" class="alert alert-success" style="margin-top: 100px;">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="row d-flex text-center mt-content">
     <div class="col">
         <h1>Informes registrados</h1>
@@ -27,7 +32,7 @@
             <tbody>
                 @foreach($crew_reports as $report)
                     <tr>
-                        <td class="text-uppercase">{{ $report->date }}</td>
+                        <td class="text-uppercase">{{ $report->created_at->format('d/m/Y') }}</td>
                         <td class="text-uppercase">{{ $report->name }}</td>
                         <td class="text-uppercase">{{ $report->surnames}}</td>
                         <td class="text-uppercase">{{ $report->email}}</td>

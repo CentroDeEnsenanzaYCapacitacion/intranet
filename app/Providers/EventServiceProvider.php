@@ -32,7 +32,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
        Receipt::observe(ReceiptObserver::class);
-       SysRequest::observe(SysRequestObserver::class);
     }
 
     /**
