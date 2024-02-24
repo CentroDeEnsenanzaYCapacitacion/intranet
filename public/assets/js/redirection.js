@@ -19,7 +19,7 @@ document.getElementById('myForm').addEventListener('submit', function(e) {
 
        setTimeout(function() {
             window.location.href = currentRedirectUrl;
-        }, 3000);
+        }, 5000);
     } else {
         alert('Por favor, permite las ventanas emergentes para este sitio.');
     }
