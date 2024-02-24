@@ -57,12 +57,19 @@ class ReportController extends Controller
             return redirect()->route('system.reports.show');
 
         } else {
+            if(!$request->reason || $request->reason ==''){
+                return redirect()->route('system.reports.signdiscount', ['report_id' => $request->report_id])
+                                 ->with('error','La razón de la solicitud debe proporcionarse')
+                                 ->with('selection',$request->discount);
+            }
             SysRequest::create([
                 'request_type_id' => 1,
                 'description' => $request->discount."% - ".$request->reason,
                 'user_id' => Auth::user()->id,
                 'report_id' => $request->report_id
             ]);
+
+            return redirect()->route('system.reports.show');
         }
     }
 

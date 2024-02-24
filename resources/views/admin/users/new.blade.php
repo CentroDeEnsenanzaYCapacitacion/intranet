@@ -45,13 +45,13 @@
             <b>Género:</b><br>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" value="H" {{ old('genre') == 'H' ? 'selected' : '' }} class="btn-check" name="genre" id="male" autocomplete="off" checked>
+                    <input type="radio" value="H" {{ old('genre') == 'H' ? 'checked' : '' }} class="btn-check" name="genre" id="male" autocomplete="off" checked>
                     <label class="btn btn-outline-orange text-uppercase" for="male">Hombre</label>
 
-                    <input type="radio" value="M" {{ old('genre') == 'M' ? 'selected' : '' }} class="btn-check" name="genre" id="female" autocomplete="off">
+                    <input type="radio" value="M" {{ old('genre') == 'M' ? 'checked' : '' }} class="btn-check" name="genre" id="female" autocomplete="off">
                     <label class="btn btn-outline-orange text-uppercase" for="female">Mujer</label>
 
-                    <input type="radio" value="NB" {{ old('genre') == 'NB' ? 'selected' : '' }} class="btn-check" name="genre" id="nobinary" autocomplete="off">
+                    <input type="radio" value="NB" {{ old('genre') == 'NB' ? 'checked' : '' }} class="btn-check" name="genre" id="nobinary" autocomplete="off">
                     <label class="btn btn-outline-orange text-uppercase" for="nobinary">No binario</label>
                 </div>
             </div>

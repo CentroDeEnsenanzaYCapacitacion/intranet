@@ -3,7 +3,7 @@
 @section('content')
 <div class="row d-flex text-center mt-content">
     <div class="col">
-        <h1>Selecciona un descuento para esta preinscripción {{ $report_id }}</h1>
+        <h1>Selecciona un descuento para esta preinscripción</h1>
     </div>
 </div>
 <form id="myForm" action="{{ route('system.report.receiptorrequest') }}" method="POST">
@@ -13,16 +13,16 @@
         <div class="col">
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" value="0" class="btn-check" name="discount" id="discount0" autocomplete="off" checked>
+                    <input type="radio" value="0" class="btn-check" name="discount" id="discount0"  autocomplete="off" checked>
                     <label class="btn btn-outline-orange" for="discount0">No aplicar descuento</label>
 
-                    <input type="radio" value="30" class="btn-check" name="discount" id="discount30"  autocomplete="off">
+                    <input type="radio" value="30" {{ session('selection') && session('selection') == '30' ? 'checked' : '' }} class="btn-check" name="discount" id="discount30"  autocomplete="off">
                     <label class="btn btn-outline-orange" for="discount30">30%</label>
 
-                    <input type="radio" value="50" class="btn-check" name="discount" id="discount50"  autocomplete="off">
+                    <input type="radio" value="50" {{ session('selection') && session('selection') == '50' ? 'checked' : '' }} class="btn-check" name="discount" id="discount50"  autocomplete="off">
                     <label class="btn btn-outline-orange" for="discount50">50%</label>
 
-                    <input type="radio" value="100" class="btn-check" name="discount" id="discount100"  autocomplete="off">
+                    <input type="radio" value="100" {{ session('selection') && session('selection') == '100' ? 'checked' : '' }} class="btn-check" name="discount" id="discount100"  autocomplete="off">
                     <label class="btn btn-outline-orange" for="discount100">100%</label>
                 </div>
             </div>
@@ -50,12 +50,27 @@
     <div class="row d-flex text-center mt-5">
         <div class="col">
             <div class="text-center">
-                <button class="btn bg-orange text-white w-25" type="submit">Preinscribir</button><br><br>
+                <button id=presign class="btn bg-orange text-white w-25" type="submit">Preinscribir</button><br><br>
                 <a href="preinscription.php"><button type="button" class="btn btn-outline-orange text-white w-25">Cancelar</button></a>
             </div>
         </div>
     </div>
 </form>
+<br>
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <script src="{{ asset('assets/js/presign.js') }}"></script>
 <script src="{{ asset('assets/js/redirection.js') }}"></script>
 @endsection
