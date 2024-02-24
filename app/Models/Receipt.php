@@ -21,7 +21,7 @@ class Receipt extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function recipeType()
+    public function receiptType()
     {
         return $this->belongsTo(ReceiptType::class);
     }

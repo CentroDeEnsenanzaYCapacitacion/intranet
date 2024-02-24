@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\CreateReceiptEvent;
 use App\Http\Requests\ReportRequest;
 use App\Models\Course;
 use App\Models\Crew;
@@ -12,19 +11,31 @@ use App\Models\Report;
 use App\Models\SysRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\PdfController;
 
 class ReportController extends Controller
 {
     public function getReports()
     {
         if(Auth::user()->role_id == 1) {
-            $crew_reports = Report::all();
+            $crew_reports = Report::where('presigned',false)
+                                    ->where('signed',false)
+                                    ->get();
         } else {
-            $crew_reports = Report::where('crew_id', Auth::user()->crew_id)->get();
+            $crew_reports = Report::where('crew_id', Auth::user()->crew_id)
+                                    ->where('presigned',false)
+                                    ->where('signed',false)
+                                    ->get();
         }
 
         return view('system.reports.show', compact('crew_reports'));
+    }
+
+    public static function updateReport($report_id){
+        $report = Report::find($report_id);
+        
+        $report->presigned = true;
+        $report->save();
+
     }
 
     public function receiptOrRequest(Request $request)

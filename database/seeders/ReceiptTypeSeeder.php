@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ReceiptType;
-use App\Models\RecipeType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

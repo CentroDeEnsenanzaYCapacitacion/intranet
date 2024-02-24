@@ -26,8 +26,6 @@ class Utils
                 $url = public_path().'/';
                 break;
             case 'development':
-                $url = substr(public_path(),0,-19).env('PUBLIC_PATH');
-                break;
             case 'production':
                 $url = substr(public_path(),0,-19).env('PUBLIC_PATH');
                 break;

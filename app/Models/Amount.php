@@ -19,7 +19,7 @@ class Amount extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function recipeType() {
+    public function receiptType() {
         return $this->belongsTo(ReceiptType::class);
     }
 }

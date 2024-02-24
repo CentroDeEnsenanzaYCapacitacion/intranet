@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Receipt;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\ReportController;
 use App\Helpers\Utils;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,6 +15,7 @@ class ReceiptObserver
      */
     public function created(Receipt $receipt)
     {
+        ReportController::updateReport($receipt->report_id);
         Utils::generateQR(Hash::make($receipt->id));
         PdfController::generateReceipt($receipt);
     }

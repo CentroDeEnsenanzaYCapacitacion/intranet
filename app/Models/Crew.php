@@ -23,7 +23,7 @@ class Crew extends Model
         return $this->hasMany(Report::class);
     }
 
-    public function recipes() {
+    public function receipts() {
         return $this->hasMany(Receipt::class);
     }
 

@@ -11,7 +11,7 @@ class ReceiptType extends Model
 
     protected $guarded = [];
 
-    public function recipes()
+    public function receipts()
     {
         return $this->hasMany(Receipt::class);
     }

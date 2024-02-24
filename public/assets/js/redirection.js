@@ -1,11 +1,9 @@
 document.getElementById('myForm').addEventListener('submit', function(e) {
     e.preventDefault(); 
 
-    // Definir la URL a la que quieres redirigir la página actual después de enviar el formulario.
-    const currentRedirectUrl = '/system/reports'; // Ajusta esto.
-
-    // Intentar abrir una nueva pestaña.
+    const currentRedirectUrl = '/system/reports'; 
     const newTab = window.open('', '_blank');
+
     if (newTab) {
         const formHtml = `
             <form action="${this.action}" method="post">
@@ -16,11 +14,12 @@ document.getElementById('myForm').addEventListener('submit', function(e) {
                 <input type="hidden" name="reason" value="${document.querySelector('textarea[name="reason"]').value}">
             </form>
         `;
-        newTab.document.body.innerHTML = formHtml; // Establecer el HTML del formulario en la nueva pestaña.
-        newTab.document.forms[0].submit(); // Enviar el formulario en la nueva pestaña.
+        newTab.document.body.innerHTML = formHtml; 
+        newTab.document.forms[0].submit(); 
 
-        // Redirigir la pestaña actual a otra página.
-        window.location.href = currentRedirectUrl;
+       setTimeout(function() {
+            window.location.href = currentRedirectUrl;
+        }, 3000);
     } else {
         alert('Por favor, permite las ventanas emergentes para este sitio.');
     }

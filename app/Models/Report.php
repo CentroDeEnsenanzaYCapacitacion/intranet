@@ -31,7 +31,7 @@ class Report extends Model
         return $this->hasMany(SysRequest::class);
     }
 
-    public function recipes() {
+    public function receipts() {
         return $this->hasMany(Receipt::class);
     }
 }
