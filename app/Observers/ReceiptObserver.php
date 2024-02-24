@@ -14,7 +14,7 @@ class ReceiptObserver
      */
     public function created(Receipt $receipt)
     {
-        Utils::generateQR(Hash::make($receipt->id));
+        Utils::generateQR($receipt->id);
         PdfController::generateReceipt($receipt);
     }
 
