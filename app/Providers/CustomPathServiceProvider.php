@@ -12,7 +12,7 @@ class CustomPathServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind('path.public', function() {
-            return base_path(env('PUBLIC_PATH', 'public'));
+            return base_path(env('PUBLIC_PATH'));
         });
     }
 
