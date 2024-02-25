@@ -39,9 +39,7 @@ class ReportController extends Controller
                 $report->request_date = $request->created_at;
                 $report->request_id= $request->id;
                 $crew_requests[] = $report;
-                if($report->status != "Rechazado"){
-                    $idsToRemove[] = $report->id;
-                }
+                $idsToRemove[] = $report->id;
             }
         }
 

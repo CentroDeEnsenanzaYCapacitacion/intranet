@@ -115,7 +115,7 @@
                             @endswitch
                         </td>                                                                    
                         <td class="text-center align-items-center">
-                            @if($request->status === "Aprobado")
+                            @if($request->status === "Aprobado" || $request->status === "Rechazado")
                             <a href="{{ route('system.reports.signdiscount', ['report_id'=> $request->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
                             @endif
                         </td>
