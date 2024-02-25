@@ -17,29 +17,53 @@ class ReportController extends Controller
     public function getReports()
     {
         if(Auth::user()->role_id == 1) {
-            $crew_reports = Report::where('presigned',false)
-                                    ->where('signed',false)
+            $crew_reports = Report::where('presigned', false)
+                                    ->where('signed', false)
                                     ->get();
+
         } else {
             $crew_reports = Report::where('crew_id', Auth::user()->crew_id)
-                                    ->where('presigned',false)
-                                    ->where('signed',false)
+                                    ->where('presigned', false)
+                                    ->where('signed', false)
                                     ->get();
         }
 
-        return view('system.reports.show', compact('crew_reports'));
+        $crew_requests = [];
+        $idsToRemove = [];
+
+        foreach($crew_reports as $report) {
+            $request = SysRequest::where('report_id', $report->id)->first();
+
+            if($request) {
+                $report->status = is_null($request->approved) ? "Pendiente" : ($request->approved ? "Aprobado" : "Rechazado");
+                $report->request_date = $request->created_at;
+                $report->request_id= $request->id;
+                $crew_requests[] = $report;
+                if($report->status != "Rechazado"){
+                    $idsToRemove[] = $report->id;
+                }
+            }
+        }
+
+        $crew_reports = $crew_reports->reject(function ($report) use ($idsToRemove) {
+            return in_array($report->id, $idsToRemove);
+        });
+        
+
+        return view('system.reports.show', compact('crew_reports', 'crew_requests'));
     }
 
-    public static function updateReport($report_id,$field){
-        
+    public static function updateReport($report_id, $field)
+    {
+
         $report = Report::find($report_id);
 
-        if($field=="presigned"){
+        if($field == "presigned") {
             $report->presigned = true;
-        }else{
+        } else {
             $report->signed = true;
         }
-        
+
         $report->save();
 
     }
@@ -53,7 +77,7 @@ class ReportController extends Controller
                 'crew_id' => $report->crew_id,
                 'user_id' => Auth::user()->id,
                 'receipt_type_id' => 1,
-                'report_id'=> $report->id,
+                'report_id' => $report->id,
                 'payment_type_id' => $request->has('card_payment') ? 2 : 1,
                 'concept' => 'Inscripción '.$report->course->name,
                 'amount' => $amount,
@@ -63,10 +87,10 @@ class ReportController extends Controller
             return redirect()->route('system.reports.show');
 
         } else {
-            if(!$request->reason || $request->reason ==''){
+            if(!$request->reason || $request->reason == '') {
                 return redirect()->route('system.reports.signdiscount', ['report_id' => $request->report_id])
-                                 ->with('error','La razón de la solicitud debe proporcionarse')
-                                 ->with('selection',$request->discount);
+                                 ->with('error', 'La razón de la solicitud debe proporcionarse')
+                                 ->with('selection', $request->discount);
             }
             SysRequest::create([
                 'request_type_id' => 1,
@@ -75,14 +99,19 @@ class ReportController extends Controller
                 'report_id' => $request->report_id
             ]);
 
-            return redirect()->route('system.reports.show')->with('success','Solicitud enviada correctamente');
+            return redirect()->route('system.reports.show')->with('success', 'Solicitud enviada correctamente');
         }
     }
 
 
     public function signDiscount($report_id)
     {
-        return view('system.reports.sign_discount', compact('report_id'));
+        $request = SysRequest::where('report_id',$report_id)->first();
+        if(!$request){
+            return view('system.reports.sign_discount', compact('report_id'));
+        }else{
+            return redirect()->route('system.reports.show')->with('error','Este informe ya tiene una solicitud');
+        }
     }
 
     public function newReport()

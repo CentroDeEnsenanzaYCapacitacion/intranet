@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('request_type_id')->require;
             $table->string('description')->require;
-            $table->boolean('approved')->default(0);
+            $table->boolean('approved')->nullable();
             $table->unsignedBigInteger('user_id')->require;
             $table->unsignedBigInteger('report_id')->require;
             $table->timestamps();
