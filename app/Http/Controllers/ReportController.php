@@ -101,6 +101,28 @@ class ReportController extends Controller
         }
     }
 
+    public function receipt($report_id)
+    {
+        $request = SysRequest::where('report_id',$report_id)->first();
+        return view('system.reports.receipt', compact('request'));
+        // $report = Report::find($report_id);
+        // $request = SysRequest::where('report_id',$report_id)->first();
+        // $amount = 1000;// TODO: obtener monto de BDD
+        // Receipt::create([
+        //     'crew_id' => $report->crew_id,
+        //     'user_id' => Auth::user()->id,
+        //     'receipt_type_id' => 1,
+        //     'report_id' => $report->id,
+        //     'payment_type_id' => $request->has('card_payment') ? 2 : 1,
+        //     'concept' => 'Inscripción '.$report->course->name,
+        //     'amount' => $amount,
+
+        // ]);
+
+        // return redirect()->route('system.reports.show');
+    }
+
+
 
     public function signDiscount($report_id)
     {

@@ -49,6 +49,10 @@ input[type="radio"]:checked + .btn-outline-orange {
     color: darkblue !important;
 }
 
+.bg-done{
+    color: green !important;
+}
+
 .bg-red{
     color: red;
 }

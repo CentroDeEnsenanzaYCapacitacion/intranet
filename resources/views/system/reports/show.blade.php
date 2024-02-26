@@ -1,5 +1,5 @@
 @extends('layout.mainLayout')
-@section('title','dashboard')
+@section('title','Informes')
 @section('content')
 @if(session('success'))
     <div id="success" class="alert alert-success" style="margin-top: 100px;">
@@ -116,7 +116,7 @@
                         </td>                                                                    
                         <td class="text-center align-items-center">
                             @if($request->status === "Aprobado" || $request->status === "Rechazado")
-                            <a href="{{ route('system.reports.signdiscount', ['report_id'=> $request->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
+                            <a href="{{ route('system.reports.receipt', ['report_id'=> $request->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
                             @endif
                         </td>
                     </tr>
