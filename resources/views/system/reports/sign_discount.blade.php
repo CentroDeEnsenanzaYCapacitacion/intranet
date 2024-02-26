@@ -51,7 +51,7 @@
         <div class="col">
             <div class="text-center">
                 <button id=presign class="btn bg-orange text-white w-25" type="submit">Preinscribir</button><br><br>
-                <a href="preinscription.php"><button type="button" class="btn btn-outline-orange text-white w-25">Cancelar</button></a>
+                <a href="{{ route('system.reports.show') }}"><button type="button" class="btn btn-outline-orange text-white w-25">Cancelar</button></a>
             </div>
         </div>
     </div>
