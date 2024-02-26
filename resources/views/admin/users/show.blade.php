@@ -45,7 +45,7 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('admin.users.new') }}"  class="btn bg-orange text-white mt-content">Nuevo Usuario</a>
+        <a href="{{ route('admin.users.new') }}"  class="btn bg-orange text-white mt-5 mb-5">Nuevo Usuario</a>
     </div>
 </div>
 @endsection

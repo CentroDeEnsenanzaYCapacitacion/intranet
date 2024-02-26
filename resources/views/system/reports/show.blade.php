@@ -54,7 +54,7 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('system.report.new') }}"  class="btn bg-orange text-white mt-content">Nuevo Informe</a>
+        <a href="{{ route('system.report.new') }}"  class="btn bg-orange text-white mt-5">Nuevo Informe</a>
     </div>
 </div>
 <div class="row d-flex text-center mt-content">

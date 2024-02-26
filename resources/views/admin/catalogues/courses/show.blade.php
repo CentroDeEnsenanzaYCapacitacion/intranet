@@ -33,7 +33,7 @@
                 @endforeach
             </tbody>
         </table>
-        <a href="{{ route('admin.catalogues.courses.new') }}"  class="btn bg-orange text-white mt-content">Nuevo Curso</a>
+        <a href="{{ route('admin.catalogues.courses.new') }}"  class="btn bg-orange text-white mt-5 mb-5">Nuevo Curso</a>
     </div>
 </div>
 @endsection
