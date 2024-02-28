@@ -8,3 +8,4 @@
     Route::post('/admin/user/insert', [UserController::class,'insertUser'])->name('admin.users.insert');
     Route::put('/admin/user/update/{id}', [UserController::class,'updateUser'])->name('admin.users.update');
     Route::delete('/admin/user/block/{id}', [UserController::class,'blockUser'])->name('admin.users.block');
+    Route::get('/admin/user/activate/{id}', [UserController::class,'activateUser'])->name('admin.users.activate');

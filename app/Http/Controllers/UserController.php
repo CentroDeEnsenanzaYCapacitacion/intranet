@@ -12,8 +12,9 @@ class UserController extends Controller
 {
     public function getUsers()
     {
-        $users = User::all()->where('is_active',true)->skip(1);
-        return view('admin.users.show', compact('users'));
+        $users = User::all()->where('is_active', true)->skip(1);
+        $blocked_users = User::where('is_active', false)->get();
+        return view('admin.users.show', compact('users', 'blocked_users'));
     }
 
     public function newUser()
@@ -35,7 +36,7 @@ class UserController extends Controller
             'cel_phone' => $request->cel_phone,
             'genre' => $request->genre
         ]);
-        
+
         if($user) {
             return redirect()->route('admin.users.show');
         } else {
@@ -49,10 +50,11 @@ class UserController extends Controller
         $roles = Role::all();
         $crews = Crew::all();
 
-        return view('admin.users.edit',compact('user','roles','crews'));
+        return view('admin.users.edit', compact('user', 'roles', 'crews'));
     }
 
-    public function updateUser(UserRequest $request,$id){
+    public function updateUser(UserRequest $request, $id)
+    {
         $user = User::find($id);
         $wasUpdated = $user ->update([
             'name' => $request->name,
@@ -70,15 +72,26 @@ class UserController extends Controller
         } else {
             $roles = Role::all();
             $crews = Crew::all();
-            return redirect()->route('admin.users.edit', compact('user','roles','crews'))->with('error', 'No se detectaron cambios en la información del usuario.');
+            return redirect()->route('admin.users.edit', compact('user', 'roles', 'crews'))->with('error', 'No se detectaron cambios en la información del usuario.');
         }
     }
 
-    public function blockUser($id){
+    public function blockUser($id)
+    {
         $user = User::find($id);
         $user->update([
             'is_active' => false
-        ]); 
+        ]);
+
+        return redirect()->route('admin.users.show');
+    }
+
+    public function activateUser($id)
+    {
+        $user = User::find($id);
+        $user->update([
+            'is_active' => true
+        ]);
 
         return redirect()->route('admin.users.show');
     }
