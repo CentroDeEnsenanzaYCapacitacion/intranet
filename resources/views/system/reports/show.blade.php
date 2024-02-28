@@ -73,11 +73,10 @@
                     <th>Email</th>
                     <th>Teléfono</th>
                     <th>Celular</th>
-                    <th>Género</th>
                     <th>Área de interés</th>
-                    <th>Conoce CEC por</th>
                     <th>Plantel de interés</th>
                     <th>Fecha de solicitud</th>
+                    <th>Descuento</th>
                     <th>Estatus</th>
                     <th>Preinscribir</th>
                 </tr>
@@ -91,11 +90,10 @@
                         <td class="text-uppercase">{{ $request->email}}</td>
                         <td class="text-uppercase">{{ $request->phone}}</td>
                         <td class="text-uppercase">{{ $request->cel_phone}}</td>
-                        <td class="text-uppercase">{{ $request->genre}}</td>
                         <td class="text-uppercase">{{ $request->course->name}}</td>
-                        <td class="text-uppercase">{{ $request->marketing->name}}</td>
                         <td class="text-uppercase">{{ $request->crew->name}}</td>
                         <td class="text-uppercase">{{ $request->request_date->format('d/m/Y')}}</td>
+                        <td class="text-uppercase">{{ $request->discount}}</td>
                         <td class="text-uppercase">
                             @switch($request->status)
                                 @case('Aprobado')
@@ -116,7 +114,7 @@
                         </td>                                                                    
                         <td class="text-center align-items-center">
                             @if($request->status === "Aprobado" || $request->status === "Rechazado")
-                            <a href="{{ route('system.reports.receipt', ['report_id'=> $request->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
+                            <a href="{{ route('system.reports.receiptconfirmation', ['report_id'=> $request->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
                             @endif
                         </td>
                     </tr>

@@ -24,7 +24,6 @@ return new class () extends Migration {
             $table->string('genre', 2)->require;
             $table->boolean('presigned')->default(0);
             $table->boolean('signed')->default(0);
-            $table->boolean('approval_pending')->default(0);
             $table->timestamps();
             $table->foreign('crew_id')->references('id')->on('crews');
             $table->foreign('responsible_id')->references('id')->on('users');

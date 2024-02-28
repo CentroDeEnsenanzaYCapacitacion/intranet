@@ -20,6 +20,6 @@ class PdfController extends Controller
         $pdf->SetMargins(3, 3, 3);
         $pdf->AddPage();
         $pdf->writeHTML($htmlContent, true, false, true, false, '');
-        $pdf->Output('myview.pdf', 'I');
+        $pdf->Output('receipt.pdf', 'I');
     }
 }

@@ -8,7 +8,7 @@
 </div>
 <div class="row d-flex text-center mt-5">
     <div class="col">
-        <table class="table table-hover">
+        <table class="table">
             <thead class="thead-dark">
                 <tr>
                     <th>Nombre</th>

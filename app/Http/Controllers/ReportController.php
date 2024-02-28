@@ -35,9 +35,11 @@ class ReportController extends Controller
             $request = SysRequest::where('report_id', $report->id)->first();
 
             if($request) {
+                $array = explode('-', $request->description);
                 $report->status = is_null($request->approved) ? "Pendiente" : ($request->approved ? "Aprobado" : "Rechazado");
                 $report->request_date = $request->created_at;
-                $report->request_id= $request->id;
+                $report->request_id = $request->id;
+                $report->discount = trim($array[0]);
                 $crew_requests[] = $report;
                 $idsToRemove[] = $report->id;
             }
@@ -46,7 +48,7 @@ class ReportController extends Controller
         $crew_reports = $crew_reports->reject(function ($report) use ($idsToRemove) {
             return in_array($report->id, $idsToRemove);
         });
-        
+
 
         return view('system.reports.show', compact('crew_reports', 'crew_requests'));
     }
@@ -101,36 +103,38 @@ class ReportController extends Controller
         }
     }
 
-    public function receipt($report_id)
+    public function receiptConfirmation($report_id)
     {
-        $request = SysRequest::where('report_id',$report_id)->first();
+        $request = SysRequest::where('report_id', $report_id)->first();
         return view('system.reports.receipt', compact('request'));
-        // $report = Report::find($report_id);
-        // $request = SysRequest::where('report_id',$report_id)->first();
-        // $amount = 1000;// TODO: obtener monto de BDD
-        // Receipt::create([
-        //     'crew_id' => $report->crew_id,
-        //     'user_id' => Auth::user()->id,
-        //     'receipt_type_id' => 1,
-        //     'report_id' => $report->id,
-        //     'payment_type_id' => $request->has('card_payment') ? 2 : 1,
-        //     'concept' => 'Inscripción '.$report->course->name,
-        //     'amount' => $amount,
-
-        // ]);
-
-        // return redirect()->route('system.reports.show');
     }
 
+    public function generateReceipt(Request $request)
+    {
+        $report = Report::find($request->report_id);
+            $amount = 1000;// TODO: obtener monto de BDD
+            Receipt::create([
+                'crew_id' => $report->crew_id,
+                'user_id' => Auth::user()->id,
+                'receipt_type_id' => 1,
+                'report_id' => $report->id,
+                'payment_type_id' => $request->has('card_payment') ? 2 : 1,
+                'concept' => 'Inscripción '.$report->course->name,
+                'amount' => $amount,
+
+            ]);
+
+            return redirect()->route('system.reports.show');
+    }
 
 
     public function signDiscount($report_id)
     {
-        $request = SysRequest::where('report_id',$report_id)->first();
-        if(!$request){
+        $request = SysRequest::where('report_id', $report_id)->first();
+        if(!$request) {
             return view('system.reports.sign_discount', compact('report_id'));
-        }else{
-            return redirect()->route('system.reports.show')->with('error','Este informe ya tiene una solicitud');
+        } else {
+            return redirect()->route('system.reports.show')->with('error', 'Este informe ya tiene una solicitud');
         }
     }
 

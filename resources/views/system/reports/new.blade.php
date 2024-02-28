@@ -80,7 +80,7 @@
     </div>
     <div class="row d-flex text-center mt-5">
         <div class="col">
-            <button type="submit" class="btn bg-orange text-white w-25">Guardar informe</button>
+            <button onclick="showLoader(true)" type="submit" class="btn bg-orange text-white w-25">Guardar informe</button>
         </div>
     </div>
 </form><br>
