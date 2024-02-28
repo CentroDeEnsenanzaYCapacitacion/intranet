@@ -30,4 +30,8 @@ class Crew extends Model
     public function amounts() {
         return $this->hasMany(Amount::class);
     }
+
+    public function students() {
+        return $this->hasMany(Student::class);
+    }
 }
