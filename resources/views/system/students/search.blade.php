@@ -12,7 +12,7 @@
             <form class="form" action="{{ route('system.students.search-post') }}" method="POST">
                 @csrf
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar por nombre, apellidos y matrícula">
+                    <input name="data" type="text" class="form-control" placeholder="Buscar por nombre, apellidos y matrícula">
                     <button class="btn btn-outline-secondary" type="submit">
                         <span class="material-symbols-outlined">search</span>
                     </button>
@@ -21,9 +21,6 @@
         </div>
     </div>
 </div>
-
-
-
 <div class="row d-flex  mt-5">
     <div class="col">
         <table class="table">
@@ -34,12 +31,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($students as $student)
-                    <tr>
-                        <td class="text-uppercase">{{ $student->crew->name[0].'/'.$student->id }}</td>
-                        <td class="text-uppercase">{{ $student->surnames.', '.$student->name }}</td>
-                    </tr>
-                @endforeach
+                @if($students)
+                    @foreach($students as $student)
+                        <tr>
+                            <td class="text-uppercase">{{ $student->crew->name[0].'/'.$student->id }}</td>
+                            <td class="text-uppercase">{{ $student->surnames.', '.$student->name }}</td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>

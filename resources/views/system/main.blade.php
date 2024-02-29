@@ -7,7 +7,7 @@
         Informes
     </div>
     <div class="col">
-        <a id="sign" href="{{ route('system.student.search') }}"><img class="menu_icon" src="{{ asset('assets/img/ins.png') }}"></a><br>
+        <a id="sign" href="{{ route('system.students.search') }}"><img class="menu_icon" src="{{ asset('assets/img/ins.png') }}"></a><br>
         Expedientes de estudiantes
     </div>
     <!-- <div class="col">

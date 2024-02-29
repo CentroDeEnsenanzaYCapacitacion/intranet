@@ -22,7 +22,8 @@ class StudentController extends Controller
     }
 
     public function search(){
-        return view('system.students.search');
+        $students=[];
+        return view('system.students.search',compact('students'));
     }
 
     public function searchPost(Request $request){
