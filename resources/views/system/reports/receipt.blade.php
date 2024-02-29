@@ -31,7 +31,7 @@
     <div class="row d-flex text-center mt-5">
         <div class="col">
             <div class="text-center">
-                <button onclick="showLoader(true)" id="validated_presign" class="btn bg-orange text-white w-25" type="submit">Preinscribir</button><br><br>
+                <button onclick="showLoader(true)" id="validated_sign" class="btn bg-orange text-white w-25" type="submit">Inscribir</button><br><br>
                 <a onclick="showLoader(true)" class="btn btn-outline-orange text-white w-25" href="{{ route('system.reports.show') }}">Cancelar</button></a>
             </div>
         </div>

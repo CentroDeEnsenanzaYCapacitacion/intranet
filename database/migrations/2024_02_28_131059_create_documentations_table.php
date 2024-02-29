@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('student_id');
             $table->boolean('birth_certificate');
             $table->boolean('copy_birth_certificate');
+            $table->boolean('curp');
+            $table->boolean('ine');
             $table->boolean('secondary_certificate');
             $table->boolean('copy_secondary_certificate');
             $table->boolean('photos');

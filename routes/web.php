@@ -39,4 +39,5 @@ Route::middleware(['auth'])->group(function () {
     require 'admin_catalogues_courses.php';
     require 'admin_requests.php';
     require 'system_reports.php';
+    require 'system_students.php';
 });

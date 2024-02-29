@@ -175,10 +175,21 @@ a{
     transition: opacity 0.5s ease-out;
   }
   
-  .table th, .table td {
-    max-width: 120px; /* Ajusta este valor según necesites */
+.table th, .table td {
+    max-width: 120px; 
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.input-group .btn {
+    background-color: #ff6900; 
+    color: white;
+    border: none;
+    padding-top: 15px;
+}
+
+.input-group .btn .material-symbols-outlined {
+    font-size: 24px; 
 }
 
 

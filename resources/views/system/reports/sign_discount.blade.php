@@ -50,7 +50,7 @@
     <div class="row d-flex text-center mt-5">
         <div class="col">
             <div class="text-center">
-                <button onclick="showLoader(true)" id=presign class="btn bg-orange text-white w-25" type="submit">Preinscribir</button><br><br>
+                <button onclick="showLoader(true)" id=sign class="btn bg-orange text-white w-25" type="submit">Inscribir</button><br><br>
                 <a class="btn btn-outline-orange text-white w-25" href="{{ route('system.reports.show') }}">Cancelar</a>
             </div>
         </div>
@@ -71,6 +71,6 @@
         </ul>
     </div>
 @endif
-<script src="{{ asset('assets/js/presign.js') }}"></script>
+<script src="{{ asset('assets/js/sign.js') }}"></script>
 <script src="{{ asset('assets/js/no_discount_redirection.js') }}"></script>
 @endsection

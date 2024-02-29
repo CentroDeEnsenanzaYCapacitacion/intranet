@@ -17,13 +17,11 @@ class ReportController extends Controller
     public function getReports()
     {
         if(Auth::user()->role_id == 1) {
-            $crew_reports = Report::where('presigned', false)
-                                    ->where('signed', false)
+            $crew_reports = Report::where('signed', false)
                                     ->get();
 
         } else {
             $crew_reports = Report::where('crew_id', Auth::user()->crew_id)
-                                    ->where('presigned', false)
                                     ->where('signed', false)
                                     ->get();
         }
@@ -53,16 +51,12 @@ class ReportController extends Controller
         return view('system.reports.show', compact('crew_reports', 'crew_requests'));
     }
 
-    public static function updateReport($report_id, $field)
+    public static function updateReport($report_id)
     {
 
         $report = Report::find($report_id);
 
-        if($field == "presigned") {
-            $report->presigned = true;
-        } else {
-            $report->signed = true;
-        }
+        $report->signed = true;
 
         $report->save();
 
@@ -112,19 +106,19 @@ class ReportController extends Controller
     public function generateReceipt(Request $request)
     {
         $report = Report::find($request->report_id);
-            $amount = 1000;// TODO: obtener monto de BDD
-            Receipt::create([
-                'crew_id' => $report->crew_id,
-                'user_id' => Auth::user()->id,
-                'receipt_type_id' => 1,
-                'report_id' => $report->id,
-                'payment_type_id' => $request->has('card_payment') ? 2 : 1,
-                'concept' => 'Inscripción '.$report->course->name,
-                'amount' => $amount,
+        $amount = 1000;// TODO: obtener monto de BDD
+        Receipt::create([
+            'crew_id' => $report->crew_id,
+            'user_id' => Auth::user()->id,
+            'receipt_type_id' => 1,
+            'report_id' => $report->id,
+            'payment_type_id' => $request->has('card_payment') ? 2 : 1,
+            'concept' => 'Inscripción '.$report->course->name,
+            'amount' => $amount,
 
-            ]);
+        ]);
 
-            return redirect()->route('system.reports.show');
+        return redirect()->route('system.reports.show');
     }
 
 

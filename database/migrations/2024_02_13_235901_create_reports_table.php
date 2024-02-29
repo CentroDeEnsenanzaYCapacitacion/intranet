@@ -22,7 +22,6 @@ return new class () extends Migration {
             $table->unsignedBigInteger('crew_id')->require;
             $table->unsignedBigInteger('responsible_id')->require;
             $table->string('genre', 2)->require;
-            $table->boolean('presigned')->default(0);
             $table->boolean('signed')->default(0);
             $table->timestamps();
             $table->foreign('crew_id')->references('id')->on('crews');

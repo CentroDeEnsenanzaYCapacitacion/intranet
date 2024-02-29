@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('noDiscountForm').addEventListener('submit', function(e) {
         const form = e.currentTarget;
         const currentRedirectUrl = '/system/reports'; 
-        const buttonText = document.getElementById('presign').innerText || document.getElementById('presign').textContent;
+        const buttonText = document.getElementById('sign').innerText || document.getElementById('sign').textContent;
 
-        if (buttonText === 'Preinscribir') {
+        if (buttonText === 'Inscribir') {
             e.preventDefault(); 
             const newTab = window.open('', '_blank');
             if (newTab) {

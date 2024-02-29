@@ -31,7 +31,7 @@
     <div class="row d-flex text-center mt-5">
         <div class="col">
             <div class="text-center">
-                <button onclick="showLoader(true)" id=presign class="btn bg-orange text-white w-25" type="submit">Cambiar porcentaje</button><br><br>
+                <button onclick="showLoader(true)" id=sign class="btn bg-orange text-white w-25" type="submit">Cambiar porcentaje</button><br><br>
                 <a href="{{ route('admin.requests.show') }}"><button type="button" class="btn btn-outline-orange text-white w-25">Cancelar</button></a>
             </div>
         </div>

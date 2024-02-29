@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -17,19 +16,21 @@ return new class extends Migration
             $table->string('name')->require;
             $table->string('surnames')->require;
             $table->string('genre')->require;
-            $table->string('birthdate')->require;
-            $table->string('address')->require;
-            $table->string('colony')->require;
-            $table->string('municipality')->require;
-            $table->string('PC')->require;
+            $table->string('birthdate')->nullable();
+            $table->string('address')->nullable();
+            $table->string('colony')->nullable();
+            $table->string('municipality')->nullable();
+            $table->string('PC')->nullable();
             $table->string('phone')->nullable();
             $table->string('cel_phone')->nullable();
             $table->string('email')->require;
-            $table->unsignedBigInteger('generation_id')->require;
-            $table->unsignedBigInteger('modality_id')->require;
-            $table->unsignedBigInteger('payment_periodicity_id')->require;
+            $table->unsignedBigInteger('generation_id')->nullable();
+            $table->unsignedBigInteger('modality_id')->nullable();
+            $table->unsignedBigInteger('payment_periodicity_id')->nullable();
             $table->unsignedBigInteger('course_id')->require;
-            $table->date('start')->require;
+            $table->string('schedule')->nullable();
+            $table->boolean('sabbatine')->default(false);
+            $table->date('start')->nullable();
             $table->string('curp')->nullable();
             $table->timestamps();
             $table->foreign('crew_id')->references('id')->on('crews');

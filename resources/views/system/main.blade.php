@@ -7,8 +7,8 @@
         Informes
     </div>
     <div class="col">
-        <a id="sign" href="inscription.php"><img class="menu_icon" src="{{ asset('assets/img/ins.png') }}"></a><br>
-        Generar matrícula
+        <a id="sign" href="{{ route('system.student.search') }}"><img class="menu_icon" src="{{ asset('assets/img/ins.png') }}"></a><br>
+        Expedientes de estudiantes
     </div>
     <!-- <div class="col">
         <a><img class="menu_icon" src="../../assets/img/avatar.png"></a><br>

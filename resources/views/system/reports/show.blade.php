@@ -31,7 +31,7 @@
                     <th>Área de interés</th>
                     <th>Conoce CEC por</th>
                     <th>Plantel de interés</th>
-                    <th>Preinscribir</th>
+                    <th>Inscribir</th>
                 </tr>
             </thead>
             <tbody>
@@ -78,7 +78,7 @@
                     <th>Fecha de solicitud</th>
                     <th>Descuento</th>
                     <th>Estatus</th>
-                    <th>Preinscribir</th>
+                    <th>Inscribir</th>
                 </tr>
             </thead>
             <tbody>
