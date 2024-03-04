@@ -2,42 +2,50 @@
 @section('title','Funciones de administrador')
 @section('content')
 <div class="container">
-    <div class="row d-flex text-center mt-content">
-        <div class="col">
-            <a id="adminUsers" href=" {{route('admin.users.show') }}"><img class="menu_icon" src="{{asset('assets/img/users.png')}}"></a><br>
-            Gestión de usuarios
+    <div class="row d-flex align-items-center justify-content-center text-center mt-content">
+        <div class="col-md-4 d-flex justify-content-center">
+            <a id="adminUsers" href="{{route('admin.users.show')}}">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/users.png')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Gestión de usuarios</h6>
+                    </div>
+                </div>
+            </a>
         </div>
-        <div class="col">
-            <a id="adminUsers" href=" {{route('admin.catalogues.menu') }}"><img class="menu_icon" src="{{asset('assets/img/catalogues.png')}}"></a><br>
-            Catálogos
+        <div class="col-md-4 d-flex justify-content-center">
+            <a id="adminUsers" href="{{route('admin.catalogues.menu')}}">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/catalogues.png')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Catálogos</h6>
+                    </div>
+                </div>
+            </a>
         </div>
-        <div class="col">
-            <a id="adminUsers" href=" {{route('admin.requests.show') }}"><img class="menu_icon" src="{{asset('assets/img/request.png')}}"></a><br>
-            Gestión de solicitudes
-        </div>
-        <div class="col">
-            <a href="{{ route('admin.stats.menu') }}"><img class="menu_icon" src="{{asset('assets/img/graphs.png')}}"></a><br>
-            Estadísticas
+        <div class="col-md-4 d-flex justify-content-center">
+            <a id="adminUsers" id="adminUsers" href="{{route('admin.requests.show')}}">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/request.png')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Gestión de solicitudes</h6>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
-    <!-- <div class="row d-flex text-center mt-5">
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Sistema de gestión escolar
+    <div class="row d-flex align-items-center justify-content-center text-center mt-content">
+        <div class="col-md-4 d-flex justify-content-center">
+            <a href="{{route('admin.stats.menu')}}">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/graphs.png')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Estadísticas</h6>
+                    </div>
+                </div>
+            </a>
         </div>
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de contenido web
-        </div>
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de datos académicos
-        </div>
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de biblioteca
-        </div>
-    </div> -->
+    </div>
     <script>
         document.getElementById('adminUsers').addEventListener('click', function() {
             showLoader(true);

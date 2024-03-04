@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             RequestTypeSeeder::class,
             ReceiptTypeSeeder::class,
-            PaymentTypeSeeder::class
-            
+            PaymentTypeSeeder::class,
+            StudentDocumentSeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();

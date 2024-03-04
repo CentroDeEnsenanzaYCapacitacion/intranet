@@ -1,7 +1,7 @@
 @extends('layout.mainLayout')
 @section('title','Estadísticas de informes')
 @section('content')
-<?php
+@php
     if ($period=='mensual') {
         $datos = [
             ['Month', 'Informes', 'Inscripciones'],
@@ -34,7 +34,7 @@
             ['2007',  1030,      540]
         ];
     }
-?>
+@endphp
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 
@@ -54,18 +54,22 @@
     chart.draw(data, options);
   }
 </script>
-<div class="row d-flex text-center mt-content">
-    <div class="col">
-        <div class="text-center">
-            <div class="btn-group" role="group" aria-label="button group">
-                <button onclick="window.location.href='{{ route('admin.stats.reports', ['period' => 'mensual']) }}'" class="btn @if ($period == 'mensual') btn-outline-orange-selected @else btn-outline-orange @endif">Mensual</button>
+<div class="card shadow ccont">
+    <div class="card-body">
+        <div class="row d-flex text-center mt-3">
+            <div class="col">
+                <div class="text-center">
+                    <div class="btn-group" role="group" aria-label="button group">
+                        <button onclick="window.location.href='{{ route('admin.stats.reports', ['period' => 'mensual']) }}'" class="btn @if ($period == 'mensual') btn-outline-orange-selected @else btn-outline-orange @endif">Mensual</button>
 
-                <button onclick="window.location.href='{{ route('admin.stats.reports', ['period' => 'semestral']) }}'" class="btn @if ($period == 'semestral') btn-outline-orange-selected @else btn-outline-orange @endif">Semestral</button>
+                        <button onclick="window.location.href='{{ route('admin.stats.reports', ['period' => 'semestral']) }}'" class="btn @if ($period == 'semestral') btn-outline-orange-selected @else btn-outline-orange @endif">Semestral</button>
 
-                <button onclick="window.location.href='{{ route('admin.stats.reports', ['period' => 'anual']) }}'" class="btn @if ($period == 'anual') btn-outline-orange-selected @else btn-outline-orange @endif">Anual</button>
+                        <button onclick="window.location.href='{{ route('admin.stats.reports', ['period' => 'anual']) }}'" class="btn @if ($period == 'anual') btn-outline-orange-selected @else btn-outline-orange @endif">Anual</button>
+                    </div>
+                </div>
             </div>
         </div>
+        <div id="myChart" style="width:100%; height:500px;"></div>
     </div>
 </div>
-<div id="myChart" style="width:100%; height:500px;"></div>
 @endsection

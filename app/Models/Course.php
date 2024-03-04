@@ -11,15 +11,23 @@ class Course extends Model
 
     protected $guarded = [];
 
-    public function crew() {
+    public function crew()
+    {
         return $this->belongsTo(Crew::class);
     }
 
-    public function reports() {
+    public function reports()
+    {
         return $this->hasMany(Report::class);
     }
 
-    public function amounts() {
+    public function amounts()
+    {
         return $this->hasMany(Amount::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
     }
 }

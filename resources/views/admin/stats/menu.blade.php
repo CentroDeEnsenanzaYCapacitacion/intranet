@@ -1,40 +1,16 @@
 @extends('layout.mainLayout')
 @section('title','Menú estadísticas')
 @section('content')
-<div class="row d-flex text-center mt-content">
-    <div class="col">
-        <a href="{{ route('admin.stats.reports',['period'=>'mensual']) }}"><img class="menu_icon" src="{{ asset('assets/img/reports_stats.png') }}"></a><br>
-        Informes
+<div class="row d-flex align-items-center justify-content-center text-center mt-content">
+    <div class="col-md-4 d-flex justify-content-center">
+        <a href="{{route('admin.stats.reports',['period'=>'mensual'])}}">
+            <div class="card align-content-center cc">
+                <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/reports_stats.png')}}">
+                <div class="card-body">
+                    <h6 class="card-title">Informes</h6>
+                </div>
+            </div>
+        </a>
     </div>
-    <!-- <div class="col">
-        <a href="../admin/adminCatalogues.php"><img src="../../assets/img/avatar.png"></a><br>
-        Catálogos
-    </div>
-    <div class="col">
-        <a href="../admin/statistics.php"><img src="../../assets/img/avatar.png"></a><br>
-        Estadísticas
-    </div> -->
-    <!--<div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de biblioteca
-    </div> -->
 </div>
-<!-- <div class="row d-flex text-center mt-5">
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Sistema de gestión escolar
-    </div>
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de contenido web
-    </div>
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de datos académicos
-    </div>
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de biblioteca
-    </div>
-</div> -->
 @endsection

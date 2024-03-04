@@ -2,41 +2,37 @@
 @section('title','dashboard')
 @section('content')
 <div class="container">
-    <div class="row d-flex text-center mt-content">
-        <div class="col">
-            <a href="{{route('adminFunctions')}}"><img class="menu_icon" src="{{asset('assets/img/administrator.png')}}"></a><br>
-            Funciones de administrador
+    <div class="row d-flex align-items-center justify-content-center text-center mt-content">
+        <div class="col-md-4 d-flex justify-content-center">
+            <a href="{{route('adminFunctions')}}">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/administrator.png')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Funciones de administrador</h6>
+                    </div>
+                </div>
+            </a>
         </div>
-        <div class="col">
-            <a href="{{ route('system.main') }}"><img class="menu_icon" src="{{asset('assets/img/school.webp')}}"></a><br>
-            Sistema de gestión escolar
+        <div class="col-md-4 d-flex justify-content-center">
+            <a href="{{ route('system.main') }}">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/school.webp')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Sistema de gestión escolar</h6>
+                    </div>
+                </div>
+            </a>
         </div>
-        <!--<div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de datos académicos
+        <div class="col-md-4 d-flex justify-content-center">
+            <a href="#">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/ticket.png')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Tickets de servicio</h6>
+                    </div>
+                </div>
+            </a>
         </div>
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de biblioteca
-        </div> -->
     </div>
-    <!-- <div class="row d-flex text-center mt-5">
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Sistema de gestión escolar
-        </div>
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de contenido web
-        </div>
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de datos académicos
-        </div>
-        <div class="col">
-            <a><img src="/assets/img/avatar.png"></a><br>
-            Gestión de biblioteca
-        </div>
-    </div> -->
 </div>
 @endsection

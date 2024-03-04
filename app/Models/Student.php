@@ -21,11 +21,6 @@ class Student extends Model
         return $this->hasMany(Receipt::class);
     }
 
-    public function documentation()
-    {
-        return $this->hasOne(Documentation::class);
-    }
-
     public function tutor()
     {
         return $this->hasOne(Tutor::class);
@@ -46,5 +41,13 @@ class Student extends Model
         return $this->belongsTo(PaymentPeriodicity::class);
     }
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 
+    public function documents() {
+        return $this->belongsToMany(StudentDocument::class,'student_document_statuses')
+                    ->withPivot('uploaded');
+    }
 }

@@ -1,60 +1,69 @@
 @extends('layout.mainLayout')
 @section('title','Informes')
 @section('content')
-@if(session('success'))
-    <div id="success" class="alert alert-success" style="margin-top: 100px;">
-        {{ session('success') }}
-    </div>
-@endif
-<div class="row d-flex text-center mt-content">
-    <div class="col">
-        <h1>Informes registrados</h1>
-    </div>
-</div>
-@if(session('error'))
-    <div id="error" class="alert alert-danger" style="margin-top: 100px;">
-        {{ session('error') }}
-    </div>
-@endif
-<div class="row d-flex text-center mt-5">
-    <div class="col">
-        <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Fecha</th>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Celular</th>
-                    <th>Género</th>
-                    <th>Área de interés</th>
-                    <th>Conoce CEC por</th>
-                    <th>Plantel de interés</th>
-                    <th>Inscribir</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($crew_reports as $report)
-                    <tr>
-                        <td class="text-uppercase">{{ $report->created_at->format('d/m/Y') }}</td>
-                        <td class="text-uppercase">{{ $report->name }}</td>
-                        <td class="text-uppercase">{{ $report->surnames}}</td>
-                        <td class="text-uppercase">{{ $report->email}}</td>
-                        <td class="text-uppercase">{{ $report->phone}}</td>
-                        <td class="text-uppercase">{{ $report->cel_phone}}</td>
-                        <td class="text-uppercase">{{ $report->genre}}</td>
-                        <td class="text-uppercase">{{ $report->course->name}}</td>
-                        <td class="text-uppercase">{{ $report->marketing->name}}</td>
-                        <td class="text-uppercase">{{ $report->crew->name}}</td>
-                        <td class="text-center align-items-center">
-                            <a href="{{ route('system.reports.signdiscount', ['report_id'=> $report->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <a href="{{ route('system.report.new') }}"  class="btn bg-orange text-white mt-5">Nuevo Informe</a>
+<div class="card shadow ccont pb-3">
+    <div class="card-body">
+        <div class="row d-flex text-center mt-3">
+            <div class="col">
+                <h1>Ficha de estudiante</h1>
+            </div>
+        </div>
+        <div class="row d-flex text-center mt-5">
+            <div class="col-3">
+                <div class="d-flex justify-content-center mb-3">
+                    <div class="card shadow custom-size">
+                        <img src="{{ asset('assets/img/nophoto.jpg') }}">
+                    </div>
+                </div>
+                <button class="btn bg-orange text-white">Cambiar Fotografía</button>
+            </div>
+            <div class="col">
+                <div class="text-start text-uppercase">
+                    <h5 class="text-orange"><b>Información general<hr></b></h5>
+                    <b>Nombre: </b>{{ $student->surnames.', '.$student->name }}<br>
+                    <b>Fecha de nacimiento: </b>{{ $student->birthdate }}<br>
+                    <b>CURP: </b>{{ $student->curp }}<br>
+                    <b>Edad: </b>{{ $student->birthdate }}<br>
+                    <b>Dirección: </b>{{ $student->address }}<br>
+                    <b>Colonia: </b>{{ $student->colony }}<br>
+                    <b>Municipio: </b>{{ $student->municipality }}<br>
+                    <b>C.P.: </b>{{ $student->PC }}<br>
+                    <b>Género: </b>{{ $student->genre }}<br>
+                    <b>Teléfono: </b>{{ $student->phone }}<br>
+                    <b>Celular: </b>{{ $student->cel_phone }}<br>
+                    <b>Correo electrónico: </b>{{ $student->email }}<br><br>
+                    <h5 class="text-orange"><b>Información académica<hr></b></h5>
+                    <b>Curso: </b>{{ $student->course->name }}<br>
+                    <b>Tipo pago:</b>{{ $student->payment_periodicity_id }}<br>
+                    <b>Colegiatura: </b><br>
+                    <b>Horario: </b>{{ $student->schedule }}<br>
+                    <b>Sabatino: </b><br>
+                    <b>Modalidad: </b>{{ $student->modality_id }}<br>
+                    <b>Inicio: </b>{{ $student->start }}<br><br>
+                    <h5 class="text-orange"><b>Información de tutor<hr></b></h5>
+                    <b>Nombre: </b>{{ $student->tutor_id.', '.$student->tutor_id }}<br>
+                    <b>Teléfono: </b>{{ $student->tutor_id }}<br>
+                    <b>Celular: </b>{{ $student->tutor_id }}<br>
+                    <b>Parentesco: </b>{{ $student->tutor_id }}<br><br>
+                    <h5 class="text-orange"><b>Documentación<hr></b></h5>
+                    <table class="table table-sm">
+                        @foreach ($student->documents as $document)
+                        <tr>
+                            <td>{{ $document->name }}</td>
+                            <td>
+                                @if ($document->pivot->uploaded)
+                                    <span class="badge bg-success">&nbsp;</span>
+                                @else
+                                    <span class="badge bg-danger">&nbsp;</span>
+                                @endif
+                            </td>
+                            <td></td>
+                        </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

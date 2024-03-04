@@ -10,9 +10,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <title>@yield('title')</title>
 </head>
-<body>
+<body background="">
     @include('includes.header')
-    <div class="container">
+    <div class="container custom-container">
         <div id="loader-container">
             <div id="loading"></div>
         </div>
