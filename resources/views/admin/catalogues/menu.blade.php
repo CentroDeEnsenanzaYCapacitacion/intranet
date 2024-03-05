@@ -53,7 +53,7 @@
     document.getElementById('adminCourses').addEventListener('click', function() {
         showLoader(true);
     });
-    document.getElementById('adminAmounts').addEventListener('click', function() {
-        showLoader(true);
-    });
+    // document.getElementById('adminAmounts').addEventListener('click', function() {
+    //     showLoader(true);
+    // });
 </script>
