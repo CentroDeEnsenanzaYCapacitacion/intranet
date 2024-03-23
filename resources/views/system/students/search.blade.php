@@ -39,7 +39,13 @@
                                 <tr>
                                     <td class="text-uppercase">{{ $student->crew->name[0].'/'.$student->id }}</td>
                                     <td class="text-uppercase">{{ $student->surnames.', '.$student->name }}</td>
-                                    <td><span class="material-symbols-outlined" style="color:royalblue"><a href="{{ route('system.student.profile',['student_id'=>$student->id]) }}">visibility</a></span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="material-symbols-outlined" style="color:royalblue;">
+                                                <a href="{{ route('system.student.profile',['student_id'=>$student->id]) }}" style="text-decoration: none; @if($student->first_time) color: red; @else color: inherit; @endif">visibility</a>
+                                            </span>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                         @endif

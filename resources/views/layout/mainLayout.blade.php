@@ -8,6 +8,7 @@
     <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet"></link>
     <link href="{{asset('assets/css/styles.css')}}" rel="stylesheet"></link>
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <title>@yield('title')</title>
 </head>
 <body background="">
@@ -24,5 +25,12 @@
     <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('assets/js/loader.js')}}"></script>
     <script src="{{asset('assets/js/confirmAlert.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#datePicker", {
+          enableTime: false, // Desactiva la selección de tiempo si solo necesitas una fecha
+          dateFormat: "d/m/Y", // Formato de fecha que coincida con el utilizado por Laravel
+        });
+      </script>
 </body>
 </html>

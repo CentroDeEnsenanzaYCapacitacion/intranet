@@ -28,16 +28,18 @@ return new class () extends Migration {
             $table->unsignedBigInteger('modality_id')->nullable();
             $table->unsignedBigInteger('payment_periodicity_id')->nullable();
             $table->unsignedBigInteger('course_id')->require;
-            $table->string('schedule')->nullable();
-            $table->boolean('sabbatine')->default(false);
+            $table->unsignedBigInteger('schedule_id')->nullable();
+            $table->boolean('sabbatine')->nullable();
             $table->date('start')->nullable();
             $table->string('curp')->nullable();
+            $table->boolean('first_time')->default(1);
             $table->timestamps();
             $table->foreign('crew_id')->references('id')->on('crews');
             $table->foreign('generation_id')->references('id')->on('generations');
             $table->foreign('modality_id')->references('id')->on('modalities');
             $table->foreign('payment_periodicity_id')->references('id')->on('payment_periodicities');
             $table->foreign('course_id')->references('id')->on('courses');
+            $table->foreign('schedule_id')->references('id')->on('schedules');
         });
     }
 

@@ -15,7 +15,7 @@ class CourseRequest extends FormRequest
     {
         return [
             'name'=> 'required',
-            'crew_id' => 'required'
+            'crew_id' => 'required|integer|min:0'
         ];
     }
 }

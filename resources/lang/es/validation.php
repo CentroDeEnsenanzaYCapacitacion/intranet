@@ -92,7 +92,7 @@ return [
     'not_regex' => 'El formato de :attribute es inválido.',
     'numeric' => 'El campo :attribute debe ser numérico',
     'present' => 'El campo :attribute field debe estar presente.',
-    'regex' => 'El campo :attribute format es inválido.',
+    'regex' => 'El formato de :attribute es inválido.',
     'required' => 'El campo :attribute es obligatorio.',
     'required_if' => 'El campo :attribute es obligatorio cuando :other es :value.',
     'required_unless' => 'El campo :attribute es obligatorio al menos que :other esté en :values.',
@@ -146,11 +146,16 @@ return [
     'attributes' => [
         'name' => 'nombre',
         'surnames' => 'apellidos',
-        'email' => 'correo electrónico',     
+        'email' => 'correo electrónico',
         'phone' => 'teléfono',
         'cel_phone' => 'celular',
-        'genre' => 'género'
+        'genre' => 'género',
+        'relationship'=> 'parentesco',
+        'birthdate'=>'fecha de nacimiento',
+        'tutor_name'=>'nombre de tutor',
+        'tutor_surnames'=>'apellidos de tutor',
+        'tutor_phone'=>'teléfono de tutor',
+        'tutor_cel_phone'=>'celular de tutor',
+        'start'=>'inicio'
     ],
-    
-
 ];

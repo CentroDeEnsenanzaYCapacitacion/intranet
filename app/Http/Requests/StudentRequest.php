@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReportRequest extends FormRequest
+class StudentRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,13 +14,17 @@ class ReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=> 'required',
+            'crew_id'=> 'required|integer|min:0',
+            'curp' => 'required|regex:/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{1}\d{1}$/',
+            'name'=>'required',
             'surnames' => 'required',
-            'email' => 'required|email|regex:/^[^@]+@[^@]+\.[^@]+$/',
-            'marketing_id' => 'required|integer|min:0',
-            'crew_id' => 'required|integer|min:0',
+            'sabbatine'=>'required',
+            'genre'=>'required',
+            'birthdate'=>'required',
+            'start'=>'required',
             'phone' => 'nullable|required_without:cel_phone|numeric|digits:10',
             'cel_phone' => 'nullable|required_without:phone|numeric|digits:10',
+            'email' => 'required|email|regex:/^[^@]+@[^@]+\.[^@]+$/',
             'course_id' => 'required|integer|min:0'
         ];
     }

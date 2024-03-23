@@ -11,6 +11,10 @@ class Student extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'sabbatine' => 'boolean'
+    ];
+
     public function crew()
     {
         return $this->belongsTo(Crew::class);
@@ -21,9 +25,19 @@ class Student extends Model
         return $this->hasMany(Receipt::class);
     }
 
+    public function observations()
+    {
+        return $this->hasMany(Observation::class)->orderBy('created_at', 'desc');
+    }
+
     public function tutor()
     {
         return $this->hasOne(Tutor::class);
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(Schedule::class);
     }
 
     public function generation()
@@ -46,8 +60,9 @@ class Student extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function documents() {
-        return $this->belongsToMany(StudentDocument::class,'student_document_statuses')
+    public function documents()
+    {
+        return $this->belongsToMany(StudentDocument::class, 'student_document_statuses')
                     ->withPivot('uploaded');
     }
 }

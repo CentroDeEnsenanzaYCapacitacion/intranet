@@ -241,3 +241,12 @@ a:hover{
     height: auto;
 }
 
+.icon-left,
+.icon-right {
+    margin-right: 5px;
+}
+
+.text-margin {
+    margin-right: 10px;
+}
+

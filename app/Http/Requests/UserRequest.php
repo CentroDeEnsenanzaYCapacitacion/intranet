@@ -17,15 +17,11 @@ class UserRequest extends FormRequest
         return [
             'name'=> 'required',
             'surnames' => 'required',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users')->ignore($this->id),
-            ],
-            'role_id' => 'required',
-            'crew_id' => 'required',
-            'phone' => 'required_without:cel_phone',
-            'cel_phone' => 'required_without:phone',
+            'email' => 'required|email|unique:users,email,' . $this->id . '|regex:/^[^@]+@[^@]+\.[^@]+$/',
+            'role_id' => 'required|integer|min:0',
+            'crew_id' => 'required|integer|min:0',
+            'phone' => 'required_without:cel_phone|numeric|digits:10',
+            'cel_phone' => 'required_without:phone|numeric|digits:10',
             'genre' => 'required'
         ];
     }
