@@ -4,18 +4,25 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StudentRequest extends FormRequest
+class StudentUpdateRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
     public function rules(): array
     {
         return [
             'crew_id'=> 'required|integer|min:0',
-            'curp' => 'required|regex:/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{1}\d{1}$/|unique:students,curp',
             'name'=>'required',
             'surnames' => 'required',
             'sabbatine'=>'required',

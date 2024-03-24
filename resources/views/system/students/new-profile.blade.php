@@ -1,6 +1,15 @@
 @extends('layout.mainLayout')
 @section('title','Informes')
 @section('content')
+
+@php
+    $yearNow = date("Y");
+    $years = [];
+    for ($i = $yearNow - 5; $i <= $yearNow + 2; $i++) {
+        $years[] = substr($i, -2); // Añadir las dos últimas cifras de cada año al array
+    }
+@endphp
+
 @if ($errors->any())
     <div class="alert alert-danger mt-content">
         <ul>
@@ -10,6 +19,7 @@
         </ul>
     </div>
 @endif
+
 <div class="card shadow ccont pb-3">
     <div class="card-body">
         <div class="row d-flex text-center mt-3">
@@ -53,6 +63,20 @@
                         <b>Correo electrónico: </b><input class="form-control text-uppercase"  type="text" name="email" value="{{ old('email', $student->email) }}"/><br><br>
                         <h5 class="text-orange"><b>Información académica<hr></b></h5>
                         <b>Curso: </b>{{ $student->course->name  }}<br>
+                        <b>Generación: </b>
+                        <div class="d-flex">
+                            <select name="gen_month" class="form-control w-25">
+                                <option value="F" {{ old('gen_month') == 'F' ? 'selected' : '' }}>Febrero</option>
+                                <option value="M" {{ old('gen_month') == 'M' ? 'selected' : '' }}>Mayo</option>
+                                <option value="A" {{ old('gen_month') == 'A' ? 'selected' : '' }}>Agosto</option>
+                                <option value="N" {{ old('gen_month') == 'N' ? 'selected' : '' }}>Noviembre</option>
+                            </select>
+                            <select name="gen_year" class="form-control w-25">
+                                @foreach($years as $year)
+                                    <option value="{{ $year }}" {{ old('gen_year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                                @endforeach
+                            </select>
+                        </div><br>
                         <div class="form-group">
                             <label for="exampleSelect"><b>Periodicidad de pago:</b></label>
                             <select class="form-control text-uppercase" name="payment_periodicity_id" id="payment_periodicity_id">
@@ -61,7 +85,6 @@
                                 @endforeach
                             </select>
                         </div><br>
-                        <b>Colegiatura: </b><input class="form-control text-uppercase"  type="text"/><br><!-- TODO: traer de BDD-->
                         <div class="form-group">
                             <label for="exampleSelect"><b>Horario:</b></label>
                             <select class="form-control text-uppercase" name="schedule_id" id="schedule_id">
@@ -72,10 +95,10 @@
                         </div><br>
                         <div>
                             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                <input type="radio" value="false" {{ old('sabbatine') == 'true' ? 'selected' : '' }} class="btn-check text-uppercase" name="sabbatine" id="sabf" autocomplete="off" checked>
+                                <input type="radio" value="false" class="btn-check text-uppercase" name="sabbatine" id="sabf" autocomplete="off" {{ old('sabbatine', 'false') == 'false' ? 'checked' : '' }}>
                                 <label class="btn btn-outline-orange text-uppercase" for="sabf">Intersemanal</label>
 
-                                <input type="radio" value="true" {{ old('sabbatine') == 'false' ? 'selected' : '' }} class="btn-check uppercase" name="sabbatine" id="sabt" autocomplete="off">
+                                <input type="radio" value="true" class="btn-check text-uppercase" name="sabbatine" id="sabt" autocomplete="off" {{ old('sabbatine') == 'true' ? 'checked' : '' }}>
                                 <label class="btn btn-outline-orange text-uppercase" for="sabt">Sabatino</label>
                             </div>
                         </div><br>
@@ -88,14 +111,14 @@
                             </select>
                         </div><br>
                         <b>Inicio: </b>
-                        <input placeholder="selecciona..." type="text" id="datePicker" name="start" style="height: 35px !important; width:120px;" class="form-control"><br><br>
+                        <input placeholder="selecciona..." type="text" id="datePicker" name="start" style="height: 35px !important; width:120px;" class="form-control" value="{{ old('start') }}"><br><br>
                         <h5 class="text-orange"><b>Información de tutor<hr></b></h5>
                         <b>Nombre: </b><input class="form-control text-uppercase"  type="text" name="tutor_name" value="{{ old('tutor_name') }}"/><br>
                         <b>Apellidos: </b><input class="form-control text-uppercase"  type="text" name="tutor_surnames" value="{{ old('tutor_surnames') }}"/><br>
                         <b>Teléfono: </b><input class="form-control text-uppercase"  type="text" name="tutor_phone" value="{{ old('tutor_phone') }}"/><br>
                         <b>Celular: </b><input class="form-control text-uppercase"  type="text" name="tutor_cel_phone" value="{{ old('tutor_cel_phone') }}"/><br>
-                        <b>Parentesco: </b><input class="form-control text-uppercase"  type="text" name="tutor_relationship" value="{{ old('tutor_relationship') }}"/><br>
-                        <button class="btn bg-orange text-white" type="submit">Guardar</button><br><br>
+                        <b>Parentesco: </b><input class="form-control text-uppercase"  type="text" name="relationship" value="{{ old('relationship') }}"/><br>
+                        <div class="d-flex justify-content-center"><button class="btn bg-orange text-white" type="submit">Guardar</button></div><br><br>
                     </form>
                 </div>
             </div>

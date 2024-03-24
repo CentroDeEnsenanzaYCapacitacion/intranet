@@ -17,8 +17,8 @@ class TutorRequest extends FormRequest
             'student_id'=> 'required|integer|min:0',
             'tutor_name' => 'required',
             'tutor_surnames' => 'required',
-            'tutor_phone' => 'nullable|required_without:cel_phone|numeric|digits:10',
-            'tutor_cel_phone' => 'nullable|required_without:phone|numeric|digits:10',
+            'tutor_phone' => 'nullable|required_without:tutor_cel_phone|numeric|digits:10',
+            'tutor_cel_phone' => 'nullable|required_without:tutor_phone|numeric|digits:10',
             'relationship' => 'required'
         ];
     }

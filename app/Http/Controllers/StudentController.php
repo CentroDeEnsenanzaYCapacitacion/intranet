@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StudentRequest;
+use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\TutorRequest;
 use App\Models\Modality;
 use App\Models\PaymentPeriodicity;
@@ -61,8 +62,12 @@ class StudentController extends Controller
 
     public function update(Request $request)
     {
+        if($request->operation == "new") {
+            $studentRules = (new StudentRequest())->rules();
+        }else{
+            $studentRules = (new StudentUpdateRequest())->rules();
+        }
         $tutorRules = (new TutorRequest)->rules();
-        $studentRules = (new StudentRequest())->rules();
 
         $allData = $request->all();
         $allRules = array_merge($studentRules, $tutorRules);
@@ -75,35 +80,46 @@ class StudentController extends Controller
         $student = Student::find($request->student_id);
         $student->pc = $request->pc;
         $student->colony = $request->colony;
-        $student->municipality = $request->minicipality;
+        $student->municipality = $request->municipality;
         $student->address = $request->address;
         $student->phone = $request->phone;
         $student->cel_phone = $request->cel_phone;
         $student->email = $request->email;
-        $student->schedule = $request->schedule;
-        $student->sabatine = $request->sabatine;
+        $student->schedule_id = $request->schedule_id;
+        $student->sabbatine = $request->sabbatine;
         $student->modality_id = $request->modality_id;
 
         if($request->operation == "new") {
-            Tutor::create([
-                'student_id'=>$student->id,
-                'name'=>$request->tutor_name,
-                'surnames'=>$request->tutor_surnames,
-                'phone'=>$request->tutor_cel_phone,
-                'relationship'=>$request->tutor_relationship
-            ]);
             $student->birthdate = $request->birthdate;
             $student->curp = $request->curp;
+            $student->payment_periodicity_id=$request->payment_periodicity_id;
+            $student->start = $request->start;
+            $student->generation = $request->gen_month.'-'.$request->gen_year;
             $student->first_time = false;
+
+            Tutor::create([
+                'student_id'=>$student->id,
+                'tutor_name'=>$request->tutor_name,
+                'tutor_surnames'=>$request->tutor_surnames,
+                'tutor_phone'=>$request->tutor_phone,
+                'tutor_cel_phone'=>$request->tutor_cel_phone,
+                'relationship'=>$request->relationship
+            ]);
+
         }else{
-            $student->tutor->name = $request->tutor_name;
-            $student->tutor->surnames = $request->tutor_surnames;
-            $student->tutor->phone = $request->tutor_phone;
-            $student->tutor->cel_phone = $request->tutor_cel_phone;
+            $student->tutor->tutor_name = $request->tutor_name;
+            $student->tutor->tutor_surnames = $request->tutor_surnames;
+            $student->tutor->tutor_phone = $request->tutor_phone;
+            $student->tutor->tutor_cel_phone = $request->tutor_cel_phone;
             $student->tutor->relationship = $request->relationship;
         }
 
         $student->save();
 
+        if($request->operation == "new") {
+            return redirect()->route('system.students.search')->with('success', 'Estudiante registrado correctamente');
+        }else{
+            return back()->with('success', 'Estudiante actualizado correctamente');
+        }
     }
 }

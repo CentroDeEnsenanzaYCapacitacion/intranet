@@ -11,9 +11,10 @@ class Student extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'sabbatine' => 'boolean'
-    ];
+    public function setSabbatineAttribute($value)
+    {
+        $this->attributes['sabbatine'] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
 
     public function crew()
     {
@@ -38,11 +39,6 @@ class Student extends Model
     public function schedule()
     {
         return $this->belongsTo(Schedule::class);
-    }
-
-    public function generation()
-    {
-        return $this->belongsTo(Generation::class);
     }
 
     public function modality()
