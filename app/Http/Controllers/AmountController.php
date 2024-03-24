@@ -42,6 +42,14 @@ class AmountController extends Controller
         });
     }
 
+    private function createAmount($crew,$course,$type){
+        $new_amount = new Amount();
+        $new_amount->crew_id = $crew;
+        $new_amount->course_id = $course;
+        $new_amount->receipt_type_id = $type;
+        $amounts_to_store[] = $new_amount;
+    }
+
 
     public function generateAmounts()
     {
@@ -59,11 +67,7 @@ class AmountController extends Controller
                         foreach($types as $type) {
                             $amount = $this->searchAmount($amounts, $crew->id, $course->id, $type->id);
                             if(!$amount) {
-                                $new_amount = new Amount();
-                                $new_amount->crew_id = $crew->id;
-                                $new_amount->course_id = $course->id;
-                                $new_amount->receipt_type_id = $type->id;
-                                $amounts_to_store[] = $new_amount;
+                                $this->createAmount($crew->id,$course->id,$type->id);
                             }
                         }
                     }
@@ -72,11 +76,7 @@ class AmountController extends Controller
                 foreach($types as $type) {
                     $amount = $this->searchAmount($amounts, $course->crew_id, $course->id, $type->id);
                     if(!$amount) {
-                        $new_amount = new Amount();
-                        $new_amount->crew_id = $course->crew_id;
-                        $new_amount->course_id = $course->id;
-                        $new_amount->receipt_type_id = $type->id;
-                        $amounts_to_store[] = $new_amount;
+                        $this->createAmount($course->crew_id,$course->id,$type->id);
                     }
                 }
             }

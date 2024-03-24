@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StudentRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\TutorRequest;
+use App\Models\Amount;
 use App\Models\Modality;
 use App\Models\PaymentPeriodicity;
 use App\Models\Report;
@@ -53,10 +54,11 @@ class StudentController extends Controller
         $schedules = Schedule::all();
         $payment_periodicities = PaymentPeriodicity::all();
         $modalities = Modality::all();
+        $amount = Amount::where('crew_id',$student->crew_id)->where('course_id',$student->course_id)->where('receipt_type_id',2)->first();
         if($student->first_time) {
             return view('system.students.new-profile', compact('student','schedules','payment_periodicities','modalities'));
         } else {
-            return view('system.students.profile', compact('student','schedules','payment_periodicities','modalities'));
+            return view('system.students.profile', compact('student','schedules','payment_periodicities','modalities','amount'));
         }
     }
 

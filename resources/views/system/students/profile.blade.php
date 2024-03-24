@@ -72,9 +72,10 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                         <b>Celular: </b><input class="form-control text-uppercase" name="cel_phone" type="text" value="{{ old('cel_phone', $student->cel_phone) }}"/><br>
                         <b>Correo electrónico: </b><input class="form-control text-uppercase" name="email"  type="text" value="{{ old('email', $student->email) }}"/><br><br>
                         <h5 class="text-orange"><b>Información académica<hr></b></h5>
+                        <b>Matrícula: </b>{{ $student->crew->name[0].'/'.$student->id }}<br>
                         <b>Curso: </b>{{ $student->course->name  }}<br>
                         <b>Tipo pago: </b>{{ $student->paymentPeriodicity->name  }}<br>
-                        <b>Colegiatura: </b>{{ $student->cel_phone }}<br>
+                        <b>Colegiatura: </b>${{ $amount->amount }}<br>
                         <div class="form-group">
                             <label for="exampleSelect"><b>Horario:</b></label>
                             <select class="form-control text-uppercase" name="schedule_id" id="schedule_id">
@@ -108,7 +109,7 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                         <b>Teléfono: </b><input class="form-control text-uppercase" name="tutor_phone"  type="text" value="{{ old('tutor_phone',$student->tutor->tutor_phone) }}"/><br>
                         <b>Celular: </b><input class="form-control text-uppercase" name="tutor_cel_phone"  type="text" value="{{ old('tutor_cel_phone',$student->tutor->tutor_cel_phone) }}"/><br>
                         <b>Parentesco: </b><input class="form-control text-uppercase" name="relationship"  type="text" value="{{ old('tutor_relationship',$student->tutor->relationship) }}"/><br><br>
-                        <div class="d-flex justify-content-center"><button class="btn bg-orange text-white" type="submit">Actualizar datos</button></div><br><br>
+                        <div class="d-flex justify-content-center"><button class="btn bg-orange text-white" type="submit" onclick="showLoader(true)">Actualizar datos</button></div><br><br>
                     </form>
                     <h5 class="text-orange"><b>Documentación<hr></b></h5>
                         <table class="table table-sm">

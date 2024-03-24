@@ -62,6 +62,7 @@
                         <b>Celular: </b><input class="form-control text-uppercase"  type="text" name="cel_phone" value="{{ old('cel_phone') }}"/><br>
                         <b>Correo electrónico: </b><input class="form-control text-uppercase"  type="text" name="email" value="{{ old('email', $student->email) }}"/><br><br>
                         <h5 class="text-orange"><b>Información académica<hr></b></h5>
+                        <b>Matrícula: </b>{{ $student->crew->name[0].'/'.$student->id }}<br>
                         <b>Curso: </b>{{ $student->course->name  }}<br>
                         <b>Generación: </b>
                         <div class="d-flex">
@@ -118,7 +119,7 @@
                         <b>Teléfono: </b><input class="form-control text-uppercase"  type="text" name="tutor_phone" value="{{ old('tutor_phone') }}"/><br>
                         <b>Celular: </b><input class="form-control text-uppercase"  type="text" name="tutor_cel_phone" value="{{ old('tutor_cel_phone') }}"/><br>
                         <b>Parentesco: </b><input class="form-control text-uppercase"  type="text" name="relationship" value="{{ old('relationship') }}"/><br>
-                        <div class="d-flex justify-content-center"><button class="btn bg-orange text-white" type="submit">Guardar</button></div><br><br>
+                        <div class="d-flex justify-content-center"><button class="btn bg-orange text-white" type="submit" onclick="showLoader(true)">Guardar</button></div><br><br>
                     </form>
                 </div>
             </div>

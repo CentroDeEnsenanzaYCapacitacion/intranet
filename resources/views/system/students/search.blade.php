@@ -20,7 +20,7 @@
                         @csrf
                         <div class="input-group">
                             <input name="data" type="text" class="form-control" placeholder="Buscar por nombre, apellidos y matrícula">
-                            <button class="btn btn-outline-secondary" type="submit">
+                            <button class="btn btn-outline-secondary" type="submit" onclick="showLoader(true)">
                                 <span class="material-symbols-outlined">search</span>
                             </button>
                         </div>
@@ -47,7 +47,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <span class="material-symbols-outlined" style="color:royalblue;">
-                                                <a href="{{ route('system.student.profile',['student_id'=>$student->id]) }}" style="text-decoration: none; @if($student->first_time) color: red; @else color: inherit; @endif">visibility</a>
+                                                <a href="{{ route('system.student.profile',['student_id'=>$student->id]) }}" onclick="showLoader(true)" style="text-decoration: none; @if($student->first_time) color: red; @else color: inherit; @endif">visibility</a>
                                             </span>
                                         </div>
                                     </td>
