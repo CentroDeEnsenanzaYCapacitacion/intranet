@@ -13,7 +13,7 @@
         </a>
     </div>
     <div class="col-md-4 d-flex justify-content-center">
-        <a id='adminAmounts' href="#">
+        <a id='adminAmounts' href="{{route('admin.catalogues.amounts.show')}}">
             <div class="card align-content-center cc">
                 <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/prices.png')}}">
                 <div class="card-body">
@@ -53,7 +53,7 @@
     document.getElementById('adminCourses').addEventListener('click', function() {
         showLoader(true);
     });
-    // document.getElementById('adminAmounts').addEventListener('click', function() {
-    //     showLoader(true);
-    // });
+    document.getElementById('adminAmounts').addEventListener('click', function() {
+        showLoader(true);
+    });
 </script>

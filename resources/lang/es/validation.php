@@ -156,6 +156,8 @@ return [
         'tutor_surnames'=>'apellidos de tutor',
         'tutor_phone'=>'teléfono de tutor',
         'tutor_cel_phone'=>'celular de tutor',
-        'start'=>'inicio'
+        'start'=>'inicio',
+        'amount'=>'costo'
+
     ],
 ];
