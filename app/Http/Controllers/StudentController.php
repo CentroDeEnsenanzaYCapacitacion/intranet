@@ -14,6 +14,8 @@ use App\Models\Student;
 use App\Models\Tutor;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
@@ -28,6 +30,73 @@ class StudentController extends Controller
             'email' => $report->email,
             'course_id' => $report->course_id
         ]);
+    }
+
+    public function profile_image($student_id)
+    {
+        return view('system.students.profile-image', compact('student_id'));
+    }
+
+    public function upload_profile_image($student_id, Request $request)
+    {
+        $messages = [
+            'image.required' => 'Es necesario que seleccione un archivo de imagen.',
+            'image.image' => 'El archivo debe ser una imagen.',
+            'image.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif, svg.',
+            'image.max' => 'El tamaño máximo permitido para la imagen es de 2MB.'
+        ];
+
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], $messages);
+
+        $directory = 'profiles/' . $student_id;
+
+        $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg'];
+
+        foreach ($extensions as $extension) {
+            $existingImage = $directory . '/photo.' . $extension;
+            if (Storage::disk('local')->exists($existingImage)) {
+                Storage::disk('local')->delete($existingImage);
+                break;
+            }
+        }
+
+        $imageName = 'photo.' . $request->image->extension();
+        $request->image->storeAs($directory, $imageName);
+
+        return redirect()->route('system.student.profile', ['student_id' => $student_id])
+            ->with('success', 'Imagen subida correctamente.');
+    }
+
+    public function get_image($student_id)
+    {
+        $path_png = 'profiles/' . $student_id . '/photo.png';
+        $path_jpg = 'profiles/' . $student_id . '/photo.jpg';
+
+        if (Storage::disk('local')->exists($path_png)) {
+            $path = $path_png;
+        } elseif (Storage::disk('local')->exists($path_jpg)) {
+            $path = $path_jpg;
+        } else {
+            $path = public_path('assets/img/nophoto.jpg');
+            $file = file_get_contents($path);
+
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $type = finfo_file($finfo, $path);
+            finfo_close($finfo);
+
+            return response($file, 200)->header('Content-Type', $type);
+        }
+
+        $fullPath = storage_path('app/' . $path);
+        $file = Storage::disk('local')->get($path);
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $type = finfo_file($finfo, $fullPath);
+        finfo_close($finfo);
+
+        return response($file, 200)->header('Content-Type', $type);
     }
 
     public function search()
@@ -54,11 +123,11 @@ class StudentController extends Controller
         $schedules = Schedule::all();
         $payment_periodicities = PaymentPeriodicity::all();
         $modalities = Modality::all();
-        $amount = Amount::where('crew_id',$student->crew_id)->where('course_id',$student->course_id)->where('receipt_type_id',2)->first();
+        $amount = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->where('receipt_type_id', 2)->first();
         if($student->first_time) {
-            return view('system.students.new-profile', compact('student','schedules','payment_periodicities','modalities'));
+            return view('system.students.new-profile', compact('student', 'schedules', 'payment_periodicities', 'modalities'));
         } else {
-            return view('system.students.profile', compact('student','schedules','payment_periodicities','modalities','amount'));
+            return view('system.students.profile', compact('student', 'schedules', 'payment_periodicities', 'modalities', 'amount'));
         }
     }
 
@@ -66,10 +135,10 @@ class StudentController extends Controller
     {
         if($request->operation == "new") {
             $studentRules = (new StudentRequest())->rules();
-        }else{
+        } else {
             $studentRules = (new StudentUpdateRequest())->rules();
         }
-        $tutorRules = (new TutorRequest)->rules();
+        $tutorRules = (new TutorRequest())->rules();
 
         $allData = $request->all();
         $allRules = array_merge($studentRules, $tutorRules);
@@ -94,21 +163,21 @@ class StudentController extends Controller
         if($request->operation == "new") {
             $student->birthdate = $request->birthdate;
             $student->curp = $request->curp;
-            $student->payment_periodicity_id=$request->payment_periodicity_id;
+            $student->payment_periodicity_id = $request->payment_periodicity_id;
             $student->start = $request->start;
             $student->generation = $request->gen_month.'-'.$request->gen_year;
             $student->first_time = false;
 
             Tutor::create([
-                'student_id'=>$student->id,
-                'tutor_name'=>$request->tutor_name,
-                'tutor_surnames'=>$request->tutor_surnames,
-                'tutor_phone'=>$request->tutor_phone,
-                'tutor_cel_phone'=>$request->tutor_cel_phone,
-                'relationship'=>$request->relationship
+                'student_id' => $student->id,
+                'tutor_name' => $request->tutor_name,
+                'tutor_surnames' => $request->tutor_surnames,
+                'tutor_phone' => $request->tutor_phone,
+                'tutor_cel_phone' => $request->tutor_cel_phone,
+                'relationship' => $request->relationship
             ]);
 
-        }else{
+        } else {
             $student->tutor->tutor_name = $request->tutor_name;
             $student->tutor->tutor_surnames = $request->tutor_surnames;
             $student->tutor->tutor_phone = $request->tutor_phone;
@@ -120,7 +189,7 @@ class StudentController extends Controller
 
         if($request->operation == "new") {
             return redirect()->route('system.students.search')->with('success', 'Estudiante registrado correctamente');
-        }else{
+        } else {
             return back()->with('success', 'Estudiante actualizado correctamente');
         }
     }
