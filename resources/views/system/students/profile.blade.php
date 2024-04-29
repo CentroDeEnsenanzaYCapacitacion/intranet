@@ -36,10 +36,11 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
             <div class="col-3">
                 <div class="d-flex justify-content-center mb-3">
                     <div class="card shadow custom-size">
-                        <img src="{{ asset('assets/img/nophoto.jpg') }}">
+                        <img src="{{ route('system.student.image', ['student_id' => $student->id]) }}" alt="Profile Image">
                     </div>
                 </div>
-                <button class="btn bg-orange text-white">Cambiar Fotografía</button>
+                <a href="{{ route('system.student.profile-image', ['student_id' => $student->id]) }}">
+                <button class="btn bg-orange text-white">Cambiar Fotografía</button></a>
             </div>
             <div class="col">
                 <div class="text-start text-uppercase">

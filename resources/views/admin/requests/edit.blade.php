@@ -3,7 +3,7 @@
 @section('content')
 <div class="row d-flex text-center mt-content">
     <div class="col">
-        <h1>Cambio de pordentaje de preinscripción</h1>
+        <h1>Cambio de pordentaje de inscripción</h1>
     </div>
 </div>
 <form id="myForm" action="{{ route('admin.requests.changePercentage',['request_id'=>$request->id]) }}" method="POST">

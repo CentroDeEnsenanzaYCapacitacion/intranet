@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             StudentDocumentSeeder::class,
             PaymentPeriodicitySeeder::class,
             ScheduleSeeder::class,
-            ModalitySeeder::class
+            ModalitySeeder::class,
+            ReceiptAttributeSeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();

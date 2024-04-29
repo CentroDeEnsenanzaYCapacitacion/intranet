@@ -5,9 +5,10 @@ namespace App\Providers;
 use App\Events\CreateReceiptEvent;
 use App\Listeners\GenerateReceiptListener;
 use App\Models\Receipt;
+use App\Models\Student;
 use App\Models\SysRequest;
 use App\Observers\ReceiptObserver;
-use App\Observers\SysRequestObserver;
+use App\Observers\StudentObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,7 +32,8 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-       Receipt::observe(ReceiptObserver::class);
+        Receipt::observe(ReceiptObserver::class);
+        Student::observe(StudentObserver::class);
     }
 
     /**

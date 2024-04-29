@@ -2,10 +2,15 @@
 
 namespace App\Helpers;
 
+use App\Models\Amount;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Writer\PngWriter;
+use App\Models\Receipt;
+use App\Models\Report;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Utils
 {
@@ -21,17 +26,50 @@ class Utils
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
 
-        switch (env('APP_ENV')){
+        switch (env('APP_ENV')) {
             case 'local':
                 $url = public_path().'/';
                 break;
             case 'development':
             case 'production':
-                $url = substr(public_path(),0,-19).env('PUBLIC_PATH');
+                $url = substr(public_path(), 0, -19).env('PUBLIC_PATH');
                 break;
         }
 
         $result->saveToFile($url.'assets/img/qr.png');
+    }
+
+    public static function generateReceipt($crew_id, $receipt_type_id, $report_id = null, $student_id = null, $card_payment, $concept, $amount)
+    {
+        Receipt::create([
+            'crew_id' => $crew_id,
+            'user_id' => Auth::user()->id,
+            'receipt_type_id' => $receipt_type_id,
+            'report_id' => $report_id,
+            'student_id' => $student_id,
+            'payment_type_id' => $card_payment,
+            'concept' => $concept,
+            'amount' => $amount,
+        ]);
+    }
+
+    public static function validateAmount($id, $type)
+    {
+        switch ($type) {
+            case 'report':
+                $report = Report::find($id);
+                $amount = Amount::where('crew_id', $report->crew_id)->where('course_id', $report->course_id)->where('receipt_type_id', 1)->first();
+                break;
+        }
+
+        if(!isset($amount)) {
+            return false;
+        } else {
+            if($amount->amount == '0.00') {
+                return false;
+            }
+            return true;
+        }
     }
 
     public static function numberToText($number)

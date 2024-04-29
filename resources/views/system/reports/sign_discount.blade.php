@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="row d-flex text-center mt-3">
             <div class="col">
-                <h1>Selecciona un descuento para esta preinscripción</h1>
+                <h1>Selecciona un descuento para esta inscripción</h1>
             </div>
         </div>
         <form id="noDiscountForm" action="{{ route('system.report.receiptorrequest') }}" method="POST">
@@ -66,7 +66,20 @@
         {{ session('error') }}
     </div>
 @endif
-@if ($errors->any())
+
+<div class="alert alert-danger" style="{{ $errors->any() ? '' : 'display: none;' }}" id="error-container">
+    <ul id="error-list">
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        @else
+           
+        @endif
+    </ul>
+</div>
+
+{{-- @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
@@ -74,7 +87,7 @@
             @endforeach
         </ul>
     </div>
-@endif
+@endif --}}
 <script src="{{ asset('assets/js/sign.js') }}"></script>
 <script src="{{ asset('assets/js/no_discount_redirection.js') }}"></script>
 @endsection

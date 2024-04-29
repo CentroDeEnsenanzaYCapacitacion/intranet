@@ -42,7 +42,7 @@ class AmountController extends Controller
         });
     }
 
-    private function createAmount($crew,$course,$type){
+    private function createAmount(&$amounts_to_store, $crew, $course, $type) {
         $new_amount = new Amount();
         $new_amount->crew_id = $crew;
         $new_amount->course_id = $course;
@@ -51,9 +51,10 @@ class AmountController extends Controller
     }
 
 
+
     public function generateAmounts()
     {
-        $types = ReceiptType::where('is_global', false)->get();
+        $types = ReceiptType::where('automatic_amount', true)->get();
         $courses = Course::all();
         $crews = Crew::all();
         $amounts = Amount::all();
@@ -67,7 +68,7 @@ class AmountController extends Controller
                         foreach($types as $type) {
                             $amount = $this->searchAmount($amounts, $crew->id, $course->id, $type->id);
                             if(!$amount) {
-                                $this->createAmount($crew->id,$course->id,$type->id);
+                                $this->createAmount($amounts_to_store,$crew->id,$course->id,$type->id);
                             }
                         }
                     }
@@ -76,7 +77,7 @@ class AmountController extends Controller
                 foreach($types as $type) {
                     $amount = $this->searchAmount($amounts, $course->crew_id, $course->id, $type->id);
                     if(!$amount) {
-                        $this->createAmount($course->crew_id,$course->id,$type->id);
+                        $this->createAmount($amounts_to_store,$course->crew_id,$course->id,$type->id);
                     }
                 }
             }

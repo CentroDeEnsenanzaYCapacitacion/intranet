@@ -34,7 +34,6 @@
                     <div class="d-flex justify-content-center mb-3">
                         <div class="card shadow custom-size">
                             <img src="{{ route('system.student.image', ['student_id' => $student->id]) }}" alt="Profile Image">
-                            {{-- <img src="{{ asset('assets/img/nophoto.jpg') }}"> --}}
                         </div>
                     </div>
                     <a href="{{ route('system.student.profile-image', ['student_id' => $student->id]) }}"><button

@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receipt;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
-use Codedge\Fpdf\Fpdf\Fpdf;
 use TCPDF;
 
 class PdfController extends Controller

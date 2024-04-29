@@ -61,7 +61,7 @@
         </div>
         <div class="row d-flex text-center mt-content">
             <div class="col">
-                <h1>Solicitudes de descuento de preinscripción</h1>
+                <h1>Solicitudes de descuento de inscripción</h1>
             </div>
         </div>
         <div class="row d-flex text-center mt-5">
@@ -101,19 +101,19 @@
                                         @case('Aprobado')
                                             <span class="text-success">{{ $request->status }}</span>
                                             @break
-                                
+
                                         @case('Pendiente')
                                             <span class="text-info">{{ $request->status }}</span>
                                             @break
-                                
+
                                         @case('Rechazado')
                                             <span class="text-danger">{{ $request->status }}</span>
                                             @break
-                                
+
                                         @default
                                             <span>{{ $request->status }}</span>
                                     @endswitch
-                                </td>                                                                    
+                                </td>
                                 <td class="text-center align-items-center">
                                     @if($request->status === "Aprobado" || $request->status === "Rechazado")
                                     <a href="{{ route('system.reports.receiptconfirmation', ['report_id'=> $request->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>

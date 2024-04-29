@@ -16,8 +16,12 @@ return new class () extends Migration {
             $table->unsignedBigInteger('user_id')->require;
             $table->unsignedBigInteger('receipt_type_id')->require;
             $table->unsignedBigInteger('payment_type_id')->require;
-            $table->unsignedBigInteger('student_id')->nullable();
+            $table->unsignedBigInteger('student_id')->require;
             $table->unsignedBigInteger('report_id')->nullable();
+            $table->unsignedBigInteger('receipt_attribute_id')->nullable();
+            $table->boolean('card_payment')->default(false);
+            $table->string('boucher')->nullable();
+            $table->boolean('bill')->default(false);
             $table->string('concept')->require;
             $table->string('amount')->require;
             $table->timestamps();
@@ -27,6 +31,7 @@ return new class () extends Migration {
             $table->foreign('receipt_type_id')->references('id')->on('receipt_types');
             $table->foreign('payment_type_id')->references('id')->on('payment_types');
             $table->foreign('student_id')->references('id')->on('students');
+            $table->foreign('receipt_attribute_id')->references('id')->on('receipt_attributes');
         });
     }
 

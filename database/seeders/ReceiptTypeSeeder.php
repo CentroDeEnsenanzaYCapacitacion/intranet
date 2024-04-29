@@ -14,14 +14,39 @@ class ReceiptTypeSeeder extends Seeder
     public function run(): void
     {
         ReceiptType::create([
-            'name'=>'Inscripción'
+            'name'=>'Inscripción',
+            'automatic_amount'=>true
         ]);
         ReceiptType::create([
-            'name'=>'Colegiatura'
+            'name'=>'Colegiatura',
+            'automatic_amount'=>true
         ]);
         ReceiptType::create([
-            'name'=>'Ingreso',
-            'is_global'=>true
+            'name'=>'Reinscripción'
+        ]);
+        ReceiptType::create([
+            'name'=>'Constancia'
+        ]);
+        ReceiptType::create([
+            'name'=>'Extraordinario primera vuelta'
+        ]);
+        ReceiptType::create([
+            'name'=>'Extraordinario segunda vuelta'
+        ]);
+        ReceiptType::create([
+            'name'=>'Credencial'
+        ]);
+        ReceiptType::create([
+            'name'=>'Legalización'
+        ]);
+        ReceiptType::create([
+            'name'=>'Renuncia'
+        ]);
+        ReceiptType::create([
+            'name'=>'Reiscripción Licenciatura'
+        ]);
+        ReceiptType::create([
+            'name'=>'Ingreso'
         ]);
     }
 }

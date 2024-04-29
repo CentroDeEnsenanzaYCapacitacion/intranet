@@ -11,3 +11,5 @@ Route::get('/system/report/receipt_confirmation/{report_id}', [ReportController:
 Route::post('/system/report/receipt', [ReportController::class,'generateReceipt'])->name('system.report.generatereceipt');
 Route::post('/system/report/receiptorrequest', [ReportController::class,'receiptOrRequest'])->name('system.report.receiptorrequest');
 Route::get('/system/report/update/{report_id}', [ReportController::class,'updateReport'])->name('system.reports.update');
+Route::post('/system/validate-amount', [ReportController::class,'validateAmount'])->name('system.report.validateAmount');
+

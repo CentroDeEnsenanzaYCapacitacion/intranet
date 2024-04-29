@@ -15,14 +15,18 @@ use App\Models\Tutor;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
-    public static function insertStudent($report_id)
+    public static function insertStudent($request)
     {
-        $report = Report::find($report_id);
-        return Student::create([
+        $report = Report::find($request->report_id);
+        session([
+            'report' => $report,
+            'card_payment' => $request->has('card_payment') ? 2 : 1
+        ]);
+
+        Student::create([
             'crew_id' => $report->crew_id,
             'name' => $report->name,
             'surnames' => $report->surnames,

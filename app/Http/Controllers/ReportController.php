@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Utils;
 use App\Http\Requests\ReportRequest;
 use App\Models\Course;
 use App\Models\Crew;
 use App\Models\Marketing;
-use App\Models\Receipt;
 use App\Models\Report;
+use App\Models\Amount;
 use App\Models\SysRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
@@ -62,24 +64,25 @@ class ReportController extends Controller
 
     }
 
+    public function validateAmount(Request $request)
+    {
+        $id = $request->input('report_id');
+        $type = 'report';
+
+        $isValid = Utils::validateAmount($id, $type);
+
+        return response()->json(['isValid' => $isValid]);
+    }
+
     public function receiptOrRequest(Request $request)
     {
         if($request->discount == 0) {
-            $report = Report::find($request->report_id);
-            $amount = 1000;// TODO: obtener monto de BDD
-            Receipt::create([
-                'crew_id' => $report->crew_id,
-                'user_id' => Auth::user()->id,
-                'receipt_type_id' => 1,
-                'report_id' => $report->id,
-                'payment_type_id' => $request->has('card_payment') ? 2 : 1,
-                'concept' => 'Inscripción '.$report->course->name,
-                'amount' => $amount,
-
-            ]);
-
-            return redirect()->route('system.reports.show');
-
+            $success = Utils::validateAmount($request->report_id, "report");
+            if(!$success) {
+                return back()->withErrors(['error' => 'No existe un costo resgistrado para el recibo que se intenta emitir, por favor registre un costo para continuar.']);
+            } else {
+                StudentController::insertStudent($request);
+            }
         } else {
             if(!$request->reason || $request->reason == '') {
                 return redirect()->route('system.reports.signdiscount', ['report_id' => $request->report_id])
@@ -106,19 +109,26 @@ class ReportController extends Controller
     public function generateReceipt(Request $request)
     {
         $report = Report::find($request->report_id);
-        $amount = 1000;// TODO: obtener monto de BDD
-        Receipt::create([
-            'crew_id' => $report->crew_id,
-            'user_id' => Auth::user()->id,
-            'receipt_type_id' => 1,
-            'report_id' => $report->id,
-            'payment_type_id' => $request->has('card_payment') ? 2 : 1,
-            'concept' => 'Inscripción '.$report->course->name,
-            'amount' => $amount,
+        $receipt_type_id = 1;
+        $amount = Amount::where('crew_id', $report->crew_id)
+                        ->where('course_id', $report->course_id)
+                        ->where('receipt_type_id', $receipt_type_id)
+                        ->first();
+        $success = Utils::generateReceipt(
+            $report->crew_id,
+            $receipt_type_id,
+            $report->id,
+            null,
+            $request->has('card_payment') ? 2 : 1,
+            'Inscripción '.$report->course->name,
+            $amount->amount
+        );
 
-        ]);
-
-        return redirect()->route('system.reports.show');
+        if ($success) {
+            return redirect()->route('system.reports.show');
+        } else {
+            return back()->withErrors(['error' => 'No se pudo crear el recibo.']);
+        }
     }
 
 

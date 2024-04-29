@@ -15,14 +15,11 @@ class ReceiptObserver
 {
     public function created(Receipt $receipt)
     {
-        ReportController::updateReport($receipt->report_id);
+        if($receipt->report_id != null) {
+            ReportController::updateReport($receipt->report_id);
+        }
         Utils::generateQR(Hash::make($receipt->id));
         PdfController::generateReceipt($receipt);
-        $student = StudentController::insertStudent($receipt->report_id);
-        $documents = StudentDocument::all();
-        foreach ($documents as $document) {
-            $student->documents()->attach($document->id);
-        }
     }
 
     public function updated(Receipt $receipt): void

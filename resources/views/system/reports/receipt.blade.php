@@ -1,9 +1,9 @@
 @extends('layout.mainLayout')
-@section('title','Confirmación de preinscripción')
+@section('title','Confirmación de inscripción')
 @section('content')
 <div class="row d-flex text-center mt-content">
     <div class="col">
-        <h1>Confirmación de preinscripción</h1>
+        <h1>Confirmación de inscripción</h1>
     </div>
 </div>
 <form id="validatedRequestForm" action="{{ route('system.report.generatereceipt') }}" method="POST">
@@ -17,7 +17,7 @@
         <div class="col">
             <div class="text-center" id="card">
                 @if($request->approved)
-                    <span class="h3">Se aplicará un descuento del <br><span style="color:#ff6900;font-size:50px;">{{ $discount }}</span></span><br><br>   
+                    <span class="h3">Se aplicará un descuento del <br><span style="color:#ff6900;font-size:50px;">{{ $discount }}</span></span><br><br>
                 @else
                     <span class="h3">No se aplicará descuento</span><br><br>
                 @endif
