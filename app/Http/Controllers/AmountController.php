@@ -17,14 +17,14 @@ class AmountController extends Controller
         return view('admin.catalogues.amounts.show', compact('amounts'));
     }
 
-    public function updateAmount(AmountRequest $request,$id)
+    public function updateAmount(AmountRequest $request, $id)
     {
         $amount = Amount::find($id);
         $amount->amount = $request->amount;
 
         $amount->save();
 
-        return redirect()->route('admin.catalogues.amounts.show')->with('success','Costo actualizado correctamente');
+        return redirect()->route('admin.catalogues.amounts.show')->with('success', 'Costo actualizado correctamente');
 
     }
 
@@ -42,7 +42,8 @@ class AmountController extends Controller
         });
     }
 
-    private function createAmount(&$amounts_to_store, $crew, $course, $type) {
+    private function createAmount(&$amounts_to_store, $crew, $course, $type)
+    {
         $new_amount = new Amount();
         $new_amount->crew_id = $crew;
         $new_amount->course_id = $course;
@@ -54,7 +55,8 @@ class AmountController extends Controller
 
     public function generateAmounts()
     {
-        $types = ReceiptType::where('automatic_amount', true)->get();
+        $automatic_types = ReceiptType::where('automatic_amount', true)->get();
+        $no_automatic_types = ReceiptType::where('automatic_amount', false)->get();
         $courses = Course::all();
         $crews = Crew::all();
         $amounts = Amount::all();
@@ -65,21 +67,28 @@ class AmountController extends Controller
             if($course->crew->name == "Todos") {
                 foreach($crews as $crew) {
                     if($crew->id > 1) {
-                        foreach($types as $type) {
+                        foreach($automatic_types as $type) {
                             $amount = $this->searchAmount($amounts, $crew->id, $course->id, $type->id);
                             if(!$amount) {
-                                $this->createAmount($amounts_to_store,$crew->id,$course->id,$type->id);
+                                $this->createAmount($amounts_to_store, $crew->id, $course->id, $type->id);
                             }
                         }
                     }
                 }
             } else {
-                foreach($types as $type) {
+                foreach($automatic_types as $type) {
                     $amount = $this->searchAmount($amounts, $course->crew_id, $course->id, $type->id);
                     if(!$amount) {
-                        $this->createAmount($amounts_to_store,$course->crew_id,$course->id,$type->id);
+                        $this->createAmount($amounts_to_store, $course->crew_id, $course->id, $type->id);
                     }
                 }
+            }
+        }
+
+        foreach($no_automatic_types as $type) {
+            $amount = $this->searchAmount($amounts, 1, null, $type->id);
+            if(!$amount) {
+                $this->createAmount($amounts_to_store, 1, null, $type->id);
             }
         }
 

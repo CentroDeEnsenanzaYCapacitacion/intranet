@@ -68,20 +68,17 @@ class CollectionController extends Controller
     public function newTuition($student_id)
     {
         $student = Student::find($student_id);
-        $amount = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->where('receipt_type_id', 2)->first();
         $receipt_types = ReceiptType::all();
-        $newReceiptType = new ReceiptType();
-        $newReceiptType->id = 0;
-        $newReceiptType->name = 'Seleccionar tipo de recibo';
-        $receipt_types->prepend($newReceiptType);
-
+        $course = $student->course->name;
+        $crew_course_amounts = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->get();
+        $general_amounts = Amount::where('crew_id', 1)->get();
         $receipt_attributes = ReceiptAttribute::all();
         $newReceiptAttribute = new ReceiptAttribute();
         $newReceiptAttribute->id = 0;
         $newReceiptAttribute->name = 'Seleccionar atributo de recibo';
         $receipt_attributes->prepend($newReceiptAttribute);
 
-        return view('system.collection.tuitions.new', compact('student', 'receipt_types', 'receipt_attributes'));
+        return view('system.collection.tuitions.new', compact('student', 'course', 'crew_course_amounts', 'general_amounts', 'receipt_types', 'receipt_attributes'));
     }
 
 

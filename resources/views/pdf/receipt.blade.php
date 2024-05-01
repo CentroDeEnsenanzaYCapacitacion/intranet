@@ -51,7 +51,7 @@
         @if($receipt->student_id) Matrícula:{{ $receipt->student_id }}<br>@endif
         {{ $receipt->student_id ? "Alumno:" : "Nombre:" }} {{ $receipt->student_id ? $receipt->student->name .' '. $receipt->student->surnames : $receipt->report->name.' '. $receipt->report->surnames }}<br>
         Concepto: {{ $receipt->concept }}<br>
-        Importe: ${{ number_format($receipt->amount, 2, ',', '.') }}<br>
+        Importe: ${{ number_format($receipt->amount, 2, '.', ',') }}<br>
         {{ strtoupper(\App\Helpers\Utils::numberToText($receipt->amount)) }} PESOS 00/100 MN<br>
         PAGO {{ $receipt->payment_type_id==1?"EN EFECTIVO":"CON TARJETA" }}<br>
         Le atendió: {{ $receipt->user->name.' '.$receipt->user->surnames }}<br>

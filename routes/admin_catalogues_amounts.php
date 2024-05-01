@@ -8,4 +8,4 @@ Route::get('/admin/catalogues/amounts/generate', [AmountController::class,'gener
 Route::get('/admin/catalogues/amount/edit/{id}', [AmountController::class,'editAmount'])->name('admin.catalogues.amount.edit');
 // Route::post('/admin/catalogues/course/insert', [CourseController::class,'insertCourse'])->name('admin.catalogues.courses.insert');
 Route::put('/admin/catalogues/amount/update/{id}', [AmountController::class,'updateAmount'])->name('admin.catalogues.amount.update');
-// Route::delete('/admin/catalogues/course/delete/{id}', [CourseController::class,'deleteCourse'])->name('admin.catalogues.courses.delete');
+//Route::delete('/admin/catalogues/course/delete/{id}', [CourseController::class,'deleteCourse'])->name('admin.catalogues.courses.delete');

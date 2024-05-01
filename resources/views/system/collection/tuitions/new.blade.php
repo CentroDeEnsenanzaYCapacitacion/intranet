@@ -19,10 +19,11 @@
                     <div class="col">
                         <input type="hidden" name="concept" id="conceptHidden">
                         <input type="hidden" name="amount" id="amountHidden">
+
                         <div class="form-group">
                             <label for="receipt_type_id"><b>Tipo de recibo</b></label>
                             <select class="form-control text-uppercase"
-                                style="margin: 0 auto; width: 25%; text-align: center;" name="receipt_type_id"
+                                style="margin: 0 auto; width: 40%; text-align: center;" name="receipt_type_id"
                                 id="receipt_type_id">
                                 <?php
                                 foreach ($receipt_types as $type) {
@@ -32,16 +33,10 @@
                             </select>
                         </div>
 
-                        <b>Concepto:</b><br>
-                        <div id="conceptDiv"></div><br>
-
-                        <b>Importe:</b><br>
-                        <div id="amountDiv"></div><br>
-
-                        <div class="form-group">
+                        <div id="attr_group" class="form-group">
                             <label for="attr_id"><b>Atributos</b></label>
                             <select class="form-control text-uppercase"
-                                style="margin: 0 auto; width: 25%; text-align: center;" name="attr_id" id="attr_id">
+                                style="margin: 0 auto; width: 40%; text-align: center;" name="attr_id" id="attr_id">
                                 <?php
                                 foreach ($receipt_attributes as $attribute) {
                                     echo '<option value="' . $attribute->id . '">' . $attribute->name . '</option>';
@@ -50,20 +45,34 @@
                             </select>
                         </div>
 
-                        <div class="text-center" id="card">
-                            <input class="form-check-input" name="card_payment" type="checkbox" value="card"
-                                id="cardCheck">
-                            <label class="form-check-label" for="cardCheck">
-                                Tarjeta/Depósito
-                            </label>
-                            Boucher
-                            <input type="text">
-                        </div>
+
+                        <b>Concepto:</b><br>
+                        <div id="conceptDiv"></div><br>
+
+                        <b>Importe:</b><br>
+                        <div id="amountDiv"></div>
+                        <div style="display: flex; justify-content: center;">
+                            <input type="text" name="receipt_amount" id="receipt_amount" placeholder="Ingrese el monto"
+                                style="display:none;">
+                        </div><br>
 
                         <div class="text-center" id="card">
+                            <input class="form-check-input" name="card_payment" type="checkbox" value="card"
+                            id="cardCheck">
+                            <label class="form-check-label" for="cardCheck">
+                                <b>Tarjeta/Depósito</b>
+                            </label>
+                            <div id="boucher" class="mt-3">
+                                <b>Boucher</b>
+                                <input name="boucher" type="text">
+                            </div>
+
+                        </div>
+
+                        <div class="text-center mt-3" id="card">
                             <input class="form-check-input" name="bill" type="checkbox" value="bill" id="billCheck">
                             <label class="form-check-label" for="billCheck">
-                                Factura
+                                <b>Factura</b>
                             </label>
                         </div>
                         <br>
@@ -76,35 +85,16 @@
         </div>
     </div>
     @if (session('error'))
-    <div id="error" class="alert alert-danger" style="margin-top: 20px;">
-        {{ session('error') }}
-    </div>
-@endif
+        <div id="error" class="alert alert-danger" style="margin-top: 20px;">
+            {{ session('error') }}
+        </div>
+    @endif
     <script>
-        document.getElementById('form').addEventListener('submit', function(event) {
-            var conceptDiv = document.getElementById('conceptDiv').textContent;
-            var amountDiv = document.getElementById('amountDiv').textContent;
-            document.getElementById('conceptHidden').value = conceptDiv;
-            document.getElementById('amountHidden').value = amountDiv;
-        });
-
-        document.getElementById('receipt_type_id').addEventListener('change', function() {
-            var selectedOption = this.options[this.selectedIndex];
-
-
-            var receiptType = selectedOption.textContent;
-            // var billChecked = document.getElementById('flexCheckDefault').checked;
-            // var billValue = billChecked ? 'Factura' : '';
-
-            // var cardChecked = document.getElementById('flexCheckDefault').checked;
-            // var cardValue = cardChecked ? 'Tarjeta/Depósito' : '';
-
-            var conceptText = receiptType;
-            //conceptText += 'Boucher: ' + (billValue !== '' ? billValue + '\n' : '') + (cardValue !== '' ? cardValue + '\n' : '');
-
-            document.getElementById('conceptDiv').textContent = conceptText;
-        });
+        var student = @json($student);
+        var course = @json($course);
+        var crew_course_amounts = @json($crew_course_amounts);
+        var general_amounts = @json($general_amounts);
+        var receipt_attributes = @json($receipt_attributes);
     </script>
-
-
+    <script src="{{ asset('assets/js/new_tuition.js') }}"></script>
 @endsection

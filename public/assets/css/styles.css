@@ -1,26 +1,26 @@
-body{
-    background-image: url('../img/fon.png');
+body {
+    background-image: url("../img/fon.png");
 }
-.bg-orange{
-    background-color: #ff6900 ;
+.bg-orange {
+    background-color: #ff6900;
 }
-.navbar{
+.navbar {
     height: 60px;
 }
-.text-white{
+.text-white {
     color: white;
 }
 
-.text-orange{
+.text-orange {
     color: #ff6900;
 }
 
-.btn-outline-orange{
+.btn-outline-orange {
     color: #ff6900 !important;
     border-color: #ff6900 !important;
 }
 
-.btn-outline-orange-selected{
+.btn-outline-orange-selected {
     color: #fff !important;
     background-color: #ff6900 !important;
     border-color: #ff6900 !important;
@@ -32,7 +32,8 @@ body{
     border-color: #ff6900 !important;
 }
 
-.btn-outline-orange:focus, .btn-outline-orange:active {
+.btn-outline-orange:focus,
+.btn-outline-orange:active {
     color: #fff !important;
     background-color: #ff6900 !important;
     border-color: #ff6900 !important;
@@ -44,7 +45,7 @@ input[type="radio"]:checked + .btn-outline-orange {
     border-color: #ff6900 !important;
 }
 
-.header-fixed{
+.header-fixed {
     position: fixed;
     top: 0;
     left: 0;
@@ -52,25 +53,25 @@ input[type="radio"]:checked + .btn-outline-orange {
     z-index: 1000;
 }
 
-.bg-edit{
+.bg-edit {
     color: darkblue !important;
 }
 
-.bg-done{
+.bg-done {
     color: green !important;
 }
 
-.bg-red{
+.bg-red {
     color: red;
 }
 
-a{
+a {
     text-decoration: none;
     color: inherit;
     cursor: pointer;
 }
 
-a:hover{
+a:hover {
     text-decoration: none;
     color: inherit;
 }
@@ -79,7 +80,7 @@ a:hover{
     position: fixed;
     top: 0;
     left: 0;
-    width:100%;
+    width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
 }
@@ -89,9 +90,9 @@ a:hover{
     background: white;
     width: 300px;
     height: 200px;
-    top:50%;
-    left:50%;
-    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .modal.fade .modal-dialog {
@@ -104,7 +105,10 @@ a:hover{
     position: fixed; /* Usar fixed para posicionar en relación a la ventana del navegador */
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Ajustar tanto horizontal como verticalmente */
+    transform: translate(
+        -50%,
+        -50%
+    ); /* Ajustar tanto horizontal como verticalmente */
 }
 
 .modal-footer {
@@ -113,7 +117,7 @@ a:hover{
     align-items: center; /* Alinea los elementos verticalmente */
 }
 
-.clean-button{
+.clean-button {
     border: none;
     background-color: white;
 }
@@ -136,7 +140,6 @@ a:hover{
     z-index: 1000;
 }
 
-
 #loading {
     border: 5px solid #f3f3f3;
     border-top: 5px solid #ff6900;
@@ -149,20 +152,22 @@ a:hover{
     top: 50%;
     margin-left: -25px;
     margin-top: -25px;
-
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-.menu_icon{
+.menu_icon {
     width: 100px;
-
 }
 
-.header_icon{
+.header_icon {
     width: 25px;
     height: 25px;
     margin-left: 25px;
@@ -180,15 +185,16 @@ a:hover{
     display: none;
 }
 
-.mt-content{
+.mt-content {
     margin-top: 5rem;
 }
 
 #success {
     transition: opacity 0.5s ease-out;
-  }
+}
 
-.table th, .table td {
+.table th,
+.table td {
     max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -205,18 +211,18 @@ a:hover{
     font-size: 24px;
 }
 
-.cc{
+.cc {
     width: 15rem;
     border-radius: 1.5rem;
     transition: all 300ms ease-in-out;
 }
 
-.cc:hover{
-    box-shadow: 0 18px 24px  rgba(0, 0, 0, 0.15);
+.cc:hover {
+    box-shadow: 0 18px 24px rgba(0, 0, 0, 0.15);
     transform: translateY(-0.5rem);
 }
 
-.ccont{
+.ccont {
     margin-top: 100px;
     border-radius: 1.5rem;
     margin-bottom: 25px;
@@ -250,3 +256,6 @@ a:hover{
     margin-right: 10px;
 }
 
+#receipt_amount {
+    width: 25%;
+}
