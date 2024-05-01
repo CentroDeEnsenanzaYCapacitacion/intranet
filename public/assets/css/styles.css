@@ -256,6 +256,7 @@ a:hover {
     margin-right: 10px;
 }
 
-#receipt_amount {
+#receipt_amount,
+#boucher_input {
     width: 25%;
 }

@@ -47,24 +47,28 @@
 
 
                         <b>Concepto:</b><br>
-                        <div id="conceptDiv"></div><br>
+                        <div id="conceptDiv" class="text-uppercase"></div><br>
 
                         <b>Importe:</b><br>
                         <div id="amountDiv"></div>
                         <div style="display: flex; justify-content: center;">
-                            <input type="text" name="receipt_amount" id="receipt_amount" placeholder="Ingrese el monto"
+                            <input class="form-control text-uppercase" style="text-align: center;" type="text"
+                                name="receipt_amount" id="receipt_amount" placeholder="Ingrese el monto"
                                 style="display:none;">
                         </div><br>
 
                         <div class="text-center" id="card">
                             <input class="form-check-input" name="card_payment" type="checkbox" value="card"
-                            id="cardCheck">
+                                id="cardCheck">
                             <label class="form-check-label" for="cardCheck">
                                 <b>Tarjeta/Depósito</b>
                             </label>
                             <div id="boucher" class="mt-3">
                                 <b>Boucher</b>
-                                <input name="boucher" type="text">
+                                <div style="display: flex; justify-content: center;">
+                                    <input id="boucher_input" class="form-control text-uppercase"
+                                        style="text-align: center;" name="boucher" type="text">
+                                </div>
                             </div>
 
                         </div>
