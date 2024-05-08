@@ -34,7 +34,7 @@ class CollectionController extends Controller
         })->get();
 
         if ($students->isEmpty()) {
-            return redirect()->route('system.collection.tuition')->withErrors(['error' => 'No se encontraron resultados para la búsqueda.']);
+            return redirect()->route('system.collection.tuition');
         }
 
         session(['searchResults' => $students]);
@@ -68,6 +68,7 @@ class CollectionController extends Controller
     public function newTuition($student_id)
     {
         $student = Student::find($student_id);
+        $student_tuition_receipts = Receipt::where('student_id', $student_id)->where('receipt_type_id', 2)->orderBy('id', 'desc')->get();
         $receipt_types = ReceiptType::all();
         $course = $student->course->name;
         $crew_course_amounts = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->get();
@@ -78,7 +79,9 @@ class CollectionController extends Controller
         $newReceiptAttribute->name = 'Seleccionar atributo de recibo';
         $receipt_attributes->prepend($newReceiptAttribute);
 
-        return view('system.collection.tuitions.new', compact('student', 'course', 'crew_course_amounts', 'general_amounts', 'receipt_types', 'receipt_attributes'));
+        //dd($student, $student_receipts, $receipt_types, $course, $crew_course_amounts, $general_amounts, $receipt_attributes);
+
+        return view('system.collection.tuitions.new', compact('student', 'course', 'crew_course_amounts', 'general_amounts', 'receipt_types', 'student_tuition_receipts', 'receipt_attributes'));
     }
 
 

@@ -24,6 +24,8 @@ return new class () extends Migration {
             $table->boolean('bill')->default(false);
             $table->string('concept')->require;
             $table->string('amount')->require;
+            $table->boolean('advance')->default(false);
+            $table->boolean('complement')->default(false);
             $table->timestamps();
             $table->foreign('crew_id')->references('id')->on('crews');
             $table->foreign('user_id')->references('id')->on('users');

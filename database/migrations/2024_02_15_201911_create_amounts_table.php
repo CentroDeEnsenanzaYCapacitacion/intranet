@@ -18,6 +18,9 @@ return new class () extends Migration {
             $table->unsignedBigInteger('course_id')->nullable();
             $table->unsignedBigInteger('receipt_type_id')->require;
             $table->timestamps();
+            $table->index('crew_id');
+            $table->index('course_id');
+            $table->index('receipt_type_id');
             $table->foreign('crew_id')->references('id')->on('crews');
             $table->foreign('course_id')->references('id')->on('courses');
             $table->foreign('receipt_type_id')->references('id')->on('receipt_types');

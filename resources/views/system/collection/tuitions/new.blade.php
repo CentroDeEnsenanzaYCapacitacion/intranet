@@ -98,7 +98,9 @@
         var course = @json($course);
         var crew_course_amounts = @json($crew_course_amounts);
         var general_amounts = @json($general_amounts);
+        var amounts = crew_course_amounts.concat(general_amounts);
         var receipt_attributes = @json($receipt_attributes);
+        var student_tuition_receipts = @json($student_tuition_receipts);
     </script>
     <script src="{{ asset('assets/js/new_tuition.js') }}"></script>
 @endsection

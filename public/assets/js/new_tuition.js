@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var typeSelectElement = document.getElementById("receipt_type_id");
     var typeEvent = new Event("change");
     typeSelectElement.dispatchEvent(typeEvent);
+    var attrSelectElement = document.getElementById("attr_id");
+    var attrEvent = new Event("change");
+    attrSelectElement.dispatchEvent(attrEvent);
 });
 
 document.getElementById("form").addEventListener("submit", function (event) {
@@ -38,8 +41,8 @@ function showBoucherInput() {
     }
 }
 
-function refresh_layout() {
-    var concept = setConcept();
+function refresh_layout(tuitionNumber, isAdvance) {
+    var concept = setConcept(tuitionNumber, isAdvance);
     var amount = setAmount();
     showBoucherInput();
     document.getElementById("conceptDiv").textContent = concept;
@@ -52,8 +55,17 @@ function establish_elements(element) {
     var attr = document.getElementById("attr_group");
     var amountText = document.getElementById("amountDiv");
     var amountInput = document.getElementById("receipt_amount");
+    var tuitionNumber = "";
 
     if (element == "type") {
+        tuition_results = calculateTuitionNumber();
+
+        if (selections[0].selectedIndex == 1) {
+            tuitionNumber = tuition_results.number;
+        } else {
+            tuition_results.isAdvance = false;
+        }
+
         const array = Object.values(receipt_attributes).map((item) => ({
             id: item.id,
             name: item.name,
@@ -70,18 +82,23 @@ function establish_elements(element) {
         var contenIndex = 0;
 
         switch (selections[0].selectedIndex) {
-            case 1:
-                attr.style.display = "block";
-                contenIndex = 2;
-                break;
+            case 3:
             case 6:
             case 7:
                 attr.style.display = "block";
                 contenIndex = 3;
                 break;
-            default:
+            case 10:
                 attr.style.display = "none";
                 break;
+            default:
+                attr.style.display = "block";
+                contenIndex = 2;
+                break;
+        }
+
+        if (tuition_results.isAdvance) {
+            attrArray[contenIndex].shift();
         }
 
         attrArray[contenIndex].forEach(function (option) {
@@ -91,41 +108,91 @@ function establish_elements(element) {
             attrSelect.appendChild(opt);
         });
 
-        amountText.style.display = "block";
-        amountInput.style.display = "none";
+        if (tuition_results.isAdvance) {
+            amountText.style.display = "none";
+            amountInput.style.display = "block";
+        } else {
+            amountText.style.display = "block";
+            amountInput.style.display = "none";
+        }
     } else {
-        switch (selections[1].selectedIndex) {
-            case 1:
-                amountText.style.display = "none";
-                amountInput.style.display = "block";
-                break;
-            default:
-                amountText.style.display = "block";
-                amountInput.style.display = "none";
-                break;
+        tuitionNumber = tuition_results.number;
+        if (tuition_results.isAdvance) {
+            switch (selections[1].selectedIndex) {
+                case 0:
+                    amountText.style.display = "none";
+                    amountInput.style.display = "block";
+                    break;
+                default:
+                    amountText.style.display = "block";
+                    amountInput.style.display = "none";
+                    break;
+            }
+        } else {
+            switch (selections[1].selectedIndex) {
+                case 1:
+                    amountText.style.display = "none";
+                    amountInput.style.display = "block";
+                    break;
+                default:
+                    amountText.style.display = "block";
+                    amountInput.style.display = "none";
+                    break;
+            }
         }
     }
-    refresh_layout();
+
+    refresh_layout(tuitionNumber, tuition_results.isAdvance);
 }
 
-function calculateTuitionNumber() {}
+function calculateTuitionNumber() {
+    if (student_tuition_receipts.length == 0) {
+        return 1;
+    }
 
-function retrieveSelectedItems() {
+    for (let i = 0; i < student_tuition_receipts.length; i++) {
+        const receipt = student_tuition_receipts[i];
+
+        if (receipt.advance) {
+            return {
+                number: Number(receipt.concept.split("#")[1].trim()),
+                isAdvance: true,
+            };
+        } else {
+            return {
+                number: Number(receipt.concept.split("#")[1].trim()) + 1,
+                isAdvance: false,
+            };
+        }
+    }
+}
+
+function retrieveSelectedItems(isAdvance = false) {
     var selects = document.querySelectorAll("select");
     var results = Array.from(selects).map((select, index) => {
         var selectedIndex = select.selectedIndex;
         var text = select.options[selectedIndex].text;
-        if (index === 1 && selectedIndex === 0) {
-            text = "";
+        if (!isAdvance) {
+            if (index === 1 && selectedIndex === 0) {
+                text = "";
+            }
         }
+
         return { selectedIndex, text };
     });
     return results;
 }
 
 function setAmount() {
-    var amountText = 0;
-    var formattedAmount = amountText.toLocaleString("es-MX", {
+    selections = retrieveSelectedItems();
+    var amount = 0;
+    amount = amounts.filter(function (item) {
+        return item.receipt_type_id == selections[0].selectedIndex + 1;
+    });
+
+    var amountValue = parseFloat(amount[0].amount);
+
+    var formattedAmount = amountValue.toLocaleString("es-MX", {
         style: "currency",
         currency: "MXN",
         minimumFractionDigits: 2,
@@ -135,13 +202,15 @@ function setAmount() {
     return formattedAmount;
 }
 
-function setConcept() {
-    selections = retrieveSelectedItems();
+function setConcept(tuitionNumber, isAdvance = false) {
+    selections = retrieveSelectedItems(isAdvance);
+    console.log(selections);
     return (
         selections[1].text.trim() +
         " " +
         selections[0].text.trim() +
         " " +
-        course.trim()
+        course.trim() +
+        (tuitionNumber !== "" ? " # " + tuitionNumber : "")
     );
 }

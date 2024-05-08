@@ -13,7 +13,7 @@ class AmountController extends Controller
 {
     public function getAmounts()
     {
-        $amounts = Amount::all();
+        $amounts = Amount::with(['crew', 'course', 'receiptType'])->get();
         return view('admin.catalogues.amounts.show', compact('amounts'));
     }
 
