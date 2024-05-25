@@ -6,7 +6,7 @@
         $yearNow = date('Y');
         $years = [];
         for ($i = $yearNow - 5; $i <= $yearNow + 2; $i++) {
-            $years[] = substr($i, -2); // Añadir las dos últimas cifras de cada año al array
+            $years[] = substr($i, -2);
         }
     @endphp
 

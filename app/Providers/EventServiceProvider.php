@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Events\CreateReceiptEvent;
 use App\Listeners\GenerateReceiptListener;
+use App\Models\Paybill;
 use App\Models\Receipt;
 use App\Models\Student;
 use App\Models\SysRequest;
+use App\Observers\PaybillObserver;
 use App\Observers\ReceiptObserver;
 use App\Observers\StudentObserver;
 use Illuminate\Auth\Events\Registered;
@@ -34,6 +36,7 @@ class EventServiceProvider extends ServiceProvider
     {
         Receipt::observe(ReceiptObserver::class);
         Student::observe(StudentObserver::class);
+        Paybill::observe(PaybillObserver::class);
     }
 
     /**

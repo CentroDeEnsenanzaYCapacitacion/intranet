@@ -147,7 +147,7 @@ function establish_elements(element) {
 
 function calculateTuitionNumber() {
     if (student_tuition_receipts.length == 0) {
-        return 1;
+        return { number: 1, isAdvance: false };
     }
 
     for (let i = 0; i < student_tuition_receipts.length; i++) {
@@ -203,14 +203,19 @@ function setAmount() {
 }
 
 function setConcept(tuitionNumber, isAdvance = false) {
+
     selections = retrieveSelectedItems(isAdvance);
-    console.log(selections);
+
     return (
         selections[1].text.trim() +
         " " +
         selections[0].text.trim() +
         " " +
         course.trim() +
-        (tuitionNumber !== "" ? " # " + tuitionNumber : "")
+        (tuitionNumber !== "" ||
+        tuitionNumber !== null ||
+        tuitionNumber !== undefined
+            ? " # " + tuitionNumber
+            : "")
     );
 }

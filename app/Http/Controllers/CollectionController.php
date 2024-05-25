@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Amount;
+use App\Models\Paybill;
 use App\Models\Receipt;
 use App\Models\ReceiptAttribute;
 use App\Models\ReceiptType;
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class CollectionController extends Controller
@@ -17,7 +19,7 @@ class CollectionController extends Controller
         return view('system.collection.menu');
     }
 
-    public function show()
+    public function showTuitions()
     {
         $students = session()->pull('searchResults', []);
 
@@ -43,9 +45,39 @@ class CollectionController extends Controller
 
     }
 
+    public function insertPaybill(Request $request)
+    {
+
+        $paybill = Paybill::create([
+            'user_id' => $request->user_id,
+            'receives' => $request->receives,
+            'concept' => $request->concept,
+            'crew_id' => $request->crew_id,
+            'amount' => $request->amount
+        ]);
+
+        // if($paybill) {
+        //     return redirect()->route('system.collection.paybills');
+        // } else {
+        //     return redirect()->route('system.collection.newpaybill')->with('error', 'error al guardar vale');
+        // }
+    }
+
+    public function newPaybill()
+    {
+        $users = User::whereIn('role_id', [1, 2])->get();
+        return view('system.collection.paybills.new',compact('users'));
+    }
+
     public function receiptPost(Request $request)
     {
         dd($request);
+    }
+
+    public function showPaybills()
+    {
+        $paybills = Paybill::all();
+        return view('system.collection.paybills.show',compact('paybills'));
     }
 
     public function getStudentTuitions($student_id)
@@ -78,8 +110,6 @@ class CollectionController extends Controller
         $newReceiptAttribute->id = 0;
         $newReceiptAttribute->name = 'Seleccionar atributo de recibo';
         $receipt_attributes->prepend($newReceiptAttribute);
-
-        //dd($student, $student_receipts, $receipt_types, $course, $crew_course_amounts, $general_amounts, $receipt_attributes);
 
         return view('system.collection.tuitions.new', compact('student', 'course', 'crew_course_amounts', 'general_amounts', 'receipt_types', 'student_tuition_receipts', 'receipt_attributes'));
     }

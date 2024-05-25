@@ -12,17 +12,17 @@
             </div>
         </a>
     </div>
-    {{-- <div class="col-md-4 d-flex justify-content-center">
-        <a id='profiles' href="{{route('system.students.search')}}">
+    <div class="col-md-4 d-flex justify-content-center">
+        <a id='profiles' href="{{route('system.collection.paybills')}}">
             <div class="card align-content-center cc">
-                <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/ins.png')}}">
+                <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/spent.png')}}">
                 <div class="card-body">
-                    <h6 class="card-title">Expedientes de estudiantes</h6>
+                    <h6 class="card-title">Pagos</h6>
                 </div>
             </div>
         </a>
     </div>
-    <div class="col-md-4 d-flex justify-content-center">
+    {{-- <div class="col-md-4 d-flex justify-content-center">
         <a id='profiles' href="{{route('system.collection.menu')}}">
             <div class="card align-content-center cc">
                 <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/pay.webp')}}">

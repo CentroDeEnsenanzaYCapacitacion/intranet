@@ -28,8 +28,8 @@ class CrewSeeder extends Seeder
         Crew::create([
             'name' => 'Ixtapaluca',
             'adress'=>'AV CUAUHTEMOC #28 IXTAPALUCA',
-            'mail'=>'59723763',
-            'phone'=>'ixtapaluca@bachilleratocec.com'
+            'mail'=>'ixtapaluca@bachilleratocec.com',
+            'phone'=>'59723763'
         ]);
         Crew::create([
             'name' => 'Texcoco',

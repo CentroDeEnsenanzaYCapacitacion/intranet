@@ -61,7 +61,7 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                         <b>Nombre: </b>{{ $student->surnames.', '.$student->name }}<br>
                         <div class="d-flex">
                             <div><b>Fecha de nacimiento: </b>{{ $student->birthdate }}</div>
-                            <div class="ms-4"><b>Edad: </b>{{ $edad }}</div>
+                            <div class="ms-4"><b>Edad: </b>{{ $age }}</div>
                         </div>
                         <b>CURP: </b>{{ $student->curp }}<br>
                         <b>Dirección: </b><input class="form-control text-uppercase" name="address" type="text" value="{{ old('address',$student->address) }}"/> <br>

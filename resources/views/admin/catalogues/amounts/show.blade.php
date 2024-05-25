@@ -1,5 +1,5 @@
 @extends('layout.mainLayout')
-@section('title', 'usuarios registrados')
+@section('title', 'costos registrados')
 @section('content')
     @if (session('success'))
         <div id="success" class="alert alert-success mt-content">
@@ -13,7 +13,7 @@
                     <h1>Costos registrados</h1>
                 </div>
                 <div>
-                    <a href="{{ route('admin.catalogues.amounts.generate') }}"
+                    <a href="{{ route('admin.catalogues.amounts.generate') }}" onclick="showLoader(true)"
                         class="btn bg-orange text-white mt-2 mb-2">Generar inscripciones y colegiaturas de cursos</a></h5>
                 </div>
                 {{-- <div>

@@ -7,6 +7,7 @@ use App\Models\Amount;
 use App\Models\Receipt;
 use App\Models\Student;
 use App\Models\StudentDocument;
+use App\Models\SysRequest;
 
 class StudentObserver
 {
@@ -21,23 +22,45 @@ class StudentObserver
         }
 
         $report = session('report', null);
-        $receipt_type_id = 2;
-        $concept = 'Colegiatura '.$report->course->name;
-        $report_id = null;
-        if($report != null) {
-            $report_id = $report->id;
-            $receipt_type_id = 1;
-            $concept = 'Inscripción '.$report->course->name;
-        }
         $card_payment = session('card_payment', null);
-        $amount = Amount::where('crew_id', $report->crew_id)
-                        ->where('course_id', $report->course_id)
-                        ->where('receipt_type_id', $receipt_type_id)
-                        ->first();
-
 
         session()->forget('report');
         session()->forget('card_payment');
+
+        $receipt_type_id = 2;
+        $concept = 'Colegiatura '.$student->course->name;
+        $report_id = null;
+        $final_amount = Amount::where('crew_id', $student->crew_id)
+                        ->where('course_id', $student->course_id)
+                        ->where('receipt_type_id', $receipt_type_id)
+                        ->first()->amount;
+        $discount = null;
+
+        if($report != null) {
+            $receipt_type_id = 1;
+
+            $amount = Amount::where('crew_id', $report->crew_id)
+                    ->where('course_id', $report->course_id)
+                    ->where('receipt_type_id', $receipt_type_id)
+                    ->first()->amount;
+
+            $sys_request = SysRequest::where('report_id', $report->id)->first();
+
+            if(isset($sys_request)) {
+                if($sys_request->approved) {
+                    $discount = strstr($sys_request->description, "%", true);
+                    $final_amount = $amount - (($discount * $amount) / 100);
+                } else {
+                    $final_amount = $amount;
+                }
+            } else {
+                $final_amount = $amount;
+            }
+
+            $report_id = $report->id;
+
+            $concept = 'Inscripción '.$report->course->name.' con descuento del '.$discount.'%';
+        }
 
         Utils::generateReceipt(
             $student->crew_id,
@@ -46,7 +69,7 @@ class StudentObserver
             $student->id,
             $card_payment,
             $concept,
-            $amount->amount
+            $final_amount
         );
     }
 

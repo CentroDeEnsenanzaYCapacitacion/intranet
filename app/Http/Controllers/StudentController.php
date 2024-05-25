@@ -13,6 +13,7 @@ use App\Models\Report;
 use App\Models\Student;
 use App\Models\Tutor;
 use App\Models\Schedule;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,17 +47,17 @@ class StudentController extends Controller
         $messages = [
             'image.required' => 'Es necesario que seleccione un archivo de imagen.',
             'image.image' => 'El archivo debe ser una imagen.',
-            'image.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif, svg.',
+            'image.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif, svg, webp.',
             'image.max' => 'El tamaño máximo permitido para la imagen es de 2MB.'
         ];
 
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ], $messages);
 
         $directory = 'profiles/' . $student_id;
 
-        $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg'];
+        $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg','webp'];
 
         foreach ($extensions as $extension) {
             $existingImage = $directory . '/photo.' . $extension;
@@ -77,20 +78,24 @@ class StudentController extends Controller
     {
         $path_png = 'profiles/' . $student_id . '/photo.png';
         $path_jpg = 'profiles/' . $student_id . '/photo.jpg';
+        $path_webp = 'profiles/' . $student_id . '/photo.webp';
 
         if (Storage::disk('local')->exists($path_png)) {
             $path = $path_png;
         } elseif (Storage::disk('local')->exists($path_jpg)) {
             $path = $path_jpg;
+        } elseif (Storage::disk('local')->exists($path_webp)) {
+            $path = $path_webp;
         } else {
-            $path = public_path('assets/img/nophoto.jpg');
-            $file = file_get_contents($path);
+            return response()->file(public_path('assets/img/nophoto.jpg'));
+            // $path = public_path('assets/img/nophoto.jpg');
+            // $file = file_get_contents($path);
 
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $type = finfo_file($finfo, $path);
-            finfo_close($finfo);
+            // $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            // $type = finfo_file($finfo, $path);
+            // finfo_close($finfo);
 
-            return response($file, 200)->header('Content-Type', $type);
+            // return response($file, 200)->header('Content-Type', $type);
         }
 
         $fullPath = storage_path('app/' . $path);
@@ -128,10 +133,14 @@ class StudentController extends Controller
         $payment_periodicities = PaymentPeriodicity::all();
         $modalities = Modality::all();
         $amount = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->where('receipt_type_id', 2)->first();
+
         if($student->first_time) {
             return view('system.students.new-profile', compact('student', 'schedules', 'payment_periodicities', 'modalities'));
         } else {
-            return view('system.students.profile', compact('student', 'schedules', 'payment_periodicities', 'modalities', 'amount'));
+            $birthdate = DateTime::createFromFormat('d/m/Y', $student->birthdate);
+            $nowdate = new DateTime();
+            $age = $birthdate->diff($nowdate)->y;
+            return view('system.students.profile', compact('student', 'schedules', 'payment_periodicities', 'modalities', 'amount', 'age'));
         }
     }
 

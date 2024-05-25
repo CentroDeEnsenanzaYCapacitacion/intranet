@@ -1,5 +1,5 @@
 @extends('layout.mainLayout')
-@section('title', 'usuarios registrados')
+@section('title', 'Modificar costo')
 @section('content')
     @if ($errors->any())
         <div class="alert alert-danger mt-content">
@@ -18,7 +18,7 @@
     <div class="card shadow ccont">
         <div class="card-body">
             <div class="row d-flex text-center mt-3">
-                <div class="col mb-5">
+                <div class="col mb-3">
                     <h1>Modificar costo</h1>
                 </div>
                 <div>
@@ -32,7 +32,7 @@
                         @endif
                     </h3>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center mt-3">
                     <form action="{{ route('admin.catalogues.amount.update', ['id' => $amount->id]) }}" method="POST">
                         @csrf
                         @method('PUT')

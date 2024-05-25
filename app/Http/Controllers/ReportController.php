@@ -9,6 +9,7 @@ use App\Models\Crew;
 use App\Models\Marketing;
 use App\Models\Report;
 use App\Models\Amount;
+use App\Models\Student;
 use App\Models\SysRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -109,26 +110,20 @@ class ReportController extends Controller
     public function generateReceipt(Request $request)
     {
         $report = Report::find($request->report_id);
-        $receipt_type_id = 1;
-        $amount = Amount::where('crew_id', $report->crew_id)
-                        ->where('course_id', $report->course_id)
-                        ->where('receipt_type_id', $receipt_type_id)
-                        ->first();
-        $success = Utils::generateReceipt(
-            $report->crew_id,
-            $receipt_type_id,
-            $report->id,
-            null,
-            $request->has('card_payment') ? 2 : 1,
-            'Inscripción '.$report->course->name,
-            $amount->amount
-        );
 
-        if ($success) {
-            return redirect()->route('system.reports.show');
-        } else {
-            return back()->withErrors(['error' => 'No se pudo crear el recibo.']);
-        }
+        session([
+            'report' => $report,
+            'card_payment' => $request->has('card_payment') ? 2 : 1
+        ]);
+
+        Student::create([
+            'crew_id' => $report->crew_id,
+            'name' => $report->name,
+            'surnames' => $report->surnames,
+            'genre' => $report->genre,
+            'email' => $report->email,
+            'course_id' => $report->course_id
+        ]);
     }
 
 
