@@ -29,13 +29,13 @@
 
                         <b>Recibe:</b><br>
                         <div style="display: flex; justify-content: center;">
-                            <input id="boucher_input" class="form-control text-uppercase"
+                            <input id="voucher_input" class="form-control text-uppercase"
                                 style="text-align: center;" name="receives" type="text">
                         </div><br>
 
                         <b>Concepto:</b><br>
                         <div style="display: flex; justify-content: center;">
-                            <input id="boucher_input" class="form-control text-uppercase"
+                            <input id="voucher_input" class="form-control text-uppercase"
                                 style="text-align: center;" name="concept" type="text">
                         </div><br>
 

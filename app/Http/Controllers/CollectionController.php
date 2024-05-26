@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Utils;
 use App\Models\Amount;
 use App\Models\Paybill;
 use App\Models\Receipt;
@@ -48,36 +49,43 @@ class CollectionController extends Controller
     public function insertPaybill(Request $request)
     {
 
-        $paybill = Paybill::create([
+        Paybill::create([
             'user_id' => $request->user_id,
             'receives' => $request->receives,
             'concept' => $request->concept,
             'crew_id' => $request->crew_id,
             'amount' => $request->amount
         ]);
-
-        // if($paybill) {
-        //     return redirect()->route('system.collection.paybills');
-        // } else {
-        //     return redirect()->route('system.collection.newpaybill')->with('error', 'error al guardar vale');
-        // }
     }
 
     public function newPaybill()
     {
         $users = User::whereIn('role_id', [1, 2])->get();
-        return view('system.collection.paybills.new',compact('users'));
+        return view('system.collection.paybills.new', compact('users'));
     }
 
-    public function receiptPost(Request $request)
+    public function insertReceipt(Request $request)
     {
-        dd($request);
+        //dd($request);
+
+        Utils::generateReceipt(
+            $request->crew_id,
+            $request->receipt_type_id,
+            $request->has('card_payment') ? 2 : 1,
+            $request->student_id,
+            null,
+            $request->attr_id == 0 ? null : $request->attr_id,
+            $request->voucher,
+            $request->has('bill') ? true : false,
+            $request->concept,
+            $request->amount
+        );
     }
 
     public function showPaybills()
     {
         $paybills = Paybill::all();
-        return view('system.collection.paybills.show',compact('paybills'));
+        return view('system.collection.paybills.show', compact('paybills'));
     }
 
     public function getStudentTuitions($student_id)

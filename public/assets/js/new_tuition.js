@@ -2,17 +2,16 @@ document.addEventListener("DOMContentLoaded", function () {
     var typeSelectElement = document.getElementById("receipt_type_id");
     var typeEvent = new Event("change");
     typeSelectElement.dispatchEvent(typeEvent);
-    var attrSelectElement = document.getElementById("attr_id");
-    var attrEvent = new Event("change");
-    attrSelectElement.dispatchEvent(attrEvent);
 });
 
-document.getElementById("form").addEventListener("submit", function (event) {
-    var conceptDiv = document.getElementById("conceptDiv").textContent;
-    var amountDiv = document.getElementById("amountDiv").textContent;
-    document.getElementById("conceptHidden").value = conceptDiv;
-    document.getElementById("amountHidden").value = amountDiv;
-});
+document
+    .getElementById("newTuitionForm")
+    .addEventListener("submit", function (event) {
+        var conceptDiv = document.getElementById("conceptDiv").textContent;
+        var amountDiv = document.getElementById("amountDiv").textContent;
+        document.getElementById("conceptHidden").value = conceptDiv;
+        document.getElementById("amountHidden").value = amountDiv;
+    });
 
 document
     .getElementById("receipt_type_id")
@@ -25,26 +24,26 @@ document.getElementById("attr_id").addEventListener("change", function () {
 });
 
 document.getElementById("cardCheck").addEventListener("change", function () {
-    showBoucherInput();
+    showVoucherInput();
 });
 
 var selections = [];
 
-function showBoucherInput() {
-    var boucher = document.getElementById("boucher");
+function showVoucherInput() {
+    var voucher = document.getElementById("voucher");
     var checkbox = document.getElementById("cardCheck");
 
     if (checkbox.checked) {
-        boucher.style.display = "block";
+        voucher.style.display = "block";
     } else {
-        boucher.style.display = "none";
+        voucher.style.display = "none";
     }
 }
 
 function refresh_layout(tuitionNumber, isAdvance) {
     var concept = setConcept(tuitionNumber, isAdvance);
     var amount = setAmount();
-    showBoucherInput();
+    showVoucherInput();
     document.getElementById("conceptDiv").textContent = concept;
     document.getElementById("amountDiv").textContent = amount;
 }
@@ -116,7 +115,10 @@ function establish_elements(element) {
             amountInput.style.display = "none";
         }
     } else {
-        tuitionNumber = tuition_results.number;
+        if (selections[0].selectedIndex == 1) {
+            tuitionNumber = tuition_results.number;
+        }
+
         if (tuition_results.isAdvance) {
             switch (selections[1].selectedIndex) {
                 case 0:
@@ -153,7 +155,9 @@ function calculateTuitionNumber() {
     for (let i = 0; i < student_tuition_receipts.length; i++) {
         const receipt = student_tuition_receipts[i];
 
-        if (receipt.advance) {
+        if (
+            receipt.receipt_attribute_id == 1
+        ) {
             return {
                 number: Number(receipt.concept.split("#")[1].trim()),
                 isAdvance: true,
@@ -203,7 +207,6 @@ function setAmount() {
 }
 
 function setConcept(tuitionNumber, isAdvance = false) {
-
     selections = retrieveSelectedItems(isAdvance);
 
     return (
@@ -212,8 +215,8 @@ function setConcept(tuitionNumber, isAdvance = false) {
         selections[0].text.trim() +
         " " +
         course.trim() +
-        (tuitionNumber !== "" ||
-        tuitionNumber !== null ||
+        (tuitionNumber !== "" &&
+        tuitionNumber !== null &&
         tuitionNumber !== undefined
             ? " # " + tuitionNumber
             : "")

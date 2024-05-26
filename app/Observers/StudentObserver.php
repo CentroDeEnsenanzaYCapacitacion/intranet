@@ -27,6 +27,8 @@ class StudentObserver
         session()->forget('report');
         session()->forget('card_payment');
 
+        $payment_type_id = isset($card_payment)?2:1;
+
         $receipt_type_id = 2;
         $concept = 'Colegiatura '.$student->course->name;
         $report_id = null;
@@ -65,9 +67,12 @@ class StudentObserver
         Utils::generateReceipt(
             $student->crew_id,
             $receipt_type_id,
-            $report_id,
-            $student->id,
             $card_payment,
+            $student->id,
+            $report_id,
+            null,
+            null,
+            null,
             $concept,
             $final_amount
         );

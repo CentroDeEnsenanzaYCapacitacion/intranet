@@ -39,17 +39,25 @@ class Utils
         $result->saveToFile($url.'assets/img/qr.png');
     }
 
-    public static function generateReceipt($crew_id, $receipt_type_id, $report_id = null, $student_id = null, $card_payment, $concept, $amount)
+    public static function generateReceipt($crew_id, $receipt_type_id, $card_payment, $student_id, $report_id = null, $receipt_attribute_id = null, $voucher = null, $bill =null, $concept, $amount)
     {
+        if(!isset($report_id)){
+            $numericString = str_replace(['$', ','], '', $amount);
+            $formattedNumber = (float)$numericString;
+            $finalAmount = number_format($formattedNumber, 2, '.', '');
+        }
         Receipt::create([
             'crew_id' => $crew_id,
             'user_id' => Auth::user()->id,
             'receipt_type_id' => $receipt_type_id,
-            'report_id' => $report_id,
-            'student_id' => $student_id,
             'payment_type_id' => $card_payment,
+            'student_id' => $student_id,
+            'report_id' => $report_id,
+            'receipt_attribute_id' => $receipt_attribute_id,
+            'voucher' => $voucher,
+            'bill' => $bill,
             'concept' => $concept,
-            'amount' => $amount,
+            'amount' => $finalAmount
         ]);
     }
 

@@ -13,8 +13,10 @@
                     <h1>Emisión de recibo</h1>
                 </div>
             </div>
-            <form id="form" action="{{ route('system.collection.tuitions.receipt-post') }}" method="POST">
+            <form id="newTuitionForm" action="{{ route('system.collection.tuitions.receipt-post') }}" method="POST">
                 @csrf
+                <input type="hidden" value="{{ Auth::user()->crew_id }}" name="crew_id">
+                <input type="hidden" value="{{ $student->id }}" name="student_id">
                 <div class="row d-flex text-center mt-3">
                     <div class="col">
                         <input type="hidden" name="concept" id="conceptHidden">
@@ -45,7 +47,6 @@
                             </select>
                         </div>
 
-
                         <b>Concepto:</b><br>
                         <div id="conceptDiv" class="text-uppercase"></div><br>
 
@@ -63,11 +64,11 @@
                             <label class="form-check-label" for="cardCheck">
                                 <b>Tarjeta/Depósito</b>
                             </label>
-                            <div id="boucher" class="mt-3">
-                                <b>Boucher</b>
+                            <div id="voucher" class="mt-3">
+                                <b>Voucher</b>
                                 <div style="display: flex; justify-content: center;">
-                                    <input id="boucher_input" class="form-control text-uppercase"
-                                        style="text-align: center;" name="boucher" type="text">
+                                    <input id="voucher_input" class="form-control text-uppercase"
+                                        style="text-align: center;" name="voucher" type="text">
                                 </div>
                             </div>
 
@@ -103,4 +104,5 @@
         var student_tuition_receipts = @json($student_tuition_receipts);
     </script>
     <script src="{{ asset('assets/js/new_tuition.js') }}"></script>
+    <script src="{{ asset('assets/js/new_tuition_redirection.js') }}"></script>
 @endsection
