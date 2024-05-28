@@ -1,13 +1,13 @@
 @extends('layout.mainLayout')
 @section('title','Informes')
 @section('content')
+@if(session('success'))
+<div id="success" class="alert alert-success"  style="margin-top: 100px;">
+    {{ session('success') }}
+</div>
+@endif
 <div class="card shadow ccont">
     <div class="card-body">
-        @if(session('success'))
-            <div id="success" class="alert alert-success" style="margin-top: 100px;">
-                {{ session('success') }}
-            </div>
-        @endif
         <div class="row d-flex text-center mt-3">
             <div class="col">
                 <h1>Informes registrados</h1>
