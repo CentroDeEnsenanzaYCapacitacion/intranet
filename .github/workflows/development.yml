@@ -23,6 +23,15 @@ jobs:
     - name: 📂 List bootstrap cache directory
       run: ls -la bootstrap/cache
 
+    - name: 🔍 Debug secrets
+      run: |
+        echo "FTP URL: ${{ secrets.ftp_url }}"
+        echo "FTP Username: ${{ secrets.ftp_username }}"
+        echo "FTP Password: ${{ secrets.ftp_password }}"
+        echo "FTP Dev Path: ${{ secrets.intra_ftp_dev_path }}"
+        echo "FTP Dev Assets Path: ${{ secrets.intra_ftp_dev_assets_path }}"
+        echo "Local Dir: ${{ secrets.local_dir }}"
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
