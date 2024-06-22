@@ -11,6 +11,15 @@ jobs:
     - name: 🚚 Get latest code
       uses: actions/checkout@v3
 
+    - name: 📂 List root directory
+      run: ls -la
+
+    - name: 📂 List public directory
+      run: ls -la public
+
+    - name: 📂 List assets directory
+      run: ls -la public/assets
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
