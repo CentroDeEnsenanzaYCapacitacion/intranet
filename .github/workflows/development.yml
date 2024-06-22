@@ -20,7 +20,7 @@ jobs:
     - name: 📂 List assets directory
       run: ls -la public/assets
 
-     - name: 📂 List bootstrap cache directory
+    - name: 📂 List bootstrap cache directory
       run: ls -la bootstrap/cache
 
     - name: 📂 Sync files
