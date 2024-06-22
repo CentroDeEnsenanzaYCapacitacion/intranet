@@ -28,6 +28,7 @@ jobs:
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.intra_ftp_dev_path }}
         exclude: |
+          **/.git/**
           **/public/**
 
     - name: 📁 Update assets
