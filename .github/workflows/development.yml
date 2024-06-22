@@ -31,7 +31,7 @@ jobs:
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.intra_ftp_dev_path }}
         exclude: |
-          **/bootstrap/cache/**
+          **/.gitignore**
           **/public/**
 
     - name: 📁 Update assets
@@ -42,4 +42,6 @@ jobs:
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.intra_ftp_dev_assets_path }}
         local-dir: ${{ secrets.local_dir }}
+        exclude: |
+          **/.gitignore**
 
