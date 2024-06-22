@@ -23,22 +23,6 @@ jobs:
     - name: 📂 List bootstrap cache directory
       run: ls -la bootstrap/cache
 
-    - name: 🔍 Debug secrets
-      run: |
-        echo "FTP URL: ${FTP_URL}" | cut -c1-10
-        echo "FTP Username: ${FTP_USERNAME}" | cut -c1-10
-        echo "FTP Password: ${FTP_PASSWORD}" | cut -c1-10
-        echo "FTP Dev Path: ${FTP_DEV_PATH}" | cut -c1-10
-        echo "FTP Dev Assets Path: ${FTP_DEV_ASSETS_PATH}" | cut -c1-10
-        echo "Local Dir: ${LOCAL_DIR}" | cut -c1-10
-      env:
-        FTP_URL: ${{ secrets.ftp_url }}
-        FTP_USERNAME: ${{ secrets.ftp_username }}
-        FTP_PASSWORD: ${{ secrets.ftp_password }}
-        FTP_DEV_PATH: ${{ secrets.intra_ftp_dev_path }}
-        FTP_DEV_ASSETS_PATH: ${{ secrets.intra_ftp_dev_assets_path }}
-        LOCAL_DIR: ${{ secrets.local_dir }}
-
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
@@ -47,9 +31,6 @@ jobs:
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.intra_ftp_dev_path }}
         exclude: |
-          **/.git/**
-          **/.github/**
-          **/.gitignore**
           **/public/**
 
     - name: 📁 Update assets
@@ -60,8 +41,4 @@ jobs:
         password: ${{ secrets.ftp_password }}
         server-dir: ${{ secrets.intra_ftp_dev_assets_path }}
         local-dir: ${{ secrets.local_dir }}
-        exclude: |
-          **/.git/**
-          **/.github/**
-          **/.gitignore**
 
