@@ -20,6 +20,9 @@ jobs:
     - name: 📂 List assets directory
       run: ls -la public/assets
 
+     - name: 📂 List bootstrap cache directory
+      run: ls -la bootstrap/cache
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
