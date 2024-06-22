@@ -25,12 +25,19 @@ jobs:
 
     - name: 🔍 Debug secrets
       run: |
-        echo "FTP URL: ${{ secrets.ftp_url }}"
-        echo "FTP Username: ${{ secrets.ftp_username }}"
-        echo "FTP Password: ${{ secrets.ftp_password }}"
-        echo "FTP Dev Path: ${{ secrets.intra_ftp_dev_path }}"
-        echo "FTP Dev Assets Path: ${{ secrets.intra_ftp_dev_assets_path }}"
-        echo "Local Dir: ${{ secrets.local_dir }}"
+        echo "FTP URL: ${FTP_URL}" | cut -c1-10
+        echo "FTP Username: ${FTP_USERNAME}" | cut -c1-10
+        echo "FTP Password: ${FTP_PASSWORD}" | cut -c1-10
+        echo "FTP Dev Path: ${FTP_DEV_PATH}" | cut -c1-10
+        echo "FTP Dev Assets Path: ${FTP_DEV_ASSETS_PATH}" | cut -c1-10
+        echo "Local Dir: ${LOCAL_DIR}" | cut -c1-10
+      env:
+        FTP_URL: ${{ secrets.ftp_url }}
+        FTP_USERNAME: ${{ secrets.ftp_username }}
+        FTP_PASSWORD: ${{ secrets.ftp_password }}
+        FTP_DEV_PATH: ${{ secrets.intra_ftp_dev_path }}
+        FTP_DEV_ASSETS_PATH: ${{ secrets.intra_ftp_dev_assets_path }}
+        LOCAL_DIR: ${{ secrets.local_dir }}
 
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
