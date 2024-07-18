@@ -24,6 +24,16 @@
             </a>
         </div>
         <div class="col-md-4 d-flex justify-content-center">
+            <a href="{{ route('web.menu') }}">
+                <div class="card align-content-center cc">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/web.png')}}">
+                    <div class="card-body">
+                        <h6 class="card-title">Gestión datos web</h6>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 d-flex justify-content-center mt-5">
             <a href="#">
                 <div class="card align-content-center cc">
                     <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/ticket.png')}}">

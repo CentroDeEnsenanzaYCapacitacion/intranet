@@ -32,5 +32,6 @@
           dateFormat: "d/m/Y", // Formato de fecha que coincida con el utilizado por Laravel
         });
       </script>
+    @stack('scripts')
 </body>
 </html>

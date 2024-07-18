@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
             PaymentPeriodicitySeeder::class,
             ScheduleSeeder::class,
             ModalitySeeder::class,
-            ReceiptAttributeSeeder::class
+            ReceiptAttributeSeeder::class,
+            WebCarouselSeeder::class,
+            WebMvvSeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();

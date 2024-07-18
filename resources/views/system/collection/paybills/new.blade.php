@@ -55,5 +55,8 @@
         </div>
     </div>
 </div>
-<script src="{{ asset('assets/js/paybill_redirection.js') }}"></script>
+
 @endsection
+@push('scripts')
+<script src="{{ asset('assets/js/paybill_redirection.js') }}"></script>
+@endpush

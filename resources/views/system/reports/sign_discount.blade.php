@@ -73,8 +73,6 @@
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
-        @else
-           
         @endif
     </ul>
 </div>
@@ -88,6 +86,9 @@
         </ul>
     </div>
 @endif --}}
+
+@endsection
+@push('scripts')
 <script src="{{ asset('assets/js/sign.js') }}"></script>
 <script src="{{ asset('assets/js/no_discount_redirection.js') }}"></script>
-@endsection
+@endpush

@@ -66,7 +66,12 @@ class CollectionController extends Controller
 
     public function insertReceipt(Request $request)
     {
-        //dd($request);
+
+        $amount = $request->amount;
+
+        if($request->receipt_amount!=null){
+            $amount = $request->receipt_amount;
+        }
 
         Utils::generateReceipt(
             $request->crew_id,
@@ -78,7 +83,7 @@ class CollectionController extends Controller
             $request->voucher,
             $request->has('bill') ? true : false,
             $request->concept,
-            $request->amount
+            $amount
         );
     }
 

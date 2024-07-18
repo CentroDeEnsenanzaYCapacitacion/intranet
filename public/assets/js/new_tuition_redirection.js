@@ -37,6 +37,9 @@ function submitFormInNewTab(form) {
                 <input type="hidden" name="attr_id" value="${
                     document.querySelector('select[name="attr_id"]').value
                 }">
+                <input type="hidden" name="receipt_amount" value="${
+                    document.querySelector('input[name="receipt_amount"]').value
+                }">
                 <input type="hidden" name="card_payment" value="${
                     document.querySelector('input[name="card_payment"]')
                         .checked

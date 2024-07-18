@@ -53,9 +53,8 @@
                         <b>Importe:</b><br>
                         <div id="amountDiv"></div>
                         <div style="display: flex; justify-content: center;">
-                            <input class="form-control text-uppercase" style="text-align: center;" type="text"
-                                name="receipt_amount" id="receipt_amount" placeholder="Ingrese el monto"
-                                style="display:none;">
+                            <input class="form-control text-uppercase" style="text-align: center;display:none;" type="text"
+                                name="receipt_amount" id="receipt_amount" placeholder="Ingrese el monto">
                         </div><br>
 
                         <div class="text-center" id="card">
@@ -103,6 +102,9 @@
         var receipt_attributes = @json($receipt_attributes);
         var student_tuition_receipts = @json($student_tuition_receipts);
     </script>
-    <script src="{{ asset('assets/js/new_tuition.js') }}"></script>
-    <script src="{{ asset('assets/js/new_tuition_redirection.js') }}"></script>
+
 @endsection
+@push('scripts')
+<script src="{{ asset('assets/js/new_tuition.js') }}"></script>
+<script src="{{ asset('assets/js/new_tuition_redirection.js') }}"></script>
+@endpush

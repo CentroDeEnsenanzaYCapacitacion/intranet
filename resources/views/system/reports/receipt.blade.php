@@ -48,5 +48,8 @@
     <script>
         var discount = @json($discount);
     </script>
-    <script src="{{ asset('assets/js/discount_redirection.js') }}"></script>
+
 @endsection
+@push('scripts')
+<script src="{{ asset('assets/js/discount_redirection.js') }}"></script>
+@endpush

@@ -40,5 +40,8 @@
             </ul>
         </div>
     @endif
-    <script src="{{ asset('assets/js/image_preview.js') }}"></script>
+
 @endsection
+@push('scripts')
+<script src="{{ asset('assets/js/image_preview.js') }}"></script>
+@endpush

@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\StatsController;
 use Illuminate\Support\Facades\Session;
 
 Route::post('/heartbeat', function () {
@@ -42,4 +40,5 @@ Route::middleware(['auth'])->group(function () {
     require 'system_reports.php';
     require 'system_students.php';
     require 'system_collection.php';
+    require 'web_admin.php';
 });
