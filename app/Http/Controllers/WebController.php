@@ -56,8 +56,17 @@ class WebController extends Controller
 
     public function webCarouselPost(WebCarouselRequest $request)
     {
+        $environment = env('APP_ENV');
 
-        Log::info('webCarouselPost method called');
+        if ($environment == 'local') {
+            $destinationPath = public_path('assets/img/carousel/');
+        } elseif ($environment == 'development') {
+            $destinationPath = '../../../../public_html/intranet_dev/assets/img/carousel/';
+        } elseif ($environment == 'production') {
+            $destinationPath = '../../../../public_html/intranet/assets/img/carousel/';
+        } else {
+            $destinationPath = public_path('assets/img/carousel/');
+        }
 
         $images = [
             $request->file('img_1'),
@@ -80,59 +89,23 @@ class WebController extends Controller
             $request->input('description4')
         ];
 
-        $destinationPath = public_path('assets/img/carousel/');
-        Log::info('Destination Path: ' . $destinationPath);
-
         foreach ($images as $key => $image) {
-            Log::info('Processing entry for key: ' . $key);
+            $data = [
+                'title' => $titles[$key],
+                'description' => $descriptions[$key],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
 
-            $title = $titles[$key] ?? null;
-            $description = $descriptions[$key] ?? null;
-
-            if ($title !== null && $description !== null) {
-                $data = [
-                    'title' => $title,
-                    'description' => $description,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-
-                if ($image) {
-                    $filename = ($key + 1) . '.jpg';
-                    Log::info('Processing image: ' . $filename);
-
-                    try {
-                        Log::info('Attempting to move image...');
-                        $image->move($destinationPath, $filename);
-                        Log::info('Image moved: ' . $filename);
-
-                        // Verificar si el archivo realmente se movió
-                        if (file_exists($destinationPath . $filename)) {
-                            Log::info('File exists after move: ' . $destinationPath . $filename);
-                        } else {
-                            Log::error('File does not exist after move: ' . $destinationPath . $filename);
-                        }
-                    } catch (\Exception $e) {
-                        Log::error('Error moving image: ' . $e->getMessage());
-                        return redirect()->back()->withErrors(['error' => 'Error al mover la imagen: ' . $e->getMessage()]);
-                    }
-                } else {
-                    Log::info('No image found for key: ' . $key);
-                }
-
-                try {
-                    WebCarousel::updateOrCreate(
-                        ['id' => $key + 1],
-                        $data
-                    );
-                    Log::info('Database updated for key: ' . $key);
-                } catch (\Exception $e) {
-                    Log::error('Error updating database: ' . $e->getMessage());
-                    return redirect()->back()->withErrors(['error' => 'Error al actualizar la base de datos: ' . $e->getMessage()]);
-                }
-            } else {
-                Log::info('No title or description found for key: ' . $key);
+            if ($image) {
+                $filename = '/' . ($key + 1) . '.jpg';
+                $image->move($destinationPath, $filename);
             }
+
+            WebCarousel::updateOrCreate(
+                ['id' => $key + 1],
+                $data
+            );
         }
 
         return redirect()->back()->with('success', 'Datos guardados exitosamente');
