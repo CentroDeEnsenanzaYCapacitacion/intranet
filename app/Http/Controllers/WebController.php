@@ -82,37 +82,39 @@ class WebController extends Controller
         Log::info('Destination Path: ' . $destinationPath);
 
         foreach ($images as $key => $image) {
-            $data = [
-                'title' => $titles[$key],
-                'description' => $descriptions[$key],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+            if ($titles[$key] !== null && $descriptions[$key] !== null) {
+                $data = [
+                    'title' => $titles[$key],
+                    'description' => $descriptions[$key],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
 
-            if ($image) {
-                $filename = ($key + 1) . '.jpg';
-                Log::info('Processing image: ' . $filename);
+                if ($image) {
+                    $filename = ($key + 1) . '.jpg';
+                    Log::info('Processing image: ' . $filename);
+
+                    try {
+                        $image->move($destinationPath, $filename);
+                        Log::info('Image moved: ' . $filename);
+                    } catch (\Exception $e) {
+                        Log::error('Error moving image: ' . $e->getMessage());
+                        return redirect()->back()->withErrors(['error' => 'Error al mover la imagen: ' . $e->getMessage()]);
+                    }
+                } else {
+                    Log::info('No image found for key: ' . $key);
+                }
 
                 try {
-                    $image->move($destinationPath, $filename);
-                    Log::info('Image moved: ' . $filename);
+                    WebCarousel::updateOrCreate(
+                        ['id' => $key + 1],
+                        $data
+                    );
+                    Log::info('Database updated for key: ' . $key);
                 } catch (\Exception $e) {
-                    Log::error('Error moving image: ' . $e->getMessage());
-                    return redirect()->back()->withErrors(['error' => 'Error al mover la imagen: ' . $e->getMessage()]);
+                    Log::error('Error updating database: ' . $e->getMessage());
+                    return redirect()->back()->withErrors(['error' => 'Error al actualizar la base de datos: ' . $e->getMessage()]);
                 }
-            } else {
-                Log::info('No image found for key: ' . $key);
-            }
-
-            try {
-                WebCarousel::updateOrCreate(
-                    ['id' => $key + 1],
-                    $data
-                );
-                Log::info('Database updated for key: ' . $key);
-            } catch (\Exception $e) {
-                Log::error('Error updating database: ' . $e->getMessage());
-                return redirect()->back()->withErrors(['error' => 'Error al actualizar la base de datos: ' . $e->getMessage()]);
             }
         }
 
