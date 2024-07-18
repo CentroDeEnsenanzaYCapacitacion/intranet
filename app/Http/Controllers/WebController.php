@@ -57,6 +57,8 @@ class WebController extends Controller
     public function webCarouselPost(WebCarouselRequest $request)
     {
 
+        Log::info('webCarouselPost method called');
+
         $images = [
             $request->file('img_1'),
             $request->file('img_2'),
