@@ -6,7 +6,8 @@ use App\Http\Requests\WebCarouselRequest;
 use App\Http\Requests\WebMvvRequest;
 use App\Models\WebCarousel;
 use App\Models\WebMvv;
-use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Log;
 
 class WebController extends Controller
 {
@@ -77,6 +78,9 @@ class WebController extends Controller
             $request->input('description4')
         ];
 
+        $destinationPath = public_path('assets/img/carousel/');
+        Log::info('Destination Path: ' . $destinationPath);
+
         foreach ($images as $key => $image) {
             $data = [
                 'title' => $titles[$key],
@@ -87,13 +91,29 @@ class WebController extends Controller
 
             if ($image) {
                 $filename = ($key + 1) . '.jpg';
-                $image->move(public_path('assets/img/carousel/'), $filename);
+                Log::info('Processing image: ' . $filename);
+
+                try {
+                    $image->move($destinationPath, $filename);
+                    Log::info('Image moved: ' . $filename);
+                } catch (\Exception $e) {
+                    Log::error('Error moving image: ' . $e->getMessage());
+                    return redirect()->back()->withErrors(['error' => 'Error al mover la imagen: ' . $e->getMessage()]);
+                }
+            } else {
+                Log::info('No image found for key: ' . $key);
             }
 
-            WebCarousel::updateOrCreate(
-                ['id' => $key + 1],
-                $data
-            );
+            try {
+                WebCarousel::updateOrCreate(
+                    ['id' => $key + 1],
+                    $data
+                );
+                Log::info('Database updated for key: ' . $key);
+            } catch (\Exception $e) {
+                Log::error('Error updating database: ' . $e->getMessage());
+                return redirect()->back()->withErrors(['error' => 'Error al actualizar la base de datos: ' . $e->getMessage()]);
+            }
         }
 
         return redirect()->back()->with('success', 'Datos guardados exitosamente');
