@@ -82,10 +82,15 @@ class WebController extends Controller
         Log::info('Destination Path: ' . $destinationPath);
 
         foreach ($images as $key => $image) {
-            if ($titles[$key] !== null && $descriptions[$key] !== null) {
+            Log::info('Processing entry for key: ' . $key);
+
+            $title = $titles[$key] ?? null;
+            $description = $descriptions[$key] ?? null;
+
+            if ($title !== null && $description !== null) {
                 $data = [
-                    'title' => $titles[$key],
-                    'description' => $descriptions[$key],
+                    'title' => $title,
+                    'description' => $description,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -95,8 +100,16 @@ class WebController extends Controller
                     Log::info('Processing image: ' . $filename);
 
                     try {
+                        Log::info('Attempting to move image...');
                         $image->move($destinationPath, $filename);
                         Log::info('Image moved: ' . $filename);
+
+                        // Verificar si el archivo realmente se movió
+                        if (file_exists($destinationPath . $filename)) {
+                            Log::info('File exists after move: ' . $destinationPath . $filename);
+                        } else {
+                            Log::error('File does not exist after move: ' . $destinationPath . $filename);
+                        }
                     } catch (\Exception $e) {
                         Log::error('Error moving image: ' . $e->getMessage());
                         return redirect()->back()->withErrors(['error' => 'Error al mover la imagen: ' . $e->getMessage()]);
@@ -115,6 +128,8 @@ class WebController extends Controller
                     Log::error('Error updating database: ' . $e->getMessage());
                     return redirect()->back()->withErrors(['error' => 'Error al actualizar la base de datos: ' . $e->getMessage()]);
                 }
+            } else {
+                Log::info('No title or description found for key: ' . $key);
             }
         }
 
