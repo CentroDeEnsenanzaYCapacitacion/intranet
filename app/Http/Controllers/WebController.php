@@ -27,15 +27,24 @@ class WebController extends Controller
         return view('web.carousel', compact('carousels'));
     }
 
-    public function webMvvPost(WebMvvRequest $request)  {
+    public function webMvvPost(WebMvvRequest $request)
+    {
         $validatedData = $request->validated();
 
         $data = WebMvv::all();
 
-        if (isset($data[0])) $data[0]->description = $validatedData['description1'] ?? '';
-        if (isset($data[1])) $data[1]->description = $validatedData['description2'] ?? '';
-        if (isset($data[2])) $data[2]->description = $validatedData['description3'] ?? '';
-        if (isset($data[3])) $data[3]->description = $validatedData['description4'] ?? '';
+        if (isset($data[0])) {
+            $data[0]->description = $validatedData['description1'] ?? '';
+        }
+        if (isset($data[1])) {
+            $data[1]->description = $validatedData['description2'] ?? '';
+        }
+        if (isset($data[2])) {
+            $data[2]->description = $validatedData['description3'] ?? '';
+        }
+        if (isset($data[3])) {
+            $data[3]->description = $validatedData['description4'] ?? '';
+        }
 
         foreach ($data as $item) {
             $item->save();
@@ -78,7 +87,7 @@ class WebController extends Controller
 
             if ($image) {
                 $filename = ($key + 1) . '.jpg';
-                $image->move(public_path('assets/img/carousel'), $filename);
+                $image->move(public_path('assets/img/carousel/'), $filename);
             }
 
             WebCarousel::updateOrCreate(
