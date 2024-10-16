@@ -1,5 +1,5 @@
 @extends('layout.mainLayout')
-@section('title','dashboard')
+@section('title','Historial de recibos')
 @section('content')
 <div class="card shadow ccont">
     <div class="card-body">

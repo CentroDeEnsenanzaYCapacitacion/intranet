@@ -1,5 +1,16 @@
 document.getElementById('validatedRequestForm').addEventListener('submit', function(e) {
-    const currentRedirectUrl = '/system/reports';
+    var currentRedirectUrl = "";
+    switch (appEnv) {
+        case 'local':
+            currentRedirectUrl = "/system/reports";
+            break;
+        case 'development':
+            currentRedirectUrl = "/intranet_dev/index.php/system/reports";
+            break;
+        case 'production':
+            currentRedirectUrl = "/system/reports";
+            break;
+    }
     e.preventDefault();
     const newTab = window.open('', '_blank');
     if (newTab) {

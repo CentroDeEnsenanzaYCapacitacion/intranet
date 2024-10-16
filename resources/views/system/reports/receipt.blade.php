@@ -47,6 +47,7 @@
     </div>
     <script>
         var discount = @json($discount);
+        const appEnv = @json(env('APP_ENV'));
     </script>
 
 @endsection

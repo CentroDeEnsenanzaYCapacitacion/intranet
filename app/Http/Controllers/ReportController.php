@@ -109,7 +109,6 @@ class ReportController extends Controller
 
     public function generateReceipt(Request $request)
     {
-        dd($request);
         $report = Report::find($request->report_id);
         session([
             'report' => $report,

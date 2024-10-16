@@ -52,6 +52,7 @@ class StudentObserver
                     $discount = strstr($sys_request->description, "%", true);
                     $final_amount = $amount - (($discount * $amount) / 100);
                 } else {
+                    $discount = null;
                     $final_amount = $amount;
                 }
             } else {
@@ -60,7 +61,13 @@ class StudentObserver
 
             $report_id = $report->id;
 
-            $concept = 'Inscripción '.$report->course->name.' con descuento del '.$discount.'%';
+            if ($discount==null){
+                $concept = 'Inscripción '.$report->course->name;
+            }else{
+                $concept = 'Inscripción '.$report->course->name.' con descuento del '.$discount.'%';
+            }
+
+
         }
 
         Utils::generateReceipt(
