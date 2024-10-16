@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+    var url = "";
+    switch (appEnv) {
+        case 'local':
+            url = "/system/validate-amount";
+            break;
+        case 'development':
+            url = "intranet_dev/index.php/system/validate-amount";
+            break;
+        case 'production':
+            url = "/system/reports";
+            break;
+    }
     document
         .getElementById("noDiscountForm")
         .addEventListener("submit", function (e) {
@@ -8,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 'input[name="report_id"]'
             ).value;
 
-            fetch("/system/validate-amount", {
+            fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
