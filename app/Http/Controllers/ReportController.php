@@ -19,7 +19,7 @@ class ReportController extends Controller
 {
     public function getReports()
     {
-        if(Auth::user()->role_id == 1) {
+        if (Auth::user()->role_id == 1) {
             $crew_reports = Report::where('signed', false)
                                     ->get();
 
@@ -32,10 +32,10 @@ class ReportController extends Controller
         $crew_requests = [];
         $idsToRemove = [];
 
-        foreach($crew_reports as $report) {
+        foreach ($crew_reports as $report) {
             $request = SysRequest::where('report_id', $report->id)->first();
 
-            if($request) {
+            if ($request) {
                 $array = explode('-', $request->description);
                 $report->status = is_null($request->approved) ? "Pendiente" : ($request->approved ? "Aprobado" : "Rechazado");
                 $report->request_date = $request->created_at;
@@ -77,15 +77,15 @@ class ReportController extends Controller
 
     public function receiptOrRequest(Request $request)
     {
-        if($request->discount == 0) {
+        if ($request->discount == 0) {
             $success = Utils::validateAmount($request->report_id, "report");
-            if(!$success) {
+            if (!$success) {
                 return back()->withErrors(['error' => 'No existe un costo resgistrado para el recibo que se intenta emitir, por favor registre un costo para continuar.']);
             } else {
                 StudentController::insertStudent($request);
             }
         } else {
-            if(!$request->reason || $request->reason == '') {
+            if (!$request->reason || $request->reason == '') {
                 return redirect()->route('system.reports.signdiscount', ['report_id' => $request->report_id])
                                  ->with('error', 'La razón de la solicitud debe proporcionarse')
                                  ->with('selection', $request->discount);
@@ -113,7 +113,7 @@ class ReportController extends Controller
         $report = Report::find($request->report_id);
         session([
             'report' => $report,
-            'card_payment' => ($request->card_payment==null) ? 1 : 2
+            'card_payment' => ($request->card_payment == null) ? 1 : 2
         ]);
 
         Student::create([
@@ -130,7 +130,7 @@ class ReportController extends Controller
     public function signDiscount($report_id)
     {
         $request = SysRequest::where('report_id', $report_id)->first();
-        if(!$request) {
+        if (!$request) {
             return view('system.reports.sign_discount', compact('report_id'));
         } else {
             return redirect()->route('system.reports.show')->with('error', 'Este informe ya tiene una solicitud');
@@ -161,7 +161,7 @@ class ReportController extends Controller
             'responsible_id' => Auth::id()
         ]);
 
-        if($report) {
+        if ($report) {
             return redirect()->route('system.reports.show');
         } else {
             return redirect()->route('system.report.new')->with('error', 'error al guardar informe');
