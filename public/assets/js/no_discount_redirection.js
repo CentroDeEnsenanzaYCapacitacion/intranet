@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
             url = "/system/validate-amount";
             break;
         case 'development':
-            url = "intranet_dev/index.php/system/validate-amount";
+            url = "/intranet_dev/index.php/system/validate-amount";
             break;
         case 'production':
             url = "/system/reports";
