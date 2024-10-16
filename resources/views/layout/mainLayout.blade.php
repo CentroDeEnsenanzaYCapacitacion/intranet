@@ -27,6 +27,7 @@
     <script src="{{asset('assets/js/confirmAlert.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        const appEnv = @json(env('APP_ENV'));
         flatpickr("#datePicker", {
           enableTime: false, // Desactiva la selección de tiempo si solo necesitas una fecha
           dateFormat: "d/m/Y", // Formato de fecha que coincida con el utilizado por Laravel
