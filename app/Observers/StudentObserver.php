@@ -27,9 +27,8 @@ class StudentObserver
         session()->forget('report');
         session()->forget('card_payment');
 
-        $payment_type_id = isset($card_payment)?2:1;
+        $receipt_type_id = isset($card_payment)?2:1;
 
-        $receipt_type_id = 2;
         $concept = 'Colegiatura '.$student->course->name;
         $report_id = null;
         $final_amount = Amount::where('crew_id', $student->crew_id)

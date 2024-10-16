@@ -12,3 +12,4 @@ Route::post('/system/collection/tuition/insert', [CollectionController::class,'i
 Route::get('/system/collection/paybills', [CollectionController::class,'showPaybills'])->name('system.collection.paybills');
 Route::get('/system/collection/paybills/new', [CollectionController::class,'newPaybill'])->name('system.collection.newpaybill');
 Route::post('/system/collection/paybill/insert', [CollectionController::class,'insertPaybill'])->name('system.collection.paybill-post');
+Route::get('/system/collection/paybills/receiptError', [CollectionController::class,'receiptError'])->name('system.collection.receipt.error');

@@ -66,17 +66,17 @@ class CollectionController extends Controller
 
     public function insertReceipt(Request $request)
     {
-
         $amount = $request->amount;
 
         if($request->receipt_amount!=null){
             $amount = $request->receipt_amount;
         }
 
+
         Utils::generateReceipt(
             $request->crew_id,
             $request->receipt_type_id,
-            $request->has('card_payment') ? 2 : 1,
+            ($request->card_payment==null) ? 1 : 2,
             $request->student_id,
             null,
             $request->attr_id == 0 ? null : $request->attr_id,
@@ -85,6 +85,8 @@ class CollectionController extends Controller
             $request->concept,
             $amount
         );
+
+        return redirect()->route('algunaRuta')->with('success', 'Recibo emitido correctamente.');
     }
 
     public function showPaybills()
@@ -108,6 +110,12 @@ class CollectionController extends Controller
             session()->forget('searchResults');
             return view('system.collection.tuitions.show', compact('student', 'amount', 'payments'));
         }
+    }
+
+    public function receiptError(Request $request)
+    {
+        $errorMessage = $request->input('error');
+        return redirect()->back()->with('error', $errorMessage);
     }
 
     public function newTuition($student_id)

@@ -8,6 +8,11 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if (session('error'))
+                <div id="error" class="alert alert-danger" style="margin-top: 20px;">
+                    {{ session('error') }}
+                </div>
+            @endif
             <div class="row d-flex text-center mt-3">
                 <div class="col">
                     <h1>Emisión de recibo</h1>
@@ -21,7 +26,6 @@
                     <div class="col">
                         <input type="hidden" name="concept" id="conceptHidden">
                         <input type="hidden" name="amount" id="amountHidden">
-
                         <div class="form-group">
                             <label for="receipt_type_id"><b>Tipo de recibo</b></label>
                             <select class="form-control text-uppercase"
@@ -88,11 +92,6 @@
             </form>
         </div>
     </div>
-    @if (session('error'))
-        <div id="error" class="alert alert-danger" style="margin-top: 20px;">
-            {{ session('error') }}
-        </div>
-    @endif
     <script>
         var student = @json($student);
         var course = @json($course);

@@ -42,8 +42,8 @@ class Utils
     public static function generateReceipt($crew_id, $receipt_type_id, $card_payment, $student_id, $report_id = null, $receipt_attribute_id = null, $voucher = null, $bill = null, $concept, $amount)
     {
         $finalAmount = $amount;
-        if(!isset($report_id)) {
-            if($amount[0] == '$') {
+        if (!isset($report_id)) {
+            if ($amount[0] == '$') {
                 $numericString = str_replace(['$', ','], '', $amount);
                 $formattedNumber = (float)$numericString;
                 $finalAmount = number_format($formattedNumber, 2, '.', '');
@@ -73,10 +73,10 @@ class Utils
                 break;
         }
 
-        if(!isset($amount)) {
+        if (!isset($amount)) {
             return false;
         } else {
-            if($amount->amount == '0.00') {
+            if ($amount->amount == '0.00') {
                 return false;
             }
             return true;

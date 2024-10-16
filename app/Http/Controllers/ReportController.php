@@ -109,11 +109,11 @@ class ReportController extends Controller
 
     public function generateReceipt(Request $request)
     {
+        dd($request);
         $report = Report::find($request->report_id);
-
         session([
             'report' => $report,
-            'card_payment' => $request->has('card_payment') ? 2 : 1
+            'card_payment' => ($request->card_payment==null) ? 1 : 2
         ]);
 
         Student::create([
