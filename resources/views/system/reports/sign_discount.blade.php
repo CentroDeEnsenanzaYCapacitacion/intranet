@@ -76,17 +76,9 @@
         @endif
     </ul>
 </div>
-
-{{-- @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif --}}
-
+<script>
+    const appEnv = @json(env('APP_ENV'));
+</script>
 @endsection
 @push('scripts')
 <script src="{{ asset('assets/js/sign.js') }}"></script>
