@@ -14,7 +14,6 @@ document.getElementById('validatedRequestForm').addEventListener('submit', funct
     e.preventDefault();
     const newTab = window.open('', '_blank');
     if (newTab) {
-        alert('ok');
         const formHtml = `
                 <form action="${this.action}" method="post">
                     <input type="hidden" name="_token" value="${document.querySelector('input[name="_token"]').value}">
