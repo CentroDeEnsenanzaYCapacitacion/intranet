@@ -56,7 +56,7 @@ function submitFormInNewTab(form) {
             currentRedirectUrl = "/system/reports";
             break;
         case 'development':
-            currentRedirectUrl = "intranet_dev/index.php/system/reports";
+            currentRedirectUrl = "/intranet_dev/index.php/system/reports";
             break;
         case 'production':
             currentRedirectUrl = "/system/reports";
