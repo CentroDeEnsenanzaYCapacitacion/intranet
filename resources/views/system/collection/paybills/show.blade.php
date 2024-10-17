@@ -25,7 +25,7 @@
                                 <td class="text-uppercase">{{ $paybill->created_at->format('d/m/Y') }}</td>
                                 <td class="text-uppercase">{{ $paybill->id }}</td>
                                 <td class="text-uppercase">{{ $paybill->concept}}</td>
-                                <td class="text-uppercase">{{ $paybill->amount}}</td>
+                                <td class="text-uppercase">${{ number_format($paybill->amount, 2, '.', ',') }}</td>
                             </tr>
                         @endforeach
                     </tbody>

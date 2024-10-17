@@ -25,7 +25,7 @@
 </head>
 <body>
     <div class="centered">
-        <img width="150px" src= "https://capacitacioncec.edu.mx/intranet_dev/assets/img/drac_bw.png">
+        <img width="150px" src= "{{ $imageUrl }}drac_bw.png">
     </div>
     <span class="title centered text-uppercase">
         {{ $paybill->crew->name }}<br>
@@ -53,12 +53,12 @@
                 <tr>
                     <td width="80" align="center" style="vertical-align: middle;">
                         <div style="display: flex; align-items: center; justify-content: center;">
-                            <img src="https://capacitacioncec.edu.mx/intranet_dev/assets/img/qr.png">
+                            <img src="{{ $imageUrl }}qr.png">
                         </div>
                     </td>
                     <td width="130">
                         <br><br>
-                        <img src="https://capacitacioncec.edu.mx/intranet_dev/assets/img/logo.png">
+                        <img src="{{ $imageUrl }}logo.png">
                     </td>
                 </tr>
             </table>
