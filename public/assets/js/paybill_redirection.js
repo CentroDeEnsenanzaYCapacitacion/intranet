@@ -8,18 +8,18 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function submitFormInNewTab(form) {
-    var currentRedirectUrl = "";
-    switch (appEnv) {
-        case 'local':
-            currentRedirectUrl = "/system/collection/paybills";
-            break;
-        case 'development':
-            currentRedirectUrl = "/intranet_dev/index.php/system/collection/paybills";
-            break;
-        case 'production':
-            currentRedirectUrl = "/system/reports";
-            break;
-    }
+    var currentRedirectUrl = "/system/collection/paybills";
+    // switch (appEnv) {
+    //     case 'local':
+    //         currentRedirectUrl = "/system/collection/paybills";
+    //         break;
+    //     case 'development':
+    //         currentRedirectUrl = "/intranet_dev/index.php/system/collection/paybills";
+    //         break;
+    //     case 'production':
+    //         currentRedirectUrl = "/system/reports";
+    //         break;
+    // }
     const newTab = window.open("", "_blank");
     if (newTab) {
         const formHtml = `
