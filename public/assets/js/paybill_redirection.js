@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function submitFormInNewTab(form) {
-    var currentRedirectUrl = "/system/collection/paybills";
+    const currentRedirectUrl = "/system/collection/paybills";
     // switch (appEnv) {
     //     case 'local':
     //         currentRedirectUrl = "/system/collection/paybills";
