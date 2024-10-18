@@ -193,7 +193,7 @@ function setAmount(isAdvance) {
         return item.receipt_type_id == selections[0].selectedIndex + 1;
     });
 
-    if ( selections[0].selectedIndex==1 && isAdvance ){
+    if (selections[0].selectedIndex==1 && isAdvance ){
         summatory = 0;
         for (const receipt of student_tuition_receipts){
             if(receipt.receipt_attribute_id==1){
@@ -203,9 +203,11 @@ function setAmount(isAdvance) {
                 break;
             }
         }
-    }else if( selections[0].selectedIndex==1 && !isAdvance ){
+    }else{
         amountValue = parseFloat(amount[0].amount);
     }
+
+
 
     var formattedAmount = amountValue.toLocaleString("es-MX", {
         style: "currency",
