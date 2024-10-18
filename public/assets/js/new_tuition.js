@@ -42,7 +42,7 @@ function showVoucherInput() {
 
 function refresh_layout(tuitionNumber, isAdvance) {
     var concept = setConcept(tuitionNumber, isAdvance);
-    var amount = setAmount();
+    var amount = setAmount(isAdvance);
     showVoucherInput();
     document.getElementById("conceptDiv").textContent = concept;
     document.getElementById("amountDiv").textContent = amount;
@@ -78,29 +78,29 @@ function establish_elements(element) {
             attrArray.push(array.slice(0, i));
         }
 
-        var contenIndex = 0;
+        var contentIndex = 0;
 
         switch (selections[0].selectedIndex) {
             case 3:
             case 6:
             case 7:
                 attr.style.display = "block";
-                contenIndex = 3;
+                contentIndex = 3;
                 break;
             case 10:
                 attr.style.display = "none";
                 break;
             default:
                 attr.style.display = "block";
-                contenIndex = 2;
+                contentIndex = 2;
                 break;
         }
 
         if (tuition_results.isAdvance) {
-            attrArray[contenIndex].shift();
+            attrArray[contentIndex].shift();
         }
 
-        attrArray[contenIndex].forEach(function (option) {
+        attrArray[contentIndex].forEach(function (option) {
             var opt = document.createElement("option");
             opt.value = option.id;
             opt.textContent = option.name;
@@ -152,12 +152,8 @@ function calculateTuitionNumber() {
         return { number: 1, isAdvance: false };
     }
 
-    for (let i = 0; i < student_tuition_receipts.length; i++) {
-        const receipt = student_tuition_receipts[i];
-
-        if (
-            receipt.receipt_attribute_id == 1
-        ) {
+    for (const receipt of student_tuition_receipts) {
+        if (receipt.receipt_attribute_id == 1) {
             return {
                 number: Number(receipt.concept.split("#")[1].trim()),
                 isAdvance: true,
@@ -169,6 +165,8 @@ function calculateTuitionNumber() {
             };
         }
     }
+
+
 }
 
 function retrieveSelectedItems(isAdvance = false) {
@@ -187,14 +185,27 @@ function retrieveSelectedItems(isAdvance = false) {
     return results;
 }
 
-function setAmount() {
+function setAmount(isAdvance) {
     selections = retrieveSelectedItems();
     var amount = 0;
+    var amountValue= 0;
     amount = amounts.filter(function (item) {
         return item.receipt_type_id == selections[0].selectedIndex + 1;
     });
 
-    var amountValue = parseFloat(amount[0].amount);
+    if ( selections[0].selectedIndex==1 && isAdvance ){
+        summatory = 0;
+        for (const receipt of student_tuition_receipts){
+            if(receipt.receipt_attribute_id==1){
+                summatory += parseInt(receipt.amount);
+                amountValue = parseFloat(amount[0].amount) - summatory;
+            }else{
+                break;
+            }
+        }
+    }else if( selections[0].selectedIndex==1 && !isAdvance ){
+        amountValue = parseFloat(amount[0].amount);
+    }
 
     var formattedAmount = amountValue.toLocaleString("es-MX", {
         style: "currency",

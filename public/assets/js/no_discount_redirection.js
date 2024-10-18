@@ -51,17 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function submitFormInNewTab(form) {
     const currentRedirectUrl = "/system/reports";
-    // switch (appEnv) {
-    //     case 'local':
-    //         currentRedirectUrl = "/system/reports";
-    //         break;
-    //     case 'development':
-    //         currentRedirectUrl = "/intranet_dev/index.php/system/reports";
-    //         break;
-    //     case 'production':
-    //         currentRedirectUrl = "/system/reports";
-    //         break;
-    // }
     const buttonText =
         document.getElementById("sign").innerText ||
         document.getElementById("sign").textContent;
