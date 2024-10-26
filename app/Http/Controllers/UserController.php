@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use Illuminate\Http\Request;
+use App\Mail\NewUser;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Crew;
+use Exception;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -26,6 +30,8 @@ class UserController extends Controller
 
     public function insertUser(UserRequest $request)
     {
+        $password = Str::random(12);
+
         $user = User::create([
             'name' => $request->name,
             'surnames' => $request->surnames,
@@ -34,10 +40,21 @@ class UserController extends Controller
             'crew_id' => $request->crew_id,
             'phone' => $request->phone,
             'cel_phone' => $request->cel_phone,
-            'genre' => $request->genre
+            'genre' => $request->genre,
+            'password' => Hash::make($password),
+            'username' => explode(' ', trim($request->name))[0]
         ]);
 
-        if($user) {
+        $user_mail = $request->email;
+
+        try {
+            Mail::to($user_mail->mail)->send(new NewUser($user, $password));
+            $success = true;
+        } catch (Exception $e) {
+            $success = false;
+        }
+
+        if ($user) {
             return redirect()->route('admin.users.show');
         } else {
             return redirect()->route('admin.users.new')->with('error', 'error al guardar usuario');
