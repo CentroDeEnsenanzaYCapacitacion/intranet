@@ -47,6 +47,8 @@ class UserController extends Controller
 
         $user_mail = $request->email;
 
+        dd($user_mail);
+
         try {
             Mail::to($user_mail->mail)->send(new NewUser($user, $password));
             $success = true;
