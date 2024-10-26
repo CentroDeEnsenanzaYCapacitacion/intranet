@@ -28,8 +28,25 @@ class UserController extends Controller
         return view('admin.users.new', compact('roles', 'crews'));
     }
 
+    private function getUniqueUsername($username) {
+
+        $usernames = User::pluck('username')->toArray();
+
+        $contador = 1;
+        $nuevoUsername = $username;
+
+        while (in_array($nuevoUsername, $usernames)) {
+            $nuevoUsername = $username . $contador;
+            $contador++;
+        }
+
+        return $nuevoUsername;
+    }
+
     public function insertUser(UserRequest $request)
     {
+        $username = $this->getUniqueUsername(explode(' ', trim($request->name))[0]);
+
         $password = Str::random(12);
 
         $user = User::create([
@@ -42,15 +59,13 @@ class UserController extends Controller
             'cel_phone' => $request->cel_phone,
             'genre' => $request->genre,
             'password' => Hash::make($password),
-            'username' => explode(' ', trim($request->name))[0]
+            'username' => $username
         ]);
 
         $user_mail = $request->email;
 
-        dd($user_mail);
-
         try {
-            Mail::to($user_mail->mail)->send(new NewUser($user, $password));
+            Mail::to($user_mail)->send(new NewUser($user, $password));
             $success = true;
         } catch (Exception $e) {
             $success = false;
