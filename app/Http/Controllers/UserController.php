@@ -71,6 +71,8 @@ class UserController extends Controller
             $success = false;
         }
 
+        dd($success);
+
         if ($user) {
             return redirect()->route('admin.users.show');
         } else {
