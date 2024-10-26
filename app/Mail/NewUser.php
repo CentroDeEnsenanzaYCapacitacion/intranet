@@ -14,12 +14,16 @@ class NewUser extends Mailable
     use Queueable;
     use SerializesModels;
 
+    public $user;
+    public $password;
+
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($user, $password)
     {
-        //
+        $this->user = $user;
+        $this->password = $password;
     }
 
     /**
@@ -38,7 +42,7 @@ class NewUser extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mails.newUser',
+            view: 'mails.newUser',
         );
     }
 
