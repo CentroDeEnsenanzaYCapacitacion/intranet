@@ -44,18 +44,19 @@
                                     </td>
                                     <td class="text-uppercase">${{ number_format($amount->amount, 2, '.', ',') }}</td>
                                     <td class="justify-content-center">
-                                        <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)"
-                                                href="{{ route('admin.catalogues.amount.edit', ['id' => $amount->id]) }}">edit</a></span>
-                                        {{-- @if ($amount->course_id == null)
-                                            <form method="POST"
-                                                action="{{ route('admin.catalogues.amount.delete', ['id' => $amount->id]) }}"
-                                                id="delete-amount-{{ $amount->id }}" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <span class="material-symbols-outlined bg-red"><a
-                                                        onclick="confirmDelete('amount',{{ $amount->id }})">delete</a></span>
-                                            </form>
-                                        @endif --}}
+                                        @if ($role != 1)
+                                            @if ($amount->id > 133)
+                                                <span class="material-symbols-outlined bg-edit"><a
+                                                        onclick="showLoader(true)"
+                                                        href="{{ route('admin.catalogues.amount.edit', ['id' => $amount->id]) }}">edit</a></span>
+                                            @endif
+                                            @if ($amount->id <= 133)
+                                                <span class="material-symbols-outlined bg-inactive">edit</span>
+                                            @endif
+                                        @else
+                                            <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)"
+                                                    href="{{ route('admin.catalogues.amount.edit', ['id' => $amount->id]) }}">edit</a></span>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

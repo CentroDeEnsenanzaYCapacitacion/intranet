@@ -8,13 +8,16 @@ use App\Models\Course;
 use App\Models\Crew;
 use App\Models\ReceiptType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class AmountController extends Controller
 {
     public function getAmounts()
     {
         $amounts = Amount::with(['crew', 'course', 'receiptType'])->get();
-        return view('admin.catalogues.amounts.show', compact('amounts'));
+        $role = $usuario = Auth::user()->role_id;
+        return view('admin.catalogues.amounts.show', compact('amounts','role'));
     }
 
     public function updateAmount(AmountRequest $request, $id)

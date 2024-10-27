@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -23,12 +24,20 @@ class UserController extends Controller
 
     public function newUser()
     {
-        $roles = Role::all();
+        $user = Auth::user();
+
+        if ($user->role->name === "admin") {
+
+            $roles = Role::all();
+        } else {
+            $roles = Role::where("name","!=","admin")->where("name","!=","Director")->get();
+        }
         $crews = Crew::all();
         return view('admin.users.new', compact('roles', 'crews'));
     }
 
-    private function getUniqueUsername($username) {
+    private function getUniqueUsername($username)
+    {
 
         $usernames = User::pluck('username')->toArray();
 

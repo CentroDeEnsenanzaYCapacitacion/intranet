@@ -3,7 +3,8 @@
 @section('content')
 <div class="container">
     <div class="row d-flex align-items-center justify-content-center text-center mt-content">
-        <div class="col-md-4 d-flex justify-content-center">
+        @if (in_array(Auth::user()->role_id, [1, 2]))
+        <div class="col-md-4 d-flex justify-content-center mb-5">
             <a id="adminUsers" href="{{route('admin.users.show')}}">
                 <div class="card align-content-center cc">
                     <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/users.png')}}">
@@ -13,7 +14,9 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-4 d-flex justify-content-center">
+        @endif
+        @if (in_array(Auth::user()->role_id, [1]))
+        <div class="col-md-4 d-flex justify-content-center mb-5">
             <a id="adminUsers" href="{{route('admin.catalogues.menu')}}">
                 <div class="card align-content-center cc">
                     <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/catalogues.png')}}">
@@ -23,7 +26,9 @@
                 </div>
             </a>
         </div>
-        <div class="col-md-4 d-flex justify-content-center">
+        @endif
+        @if (in_array(Auth::user()->role_id, [1, 2]))
+        <div class="col-md-4 d-flex justify-content-center mb-5">
             <a id="adminUsers" id="adminUsers" href="{{route('admin.requests.show')}}">
                 <div class="card align-content-center cc">
                     <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/request.png')}}">
@@ -33,9 +38,7 @@
                 </div>
             </a>
         </div>
-    </div>
-    <div class="row d-flex align-items-center justify-content-center text-center mt-content">
-        <div class="col-md-4 d-flex justify-content-center">
+        <div class="col-md-4 d-flex justify-content-center mb-5">
             <a href="{{route('admin.stats.menu')}}">
                 <div class="card align-content-center cc">
                     <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/graphs.png')}}">
@@ -45,6 +48,7 @@
                 </div>
             </a>
         </div>
+        @endif
     </div>
     <script>
         document.getElementById('adminUsers').addEventListener('click', function() {

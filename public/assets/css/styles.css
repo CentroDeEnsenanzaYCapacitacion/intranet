@@ -65,6 +65,10 @@ input[type="radio"]:checked + .btn-outline-orange {
     color: red;
 }
 
+.bg-inactive {
+    color: gray !important;
+}
+
 a {
     text-decoration: none;
     color: inherit;

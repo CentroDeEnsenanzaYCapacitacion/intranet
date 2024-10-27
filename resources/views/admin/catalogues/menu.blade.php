@@ -2,6 +2,7 @@
 @section('title','Menú catálogos')
 @section('content')
 <div class="row d-flex align-items-center justify-content-center text-center mt-content">
+    @if (in_array(Auth::user()->role_id, [1, 2]))
     <div class="col-md-4 d-flex justify-content-center">
         <a id='adminCourses' href="{{route('admin.catalogues.courses.show')}}">
             <div class="card align-content-center cc">
@@ -22,33 +23,8 @@
             </div>
         </a>
     </div>
-    <!--<div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de datos académicos
-    </div>
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de biblioteca
-    </div> -->
+    @endif
 </div>
-<!-- <div class="row d-flex text-center mt-5">
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Sistema de gestión escolar
-    </div>
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de contenido web
-    </div>
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de datos académicos
-    </div>
-    <div class="col">
-        <a><img src="/assets/img/avatar.png"></a><br>
-        Gestión de biblioteca
-    </div>
-</div> -->
 <script>
     document.getElementById('adminCourses').addEventListener('click', function() {
         showLoader(true);

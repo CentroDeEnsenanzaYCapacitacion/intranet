@@ -6,13 +6,16 @@ use App\Http\Requests\CourseRequest;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\Crew;
+use Illuminate\Support\Facades\Auth;
+
 
 class CourseController extends Controller
 {
     public function getCourses()
     {
         $courses = Course::orderBy('name', 'asc')->where('is_active', true)->get();
-        return view('admin.catalogues.courses.show', compact('courses'));
+        $role = $usuario = Auth::user()->role_id;
+        return view('admin.catalogues.courses.show', compact('courses','role'));
     }
 
     public function newCourse()
