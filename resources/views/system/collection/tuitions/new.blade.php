@@ -20,7 +20,7 @@
             </div>
             <form id="newTuitionForm" action="{{ route('system.collection.tuitions.receipt-post') }}" method="POST">
                 @csrf
-                <input type="hidden" value="{{ Auth::user()->crew_id }}" name="crew_id">
+                <input type="hidden" value="{{ $student->crew_id }}" name="crew_id">
                 <input type="hidden" value="{{ $student->id }}" name="student_id">
                 <div class="row d-flex text-center mt-3">
                     <div class="col">

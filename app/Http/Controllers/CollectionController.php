@@ -11,7 +11,7 @@ use App\Models\ReceiptType;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CollectionController extends Controller
 {
@@ -29,12 +29,20 @@ class CollectionController extends Controller
 
     public function searchPost(Request $request)
     {
+        $user = Auth::user();
+
         $students = Student::where(function ($query) use ($request) {
             $data = '%' . $request->data . '%';
             $query->where('name', 'LIKE', $data)
                   ->orWhere('surnames', 'LIKE', $data)
                   ->orWhere('id', 'LIKE', $data);
-        })->get();
+        });
+
+        if ($user && $user->role_id != 1) {
+            $students->where('crew_id', '=', $user->crew_id);
+        };
+
+        $students = $students->get();
 
         if ($students->isEmpty()) {
             return redirect()->route('system.collection.tuition');
@@ -68,7 +76,7 @@ class CollectionController extends Controller
     {
         $amount = $request->amount;
 
-        if($request->receipt_amount!=null){
+        if ($request->receipt_amount != null) {
             $amount = $request->receipt_amount;
         }
 
@@ -76,7 +84,7 @@ class CollectionController extends Controller
         Utils::generateReceipt(
             $request->crew_id,
             $request->receipt_type_id,
-            ($request->card_payment==null) ? 1 : 2,
+            ($request->card_payment == null) ? 1 : 2,
             $request->student_id,
             null,
             $request->attr_id == 0 ? null : $request->attr_id,

@@ -16,6 +16,7 @@ use App\Models\Schedule;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -116,12 +117,20 @@ class StudentController extends Controller
 
     public function searchPost(Request $request)
     {
+        $user = Auth::user();
+
         $students = Student::where(function ($query) use ($request) {
             $data = '%' . $request->data . '%';
             $query->where('name', 'LIKE', $data)
                   ->orWhere('surnames', 'LIKE', $data)
                   ->orWhere('id', 'LIKE', $data);
-        })->get();
+        });
+
+        if ($user && $user->role_id != 1) {
+            $students->where('crew_id', '=', $user->crew_id);
+        };
+
+        $students = $students->get();
 
         return view('system.students.search', compact('students'));
     }
