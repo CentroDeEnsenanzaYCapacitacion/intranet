@@ -126,7 +126,7 @@
                     </span>
                 </h4>
 
-                @if ($tiposPagoConTotales->isNotEmpty())
+                @if ($tiposPagoConTotales->count() > 1)
                     <div class="d-flex flex-wrap gap-2 align-items-center">
                         @foreach ($tiposPagoConTotales as $item)
                             <div class="bg-light border rounded px-3 py-2 text-muted">
@@ -135,6 +135,7 @@
                         @endforeach
                     </div>
                 @endif
+
             </div>
 
             <div class="table-container">
