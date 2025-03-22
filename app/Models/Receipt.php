@@ -28,7 +28,7 @@ class Receipt extends Model
 
     public function payment()
     {
-        return $this->belongsTo(PaymentType::class);
+        return $this->belongsTo(PaymentType::class, 'payment_type_id');
     }
 
     public function student()
@@ -36,7 +36,7 @@ class Receipt extends Model
         return $this->belongsTo(Student::class);
     }
 
-    
+
     public function report()
     {
         return $this->belongsTo(Report::class);

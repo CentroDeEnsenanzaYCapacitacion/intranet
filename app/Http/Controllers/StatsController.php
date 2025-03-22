@@ -10,4 +10,9 @@ class StatsController extends Controller
     {
         return view('admin.stats.reports', compact('period'));
     }
+
+    public function billing()
+    {
+        return view('admin.stats.billing');
+    }
 }

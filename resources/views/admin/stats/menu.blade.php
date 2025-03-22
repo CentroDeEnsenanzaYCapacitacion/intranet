@@ -13,6 +13,16 @@
             </div>
         </a>
     </div>
+    <div class="col-md-4 d-flex justify-content-center">
+        <a href="{{route('admin.stats.billing')}}">
+            <div class="card align-content-center cc">
+                <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/reports_stats.png')}}">
+                <div class="card-body">
+                    <h6 class="card-title">Cobranza</h6>
+                </div>
+            </div>
+        </a>
+    </div>
     @endif
 </div>
 @endsection
