@@ -32,8 +32,13 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.stats.menu');
     })->name('admin.stats.menu');
 
+    Route::get('/admin/rosters_menu', function () {
+        return view('admin.rosters.menu');
+    })->name('admin.rosters.menu');
+
     require 'admin_users.php';
     require 'admin_stats.php';
+    require 'admin_rosters.php';
     require 'admin_catalogues_courses.php';
     require 'admin_catalogues_amounts.php';
     require 'admin_requests.php';

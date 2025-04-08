@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RequestType extends Model
+class MailRequest extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function requests() {
-        return $this->hasMany(SysRequest::class);
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
     }
 }

@@ -8,13 +8,14 @@ use Illuminate\Database\Seeder;
 
 class RequestTypeSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
         RequestType::create([
             'name'=>'Descuento de inscripción'
+        ]);
+        RequestType::create([
+            'name'=>'Creación correo institucional'
         ]);
     }
 }
