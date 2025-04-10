@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Staff extends Model
+class HourAssignment extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function mailRequest()
+    public function staff()
     {
-        return $this->hasOne(MailRequest::class);
+        return $this->belongsTo(Staff::class);
     }
 
-    public function hourAssignments()
+    public function subject()
     {
-        return $this->hasMany(HourAssignment::class);
+        return $this->belongsTo(Subject::class);
     }
 
 }

@@ -45,5 +45,6 @@ Route::middleware(['auth'])->group(function () {
     require 'system_reports.php';
     require 'system_students.php';
     require 'system_collection.php';
+    require 'system_calendars.php';
     require 'web_admin.php';
 });

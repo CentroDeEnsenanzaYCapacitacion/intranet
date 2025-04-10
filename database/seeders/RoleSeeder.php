@@ -22,5 +22,8 @@ class RoleSeeder extends Seeder
         Role::create([
             'name' => 'rrhh'
         ]);
+        Role::create([
+            'name' => 'archivo'
+        ]);
     }
 }

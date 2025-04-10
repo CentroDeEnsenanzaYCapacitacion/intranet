@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Staff;
 use App\Http\Requests\StaffRequest;
+use App\Models\HourAssignment;
+use Illuminate\Http\Request;
 
 class RosterController extends Controller
 {
@@ -59,6 +61,11 @@ class RosterController extends Controller
         return view('admin.rosters.staff.edit', compact('staff'));
     }
 
+    public function editSchedule()
+    {
+        return view('admin.rosters.schedule.edit');
+    }
+
     public function update(StaffRequest $request, $id)
     {
         $staff = Staff::findOrFail($id);
@@ -72,4 +79,8 @@ class RosterController extends Controller
 
         return redirect()->route('admin.staff.show')->with('success', 'Empleado actualizado correctamente.');
     }
+
+    
+
+
 }

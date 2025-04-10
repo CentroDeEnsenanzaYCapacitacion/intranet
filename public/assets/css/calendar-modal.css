@@ -1,0 +1,58 @@
+/* -------------------------------------------- */
+/* Overlay que cubre toda la ventana            */
+/* -------------------------------------------- */
+.custom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: rgba(0,0,0,0.8); /* Oscurece el fondo */
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.custom-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Contenedor del modal (caja blanca) */
+.custom-modal-content {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 600px;  /* Ajusta a tu gusto */
+    width: 90%;        /* Para pantallas pequeñas */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Botón de cierre (la X) */
+.custom-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Ejemplo de adaptación de estilos de formulario */
+.form-label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.form-select, .form-control {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 6px;
+    font-size: 14px;
+}

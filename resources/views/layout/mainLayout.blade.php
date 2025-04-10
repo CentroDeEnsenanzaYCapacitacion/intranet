@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <title>@yield('title')</title>
+    @stack('styles')
 </head>
 <body background="">
     @include('includes.header')

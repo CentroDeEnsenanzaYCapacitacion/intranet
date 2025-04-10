@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             ModalitySeeder::class,
             ReceiptAttributeSeeder::class,
             WebCarouselSeeder::class,
-            WebMvvSeeder::class
+            WebMvvSeeder::class,
+            SubjectSeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();

@@ -15,19 +15,19 @@
             </a>
         </div>
         @endif
-        {{-- @if (in_array(Auth::user()->role_id, [1]))
+        @if (in_array(Auth::user()->role_id, [1]))
         <div class="col-md-4 d-flex justify-content-center mb-5">
-            <a id="adminUsers" href="{{route('admin.catalogues.menu')}}">
+            <a id="adminUsers" href="{{route('admin.schedule.calendar')}}">
                 <div class="card align-content-center cc">
                     <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/catalogues.png')}}">
                     <div class="card-body">
-                        <h6 class="card-title">Nóminas</h6>
+                        <h6 class="card-title">Calendario</h6>
                     </div>
                 </div>
             </a>
         </div>
         @endif
-        @if (in_array(Auth::user()->role_id, [1, 2]))
+        {{-- @if (in_array(Auth::user()->role_id, [1, 2]))
         <div class="col-md-4 d-flex justify-content-center mb-5">
             <a id="adminUsers" id="adminUsers" href="{{route('admin.requests.show')}}">
                 <div class="card align-content-center cc">
