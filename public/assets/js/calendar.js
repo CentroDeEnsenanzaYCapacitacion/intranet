@@ -54,6 +54,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
             openModal("editModal");
         },
+        eventDrop: function(info) {
+            const event = info.event;
+            const newDate = info.event.startStr.split("T")[0]; // solo la fecha (YYYY-MM-DD)
+
+            fetch(routes.update(event.id), {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                body: JSON.stringify({
+                    date: newDate
+                }),
+            })
+            .then(res => res.json())
+            .then(() => {
+                calendar.refetchEvents(); // opcional si deseas recargar todo
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error al mover el evento.");
+                info.revert(); // regresa el evento a su posición original si hay error
+            });
+        },
+
     });
 
     calendar.render();

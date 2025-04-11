@@ -90,19 +90,25 @@ class CalendarController extends Controller
         $assignment = HourAssignment::findOrFail($id);
 
         $data = $request->validate([
-            'subject_id' => 'required|exists:subjects,id',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'subject_id' => 'sometimes|exists:subjects,id',
+            'staff_id' => 'sometimes|exists:staff,id',
+            'start_time' => 'sometimes|date_format:H:i',
+            'end_time' => 'sometimes|date_format:H:i|after:start_time',
+            'date' => 'sometimes|date'
         ]);
 
-        $start = strtotime($data['start_time']);
-        $end = strtotime($data['end_time']);
-        $data['hours'] = ($end - $start) / 3600;
+        if (isset($data['start_time']) && isset($data['end_time'])) {
+            $start = strtotime($data['start_time']);
+            $end = strtotime($data['end_time']);
+            $data['hours'] = ($end - $start) / 3600;
+        }
 
         $assignment->update($data);
 
         return response()->json(['message' => 'Asignación actualizada correctamente']);
     }
+
+
 
     public function deleteHourAssignment($id)
     {
