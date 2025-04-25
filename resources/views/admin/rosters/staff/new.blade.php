@@ -1,3 +1,7 @@
+@php
+    $userCrewId = auth()->user()->crew_id ?? null;
+@endphp
+
 @extends('layout.mainLayout')
 @section('title','Nuevo Empleado')
 @section('content')
@@ -12,6 +16,18 @@
 
         <form action="{{ route('admin.staff.store') }}" method="POST">
             @csrf
+
+            @if ($userCrewId == 1)
+                <div class="mb-3">
+                    <label for="crew_id" class="form-label">Plantel</label>
+                    <select class="form-control" name="crew_id" required>
+                        <option value="" disabled selected>Selecciona un plantel</option>
+                        @foreach ($crews as $crew)
+                            <option value="{{ $crew->id }}">{{ $crew->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
 
             <div class="row mb-3">
                 <div class="col">

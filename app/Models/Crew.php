@@ -11,27 +11,39 @@ class Crew extends Model
 
     protected $guarded = [];
 
-    public function users() {
+    public function users()
+    {
         return $this->hasMany(User::class);
     }
 
-    public function courses() {
+    public function courses()
+    {
         return $this->hasMany(Course::class);
     }
 
-    public function reports() {
+    public function reports()
+    {
         return $this->hasMany(Report::class);
     }
 
-    public function receipts() {
+    public function receipts()
+    {
         return $this->hasMany(Receipt::class);
     }
 
-    public function amounts() {
+    public function amounts()
+    {
         return $this->hasMany(Amount::class);
     }
 
-    public function students() {
+    public function students()
+    {
         return $this->hasMany(Student::class);
     }
+
+    public function staff()
+    {
+        return $this->hasMany(Staff::class);
+    }
+
 }

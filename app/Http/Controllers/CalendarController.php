@@ -6,6 +6,7 @@ use App\Models\HourAssignment;
 use App\Models\Staff;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use App\Models\Crew;
 
 class CalendarController extends Controller
 {
@@ -38,12 +39,31 @@ class CalendarController extends Controller
 
         $subjects = Subject::where('is_active', true)->orderBy('name')->get();
 
-        return view('system.calendar.teachers', compact('events', 'staff', 'subjects'));
+        $crews    = Crew::orderBy('name')->get();
+
+        return view(
+            'system.calendar.teachers',
+            compact('staff', 'subjects', 'crews')
+        );
     }
 
-    public function getHourAssignments()
+    public function getHourAssignments(Request $request)
     {
-        $assignments = HourAssignment::with(['staff', 'subject'])->get();
+        $crewId = $request->input('crew_id');
+        $start = $request->input('start');
+        $end = $request->input('end');
+
+        $query = HourAssignment::with(['staff', 'subject']);
+
+        if ($crewId) {
+            $query->where('crew_id', $crewId);
+        }
+
+        if ($start && $end) {
+            $query->whereBetween('date', [$start, $end]);
+        }
+
+        $assignments = $query->get();
 
         $events = $assignments->map(function ($assignment) {
             return [
@@ -66,6 +86,9 @@ class CalendarController extends Controller
         return response()->json($events);
     }
 
+
+
+
     public function storeHourAssignment(Request $request)
     {
         $data = $request->validate([
@@ -74,16 +97,23 @@ class CalendarController extends Controller
             'date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
+            'crew_id' => 'nullable|exists:crews,id',
         ]);
 
         $start = strtotime($data['start_time']);
         $end = strtotime($data['end_time']);
         $data['hours'] = ($end - $start) / 3600;
 
+        // 👇 Guardar el crew seleccionado si el usuario es administrador
+        $data['crew_id'] = auth()->user()->crew_id === 1
+            ? $request->input('crew_id')
+            : auth()->user()->crew_id;
+
         HourAssignment::create($data);
 
         return response()->json(['message' => 'Horas asignadas correctamente']);
     }
+
 
     public function updateHourAssignment(Request $request, $id)
     {

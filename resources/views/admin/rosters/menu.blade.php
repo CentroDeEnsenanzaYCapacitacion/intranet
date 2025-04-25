@@ -17,11 +17,11 @@
         @endif
         @if (in_array(Auth::user()->role_id, [1]))
         <div class="col-md-4 d-flex justify-content-center mb-5">
-            <a id="adminUsers" href="{{route('admin.schedule.calendar')}}">
+            <a id="adminUsers" href="{{route('admin.rosters.panel')}}">
                 <div class="card align-content-center cc">
-                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/catalogues.png')}}">
+                    <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/roster.png')}}">
                     <div class="card-body">
-                        <h6 class="card-title">Calendario</h6>
+                        <h6 class="card-title">Cálculo de nómina</h6>
                     </div>
                 </div>
             </a>

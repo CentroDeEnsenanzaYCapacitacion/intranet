@@ -9,6 +9,4 @@ Route::post('/admin/staff/store', [RosterController::class, 'store'])->name('adm
 Route::patch('/admin/staff/{id}/deactivate', [RosterController::class, 'deactivate'])->name('admin.staff.deactivate');
 Route::get('/admin/staff/{id}/edit', [RosterController::class, 'edit'])->name('admin.staff.edit');
 Route::put('/admin/staff/{id}', [RosterController::class, 'update'])->name('admin.staff.update');
-
-
-
+Route::get('/admin/rosters/', [RosterController::class,'rosters'])->name('admin.rosters.panel');

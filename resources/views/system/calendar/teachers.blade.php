@@ -1,3 +1,7 @@
+@php
+    $userCrewId = auth()->user()->crew_id ?? null;
+@endphp
+
 @extends('layout.mainLayout')
 @section('title', 'Calendario')
 
@@ -19,6 +23,19 @@
             </div>
         </div>
     </div>
+
+    @if ($userCrewId == 1)
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label for="crewSelect" class="form-label">Seleccionar Plantel</label>
+                <select id="crewSelect" class="form-select">
+                    @foreach ($crews->where('id', '!=', 1) as $crew)
+                        <option value="{{ $crew->id }}">{{ $crew->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    @endif
 
     <div class="custom-modal" id="assignModal" onclick="closeOnOverlay(event, 'assignModal')">
         <div class="custom-modal-content">
@@ -147,6 +164,11 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const userCrewId = @json(auth()->user()->crew_id);
+    </script>
+
 
     <script>
         const routes = {

@@ -11,6 +11,7 @@ return new class () extends Migration {
             $table->id();
             $table->foreignId('staff_id')->constrained('staff')->onDelete('cascade');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
+            $table->foreignId('crew_id')->constrained('crews')->onDelete('cascade');
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');

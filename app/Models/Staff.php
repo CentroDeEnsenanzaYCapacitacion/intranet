@@ -21,4 +21,9 @@ class Staff extends Model
         return $this->hasMany(HourAssignment::class);
     }
 
+    public function crew()
+    {
+        return $this->belongsTo(Crew::class);
+    }
+
 }

@@ -1,6 +1,16 @@
 let calendar;
+let selectedCrewId = userCrewId;
 
 document.addEventListener("DOMContentLoaded", function () {
+    if (userCrewId === 1) {
+        const crewSelect = document.getElementById('crewSelect');
+        selectedCrewId = crewSelect.value;
+        crewSelect.addEventListener('change', () => {
+            selectedCrewId = crewSelect.value;
+            calendar.refetchEvents();
+        });
+    }
+
     calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
         locale: "es",
         buttonText: {
@@ -18,7 +28,12 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         editable: true,
         eventDurationEditable: false,
-        events: routes.events,
+        events: {
+            url: routes.events,
+            method: 'GET',
+            extraParams: () => ({ crew_id: selectedCrewId }),
+            failure: () => alert('Error al cargar los eventos')
+        },
         eventContent: function (arg) {
             const props = arg.event.extendedProps;
             const container = document.createElement("div");
@@ -110,7 +125,9 @@ document.getElementById("assignForm").addEventListener("submit", function (e) {
             date: date,
             start_time: startTime,
             end_time: endTime,
+            crew_id: selectedCrewId
         }),
+
     })
         .then((res) => res.json())
         .then(() => {

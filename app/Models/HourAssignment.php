@@ -21,4 +21,9 @@ class HourAssignment extends Model
         return $this->belongsTo(Subject::class);
     }
 
+    public function crew()
+    {
+        return $this->belongsTo(Crew::class);
+    }
+
 }
