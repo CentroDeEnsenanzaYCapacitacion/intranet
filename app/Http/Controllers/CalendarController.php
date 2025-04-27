@@ -33,7 +33,7 @@ class CalendarController extends Controller
         });
 
         $staff = Staff::where('isActive', true)
-            ->where('isRoster', true)
+            ->where('isRoster', false)
             ->orderBy('name')
             ->get();
 
@@ -104,7 +104,6 @@ class CalendarController extends Controller
         $end = strtotime($data['end_time']);
         $data['hours'] = ($end - $start) / 3600;
 
-        // 👇 Guardar el crew seleccionado si el usuario es administrador
         $data['crew_id'] = auth()->user()->crew_id === 1
             ? $request->input('crew_id')
             : auth()->user()->crew_id;

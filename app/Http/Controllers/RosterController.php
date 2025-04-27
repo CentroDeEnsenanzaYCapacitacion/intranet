@@ -90,76 +90,94 @@ class RosterController extends Controller
     }
 
     public function rosters(Request $request)
-{
-    $crews = Crew::all();
-    $userCrewId = auth()->user()->crew_id;
-    $selectedCrew = $request->get('crew');
+    {
+        $crews = Crew::all();
+        $userCrewId = auth()->user()->crew_id;
+        $selectedCrew = $request->get('crew');
 
-    $year = $request->input('year');
-    $month = $request->input('month');
-    $period = $request->input('period');
+        $year = $request->input('year', now()->year);
+        $month = $request->input('month', now()->month);
+        $period = $request->input('period', '8-22');
 
-    $startDate = null;
-    $endDate = null;
+        $startDate = null;
+        $endDate = null;
+        $periodDays = null;
 
-    if ($year && $month && $period) {
-        [$startDay, $endDay] = explode('-', $period);
+        if ($year && $month && $period) {
+            [$startDay, $endDay] = explode('-', $period);
 
-        $startDate = Carbon::create($year, $month, $startDay)->startOfDay();
-        $endDate = ((int) $endDay < (int) $startDay)
-            ? Carbon::create($year, $month, $startDay)->addMonth()->day((int) $endDay)->endOfDay()
-            : Carbon::create($year, $month, $endDay)->endOfDay();
-    }
+            $startDate = Carbon::create($year, $month, $startDay)->startOfDay();
+            $endDate = ((int) $endDay < (int) $startDay)
+                ? Carbon::create($year, $month, $startDay)->addMonth()->day((int) $endDay)->endOfDay()
+                : Carbon::create($year, $month, $endDay)->endOfDay();
 
-    // Obtener asignaciones de horas dependiendo del usuario y selección
-    $query = HourAssignment::with('staff')
-        ->whereBetween('date', [$startDate, $endDate]);
+            $periodDays = $startDate->diffInDays($endDate) + 1;
+        }
 
-    if ($userCrewId != 1) {
-        $query->where('crew_id', $userCrewId);
-    } elseif ($selectedCrew && $selectedCrew != 1) {
-        $query->where('crew_id', $selectedCrew);
-    }
 
-    $assignments = $query->get();
+        $staffQuery = Staff::where('isActive', true)->where('crew_id', '!=', 1);
 
-    // Agrupar por plantel donde se impartieron las clases
-    $assignmentsGroupedByCrew = $assignments->groupBy('crew_id');
+        if ($userCrewId != 1) {
+            $staffQuery->where('crew_id', $userCrewId);
+        } elseif ($selectedCrew && $selectedCrew != 1) {
+            $staffQuery->where('crew_id', $selectedCrew);
+        }
 
-    $staffGrouped = [];
-    $totalHoursByCrew = [];
-    $totalHoursByStaff = [];
-    $totalHours = $assignments->sum('hours');
+        $staffAll = $staffQuery->get();
 
-    foreach ($assignmentsGroupedByCrew as $crewId => $groupAssignments) {
-        $staffs = $groupAssignments->groupBy('staff_id');
+        $assignments = HourAssignment::whereBetween('date', [$startDate, $endDate])->get();
 
-        $staffGrouped[$crewId] = collect();
+        $staffGrouped = [];
 
-        foreach ($staffs as $staffId => $staffAssignments) {
-            $staffInfo = $staffAssignments->first()->staff;
-            if ($staffInfo) {
-                $staffGrouped[$crewId]->push($staffInfo);
-                $totalHoursByStaff[$staffId] = $staffAssignments->sum('hours');
+        if ($selectedCrew && $selectedCrew != 1) {
+            if (!isset($staffGrouped[$selectedCrew])) {
+                $staffGrouped[$selectedCrew] = collect();
             }
         }
 
-        $totalHoursByCrew[$crewId] = $groupAssignments->sum('hours');
+        $totalHoursByCrew = [];
+        $totalHoursByStaff = [];
+        $totalHours = 0;
+
+        foreach ($staffAll as $staff) {
+            $hours = $assignments->where('staff_id', $staff->id)->where('crew_id', $staff->crew_id);
+            $hoursSum = (float) number_format($hours->sum('hours'), 1, '.', '');
+
+            $totalHoursByStaff[$staff->id] = $hoursSum;
+
+            if (!isset($staffGrouped[$staff->crew_id])) {
+                $staffGrouped[$staff->crew_id] = collect();
+            }
+            $staffGrouped[$staff->crew_id]->push($staff);
+
+            if (!isset($totalHoursByCrew[$staff->crew_id])) {
+                $totalHoursByCrew[$staff->crew_id] = 0;
+            }
+            $totalHoursByCrew[$staff->crew_id] += $hoursSum;
+
+            $totalHours += $hoursSum;
+        }
+
+        if ($userCrewId == 1 && (!$selectedCrew || $selectedCrew == 1)) {
+            foreach ($crews as $crew) {
+                if (!isset($staffGrouped[$crew->id]) && $crew->id != 1) {
+                    $staffGrouped[$crew->id] = collect();
+                    $totalHoursByCrew[$crew->id] = 0;
+                }
+            }
+        }
+
+        return view('admin.rosters.rosters.panel', compact(
+            'crews',
+            'staffGrouped',
+            'totalHours',
+            'totalHoursByCrew',
+            'totalHoursByStaff',
+            'assignments',
+            'periodDays'
+        ));
+
     }
-
-    $assignments = HourAssignment::whereBetween('date', [$startDate, $endDate])->get();
-
-
-    return view('admin.rosters.rosters.panel', compact(
-        'crews',
-        'staffGrouped',
-        'totalHours',
-        'totalHoursByCrew',
-        'totalHoursByStaff',
-        'assignments'
-    ));
-
-}
 
 
 }

@@ -27,7 +27,7 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Apellidos</th>
-                            <th>Correo</th>
+                            <th>Plantel</th>
                             <th>Departamento</th>
                             <th>Puesto</th>
                             <th>Acciones</th>
@@ -38,7 +38,7 @@
                         <tr>
                             <td>{{ $person->name }}</td>
                             <td>{{ $person->surnames }}</td>
-                            <td>{{ $person->cec_mail }}</td>
+                            <td>{{ $person->crew->name }}</td>
                             <td>{{ $person->department }}</td>
                             <td>{{ $person->position }}</td>
                             <td>

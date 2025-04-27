@@ -15,17 +15,17 @@ class LoginController extends Controller
     }
     public function attemptLogin(LoginRequest $request)
     {
-
         $credentials = $request->only('username', 'password');
 
+        $credentials['is_active'] = true;
+
         if (Auth::attempt($credentials)) {
-            //session::put('last_heartbeat',time());
             return redirect()->intended(route('dashboard'));
         }
 
-        return redirect(route('login'))->with('error', 'credenciales incorrectas');
-
+        return redirect(route('login'))->with('error', 'Credenciales incorrectas.');
     }
+
     public function logout()
     {
         session::flush();
