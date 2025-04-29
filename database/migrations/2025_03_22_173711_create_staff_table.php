@@ -29,6 +29,7 @@ return new class () extends Migration {
             $table->boolean('isActive')->default(true);
             $table->boolean('requiresMail')->default(true);
             $table->boolean('isRoster')->default(true);
+            $table->float('cost')->nullable();
             $table->timestamps();
         });
     }

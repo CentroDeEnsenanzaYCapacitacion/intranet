@@ -8,6 +8,7 @@ use App\Models\HourAssignment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\StaffRequest;
+use App\Models\StaffAdjustment;
 
 class RosterController extends Controller
 {
@@ -24,6 +25,40 @@ class RosterController extends Controller
             $crews = Crew::where('id', '!=', 1)->get();
         }
         return view('admin.rosters.staff.new', compact('crews'));
+    }
+
+    public function storeAdjustment(Request $request)
+    {
+        $validated = $request->validate([
+            'staff_id' => 'required|exists:staff,id',
+            'definition_id' => 'required|exists:adjustment_definitions,id',
+            'amount' => 'required|numeric|min:0',
+            'year' => 'required|integer',
+            'month' => 'required|integer',
+            'period' => 'required|string',
+            'crew_id' => 'required|exists:crews,id',
+        ]);
+
+        StaffAdjustment::create([
+            'staff_id' => $validated['staff_id'],
+            'adjustment_definition_id' => $validated['definition_id'],
+            'amount' => $validated['amount'],
+            'year' => $validated['year'],
+            'month' => $validated['month'],
+            'period' => $validated['period'],
+            'crew_id' => $validated['crew_id'],
+        ]);
+
+        return redirect()->back()->with('success', 'Ajuste agregado correctamente.');
+    }
+
+
+    public function destroyAdjustment($id)
+    {
+        $adjustment = StaffAdjustment::findOrFail($id);
+        $adjustment->delete();
+
+        return redirect()->back()->with('success', 'Ajuste eliminado correctamente.');
     }
 
     public function store(StaffRequest $request)
@@ -43,7 +78,8 @@ class RosterController extends Controller
         $staff->position = $data['position'] ?? null;
         $staff->personal_mail = $data['personal_mail'] ?? null;
         $staff->requiresMail = $request->has('requiresMail');
-        $staff->isRoster = $request->has('isRoster');
+        $staff->cost = $data['cost'];
+        $staff->isRoster = $data['cost_type'] === 'day';
         $staff->isActive = true;
 
         $staff->crew_id = auth()->user()->crew_id == 1
@@ -82,8 +118,9 @@ class RosterController extends Controller
         $data = $request->validated();
 
         $staff->update([
-            ...collect($data)->except(['name', 'surnames', 'cec_mail', 'requiresMail'])->toArray(),
-            'isRoster' => $request->has('isRoster'),
+            ...collect($data)->except(['name', 'surnames', 'cost_type'])->toArray(),
+            'cost' => $data['cost'],
+            'isRoster' => ($data['cost_type'] ?? 'day') === 'day',
         ]);
 
         return redirect()->route('admin.staff.show')->with('success', 'Empleado actualizado correctamente.');
@@ -91,7 +128,6 @@ class RosterController extends Controller
 
     public function rosters(Request $request)
     {
-        $crews = Crew::all();
         $userCrewId = auth()->user()->crew_id;
         $selectedCrew = $request->get('crew');
 
@@ -99,85 +135,162 @@ class RosterController extends Controller
         $month = $request->input('month', now()->month);
         $period = $request->input('period', '8-22');
 
-        $startDate = null;
-        $endDate = null;
-        $periodDays = null;
+        [$startDay, $endDay] = explode('-', $period);
 
-        if ($year && $month && $period) {
-            [$startDay, $endDay] = explode('-', $period);
+        $startDate = Carbon::create($year, $month, $startDay)->startOfDay();
+        $endDate = ((int) $endDay < (int) $startDay)
+            ? Carbon::create($year, $month, $startDay)->addMonth()->day((int) $endDay)->endOfDay()
+            : Carbon::create($year, $month, $endDay)->endOfDay();
 
-            $startDate = Carbon::create($year, $month, $startDay)->startOfDay();
-            $endDate = ((int) $endDay < (int) $startDay)
-                ? Carbon::create($year, $month, $startDay)->addMonth()->day((int) $endDay)->endOfDay()
-                : Carbon::create($year, $month, $endDay)->endOfDay();
+        $allCrews = Crew::where('id', '!=', 1)->get();
 
-            $periodDays = $startDate->diffInDays($endDate) + 1;
+        if ($userCrewId == 1) {
+            if ($selectedCrew && $selectedCrew != 'all') {
+                $crewsToShow = Crew::where('id', $selectedCrew)->get();
+            } else {
+                $crewsToShow = $allCrews;
+            }
+        } else {
+            $crewsToShow = Crew::where('id', $userCrewId)->get();
         }
 
+        $hourAssignments = HourAssignment::with('staff')
+            ->whereBetween('date', [$startDate, $endDate])
+            ->get();
 
-        $staffQuery = Staff::where('isActive', true)->where('crew_id', '!=', 1);
-
-        if ($userCrewId != 1) {
-            $staffQuery->where('crew_id', $userCrewId);
-        } elseif ($selectedCrew && $selectedCrew != 1) {
-            $staffQuery->where('crew_id', $selectedCrew);
-        }
-
-        $staffAll = $staffQuery->get();
-
-        $assignments = HourAssignment::whereBetween('date', [$startDate, $endDate])->get();
+        $assignments = $hourAssignments;
 
         $staffGrouped = [];
-
-        if ($selectedCrew && $selectedCrew != 1) {
-            if (!isset($staffGrouped[$selectedCrew])) {
-                $staffGrouped[$selectedCrew] = collect();
-            }
-        }
-
         $totalHoursByCrew = [];
         $totalHoursByStaff = [];
         $totalHours = 0;
+        $periodDays = (int) Carbon::parse($startDate)->diffInDays($endDate) + 1;
 
-        foreach ($staffAll as $staff) {
-            $hours = $assignments->where('staff_id', $staff->id)->where('crew_id', $staff->crew_id);
-            $hoursSum = (float) number_format($hours->sum('hours'), 1, '.', '');
+        $totalCostByCrew = [];
+        $totalCostByStaff = [];
+        $totalCost = 0.0;
 
-            $totalHoursByStaff[$staff->id] = $hoursSum;
+        foreach ($crewsToShow as $crew) {
 
-            if (!isset($staffGrouped[$staff->crew_id])) {
-                $staffGrouped[$staff->crew_id] = collect();
-            }
-            $staffGrouped[$staff->crew_id]->push($staff);
+            $staffWithHours = $hourAssignments
+                ->where('crew_id', $crew->id)
+                ->pluck('staff')
+                ->unique('id')
+                ->map(function ($staff) use ($year, $month, $period, $crew) {
+                    $staff->filtered_adjustments = $staff->adjustments()
+                        ->where('year', $year)
+                        ->where('month', $month)
+                        ->where('period', $period)
+                        ->where('crew_id', $crew->id)
+                        ->with('adjustmentDefinition')
+                        ->get();
+                    return $staff;
+                });
 
-            if (!isset($totalHoursByCrew[$staff->crew_id])) {
-                $totalHoursByCrew[$staff->crew_id] = 0;
-            }
-            $totalHoursByCrew[$staff->crew_id] += $hoursSum;
+            $rosterStaff = Staff::where('crew_id', $crew->id)
+                ->where('isActive', true)
+                ->where('isRoster', true)
+                ->get()
+                ->map(function ($staff) use ($year, $month, $period, $crew) {
+                    $staff->filtered_adjustments = $staff->adjustments()
+                        ->where('year', $year)
+                        ->where('month', $month)
+                        ->where('period', $period)
+                        ->where('crew_id', $crew->id)
+                        ->with('adjustmentDefinition')
+                        ->get();
+                    return $staff;
+                });
 
-            $totalHours += $hoursSum;
-        }
 
-        if ($userCrewId == 1 && (!$selectedCrew || $selectedCrew == 1)) {
-            foreach ($crews as $crew) {
-                if (!isset($staffGrouped[$crew->id]) && $crew->id != 1) {
-                    $staffGrouped[$crew->id] = collect();
-                    $totalHoursByCrew[$crew->id] = 0;
+
+            $mergedStaff = $staffWithHours->merge($rosterStaff)->unique('id')->map(function ($staff) use ($year, $month, $period, $crew) {
+                if (!isset($staff->filtered_adjustments)) {
+                    $staff->filtered_adjustments = $staff->adjustments()
+                        ->where('year', $year)
+                        ->where('month', $month)
+                        ->where('period', $period)
+                        ->where('crew_id', $crew->id)
+                        ->with('adjustmentDefinition')
+                        ->get();
                 }
+                return $staff;
+            });
+
+
+            $staffGrouped[$crew->id] = $mergedStaff;
+
+            $crewHours = $hourAssignments
+                ->where('crew_id', $crew->id)
+                ->sum('hours');
+
+            $totalHoursByCrew[$crew->id] = (float) number_format($crewHours, 1, '.', '');
+
+            foreach ($mergedStaff as $staff) {
+                $hours = $hourAssignments
+                    ->where('crew_id', $crew->id)
+                    ->where('staff_id', $staff->id)
+                    ->sum('hours');
+
+                $totalHoursByStaff[$staff->id] = (float) number_format($hours, 2, '.', '');
+
+                $staffCost = 0.0;
+                if ($staff->isRoster) {
+                    $staffCost = $staff->cost * $periodDays;
+                } else {
+                    $staffCost = $staff->cost * $hours;
+                }
+
+                if (!isset($totalCostByCrew[$crew->id])) {
+                    $totalCostByCrew[$crew->id] = 0;
+                }
+
+                $totalCostByCrew[$crew->id] += $staffCost;
+                $totalCostByStaff[$staff->id] = $staffCost;
+                $totalCost += $staffCost;
             }
         }
+
+        $totalHours = (float) number_format($hourAssignments->sum('hours'), 1, '.', '');
+
+        $adjustedTotalCost = 0;
+
+        foreach ($staffGrouped as $crewId => $staffList) {
+            foreach ($staffList as $staff) {
+                $baseCost = $staff->isRoster
+                    ? $staff->cost * $periodDays
+                    : $assignments->where('crew_id', $crewId)->where('staff_id', $staff->id)->sum('hours') * $staff->cost;
+
+                $adjustments = $staff->filtered_adjustments ?? collect();
+
+                $adjSum = 0;
+                foreach ($adjustments as $adj) {
+                    $adjSum += $adj->adjustmentDefinition->type === 'perception'
+                        ? $adj->amount
+                        : -$adj->amount;
+                }
+
+                $adjustedTotalCost += ($baseCost + $adjSum);
+            }
+        }
+
+        $adjustmentDefinitions = \App\Models\AdjustmentDefinition::all();
+
 
         return view('admin.rosters.rosters.panel', compact(
-            'crews',
+            'allCrews',
+            'crewsToShow',
             'staffGrouped',
-            'totalHours',
             'totalHoursByCrew',
             'totalHoursByStaff',
             'assignments',
-            'periodDays'
+            'totalHours',
+            'periodDays',
+            'totalCostByCrew',
+            'totalCostByStaff',
+            'totalCost',
+            'adjustmentDefinitions',
+            'adjustedTotalCost'
         ));
-
     }
-
-
 }

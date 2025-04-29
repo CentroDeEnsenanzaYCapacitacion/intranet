@@ -23,6 +23,8 @@ class StaffRequest extends FormRequest
             'personal_mail' => 'nullable|email|max:255',
             'department' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
+            'cost' => ['required', 'numeric', 'min:0'],
+            'cost_type' => ['required', 'in:day,hour'],
             'isRoster' => 'sometimes|boolean',
         ];
 

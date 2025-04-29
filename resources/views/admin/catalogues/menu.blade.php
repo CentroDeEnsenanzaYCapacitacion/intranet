@@ -24,6 +24,18 @@
         </a>
     </div>
     @endif
+    @if (in_array(Auth::user()->role_id, [1]))
+    <div class="col-md-4 d-flex justify-content-center">
+        <a id='adminAmounts' href="{{route('admin.catalogues.perceptions.show')}}">
+            <div class="card align-content-center cc">
+                <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/plusminus.png')}}">
+                <div class="card-body">
+                    <h6 class="card-title">Percepciones y deducciones</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+    @endif
 </div>
 <script>
     document.getElementById('adminCourses').addEventListener('click', function() {

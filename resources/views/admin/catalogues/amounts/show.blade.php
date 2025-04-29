@@ -44,7 +44,7 @@
                                     </td>
                                     <td class="text-uppercase">${{ number_format($amount->amount, 2, '.', ',') }}</td>
                                     <td class="justify-content-center">
-                                        @if ($role != 1)
+                                        @if (Auth::user()->role_id !== 1)
                                             @if ($amount->id > 133)
                                                 <span class="material-symbols-outlined bg-edit"><a
                                                         onclick="showLoader(true)"

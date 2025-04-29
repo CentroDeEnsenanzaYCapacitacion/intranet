@@ -95,10 +95,20 @@
                 <label class="form-check-label">Requiere correo</label>
             </div>
 
-            <div class="form-check mb-4">
-                <input class="form-check-input" type="checkbox" name="isRoster" value="1" checked>
-                <label class="form-check-label">Incluir en nómina</label>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="cost" class="form-label">Costo *</label>
+                    <input type="number" name="cost" class="form-control" step="0.01" min="0" required>
+                </div>
+                <div class="col">
+                    <label for="cost_type" class="form-label">Tipo de costo *</label>
+                    <select name="cost_type" class="form-control" required>
+                        <option value="day">Por día</option>
+                        <option value="hour">Por hora</option>
+                    </select>
+                </div>
             </div>
+
 
             <button type="submit" class="btn bg-orange text-white">Guardar empleado</button>
             <a href="{{ route('admin.staff.show') }}" class="btn btn-secondary ms-2">Cancelar</a>

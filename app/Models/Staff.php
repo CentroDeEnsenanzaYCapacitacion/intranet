@@ -26,4 +26,9 @@ class Staff extends Model
         return $this->belongsTo(Crew::class);
     }
 
+    public function adjustments()
+    {
+        return $this->hasMany(StaffAdjustment::class);
+    }
+
 }
