@@ -17,21 +17,9 @@ function confirmDelete(origin,Id) {
             break;
     }
     if (confirm(message)) {
-        var url = "";
-        switch (appEnv) {
-            case 'local':
-                url = "/admin/request/" + Id + "/decline";
-                break;
-            case 'development':
-                url = "/intranet_dev/index.php/admin/request/" + Id + "/decline";
-                break;
-            case 'production':
-                url = "/system/reports";
-                break;
-        }
         showLoader(true);
         if(origin === 'request') {
-            window.location.href = url;
+            window.location.href = "/admin/request/" + Id + "/decline";
         } else {
             document.getElementById(formId).submit();
         }
