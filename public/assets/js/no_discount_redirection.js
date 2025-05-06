@@ -1,11 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     var url = "";
     switch (appEnv) {
-        case 'local':
+        case 'local','development':
             url = "/system/validate-amount";
-            break;
-        case 'development':
-            url = "/intranet_dev/system/validate-amount";
             break;
         case 'production':
             url = "/system/reports";
