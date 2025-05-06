@@ -1,16 +1,4 @@
 document.getElementById('validatedRequestForm').addEventListener('submit', function(e) {
-    var currentRedirectUrl = "/system/reports";
-    // switch (appEnv) {
-    //     case 'local':
-    //         currentRedirectUrl = "/system/reports";
-    //         break;
-    //     case 'development':
-    //         currentRedirectUrl = "/intranet_dev/index.php/system/reports";
-    //         break;
-    //     case 'production':
-    //         currentRedirectUrl = "/system/reports";
-    //         break;
-    // }
     e.preventDefault();
     const newTab = window.open('', '_blank');
     if (newTab) {
@@ -25,7 +13,7 @@ document.getElementById('validatedRequestForm').addEventListener('submit', funct
             newTab.document.body.innerHTML = formHtml;
             newTab.document.forms[0].submit();
         setTimeout(function() {
-            window.location.href = currentRedirectUrl;
+            window.location.href = "/system/reports";
         }, 3000);
     }else {
         alert('Por favor, permite las ventanas emergentes para este sitio.');

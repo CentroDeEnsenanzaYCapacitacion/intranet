@@ -59,8 +59,6 @@ function establish_elements(element) {
     if (element == "type") {
         tuition_results = calculateTuitionNumber();
 
-        alert("tuitionResults"+JSON.stringify(tuition_results));
-
         if (selections[0].selectedIndex == 1) {
             tuitionNumber = tuition_results.number;
         } else {
