@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
         eventDrop: function(info) {
             const event = info.event;
-            const newDate = info.event.startStr.split("T")[0]; // solo la fecha (YYYY-MM-DD)
+            const newDate = info.event.startStr.split("T")[0];
 
             fetch(routes.update(event.id), {
                 method: "PUT",
@@ -85,12 +85,12 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(res => res.json())
             .then(() => {
-                calendar.refetchEvents(); // opcional si deseas recargar todo
+                calendar.refetchEvents();
             })
             .catch(err => {
                 console.error(err);
                 alert("Error al mover el evento.");
-                info.revert(); // regresa el evento a su posición original si hay error
+                info.revert();
             });
         },
 
@@ -108,8 +108,23 @@ document.getElementById("assignForm").addEventListener("submit", function (e) {
     const endTime = document.getElementById("endTime").value;
     const date = document.getElementById("selectedDate").value;
 
+    const errorBox = document.getElementById("assignError");
+    errorBox.classList.add("d-none");
+    errorBox.textContent = "";
+
     if (!staffId || !subjectId || !startTime || !endTime || !date) {
-        alert("Completa todos los campos.");
+        errorBox.textContent = "Completa todos los campos.";
+        errorBox.classList.remove("d-none");
+        return;
+    }
+
+    const start = new Date(`2000-01-01T${startTime}:00`);
+    const end = new Date(`2000-01-01T${endTime}:00`);
+    const hours = (end - start) / (1000 * 60 * 60);
+
+    if (hours <= 0) {
+        errorBox.textContent = "La hora de fin debe ser posterior a la de inicio.";
+        errorBox.classList.remove("d-none");
         return;
     }
 
@@ -127,18 +142,28 @@ document.getElementById("assignForm").addEventListener("submit", function (e) {
             end_time: endTime,
             crew_id: selectedCrewId
         }),
-
     })
-        .then((res) => res.json())
+        .then(res => {
+            if (!res.ok) {
+                return res.json().then(data => { throw data; });
+            }
+            return res.json();
+        })
         .then(() => {
             calendar.refetchEvents();
             closeModal("assignModal");
         })
         .catch((err) => {
-            console.error(err);
-            alert("Error al asignar horas.");
+            if (err.error) {
+                errorBox.textContent = err.error;
+                errorBox.classList.remove("d-none");
+            } else {
+                errorBox.textContent = "Error al asignar horas.";
+                errorBox.classList.remove("d-none");
+            }
         });
 });
+
 
 document.getElementById("editForm").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -186,7 +211,6 @@ document.getElementById("deleteAssignmentBtn").addEventListener("click", functio
         .then((res) => res.json())
         .then(() => {
             calendar.refetchEvents();
-            // CERRAMOS TU MODAL PERSONALIZADO
             closeModal("editModal");
         })
         .catch((err) => {

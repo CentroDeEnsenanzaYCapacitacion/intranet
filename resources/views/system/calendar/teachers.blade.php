@@ -10,13 +10,28 @@
         <link rel="stylesheet" href="{{ asset('assets/css/calendar-modal.css') }}">
     @endpush
 
-    <div class="card shadow ccont">
+    <div class="card ccont shadow">
         <div class="card-body">
-            <div class="row d-flex text-center mt-3">
+            <div class="row d-flex mt-3 text-center">
                 <div class="col mb-3">
                     <h1>Asignación de horas</h1>
                 </div>
             </div>
+
+            @if ($userCrewId == 1)
+                <div class="container mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="crewSelect" class="form-label">Seleccionar Plantel</label>
+                            <select id="crewSelect" class="form-select">
+                                @foreach ($crews->where('id', '!=', 1) as $crew)
+                                    <option value="{{ $crew->id }}">{{ $crew->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <div class="container">
                 <div id="calendar"></div>
@@ -24,27 +39,15 @@
         </div>
     </div>
 
-    @if ($userCrewId == 1)
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <label for="crewSelect" class="form-label">Seleccionar Plantel</label>
-                <select id="crewSelect" class="form-select">
-                    @foreach ($crews->where('id', '!=', 1) as $crew)
-                        <option value="{{ $crew->id }}">{{ $crew->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    @endif
-
+    {{-- Modal Asignar --}}
     <div class="custom-modal" id="assignModal" onclick="closeOnOverlay(event, 'assignModal')">
         <div class="custom-modal-content">
-
             <span class="custom-modal-close" onclick="closeModal('assignModal')">&times;</span>
 
             <h5>Asignar horas</h5>
             <form id="assignForm">
                 @csrf
+
                 <div class="mb-3">
                     <label for="staffSelect" class="form-label">Trabajador</label>
                     <select id="staffSelect" class="form-select" required>
@@ -54,6 +57,7 @@
                         @endforeach
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <label for="subjectSelect" class="form-label">Materia</label>
                     <select id="subjectSelect" class="form-select" required>
@@ -63,6 +67,7 @@
                         @endforeach
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">Horario</label>
                     <div class="d-flex gap-2">
@@ -70,34 +75,41 @@
                             <option value="" disabled selected>Inicio</option>
                             @for ($hour = 7; $hour <= 20; $hour++)
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00
+                                </option>
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30
+                                </option>
                             @endfor
                         </select>
+
                         <select id="endTime" class="form-select" required>
                             <option value="" disabled selected>Fin</option>
                             @for ($hour = 7; $hour <= 21; $hour++)
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00
+                                </option>
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30
+                                </option>
                             @endfor
                         </select>
                     </div>
                 </div>
+
                 <input type="hidden" id="selectedDate">
 
-                <div class="text-end mt-4">
-                    <button type="button" class="btn btn-secondary me-2" onclick="closeModal('assignModal')">
-                        Cancelar
-                    </button>
+                <div class="mt-4 text-end">
+                    <div id="assignError" class="alert alert-danger d-none mt-2"></div>
+
+                    <button type="button" class="btn btn-secondary me-2" onclick="closeModal('assignModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Asignar</button>
                 </div>
             </form>
         </div>
     </div>
 
+    {{-- Modal Editar --}}
     <div class="custom-modal" id="editModal" onclick="closeOnOverlay(event, 'editModal')">
         <div class="custom-modal-content">
             <span class="custom-modal-close" onclick="closeModal('editModal')">&times;</span>
@@ -106,6 +118,7 @@
             <form id="editForm">
                 @csrf
                 <input type="hidden" id="editAssignmentId">
+
                 <div class="mb-3">
                     <label for="editStaffSelect" class="form-label">Trabajador</label>
                     <select id="editStaffSelect" class="form-select" required>
@@ -115,6 +128,7 @@
                         @endforeach
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <label for="editSubjectSelect" class="form-label">Materia</label>
                     <select id="editSubjectSelect" class="form-select" required>
@@ -124,6 +138,7 @@
                         @endforeach
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label">Horario</label>
                     <div class="d-flex gap-2">
@@ -131,29 +146,31 @@
                             <option value="" disabled selected>Inicio</option>
                             @for ($hour = 7; $hour <= 20; $hour++)
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00
+                                </option>
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30
+                                </option>
                             @endfor
                         </select>
+
                         <select id="editEndTime" class="form-select" required>
                             <option value="" disabled selected>Fin</option>
                             @for ($hour = 7; $hour <= 21; $hour++)
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:00
+                                </option>
                                 <option value="{{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30">
-                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                    {{ str_pad($hour, 2, '0', STR_PAD_LEFT) }}:30
+                                </option>
                             @endfor
                         </select>
                     </div>
                 </div>
-                <div class="text-end mt-4">
-                    <button type="button" class="btn btn-danger me-2" id="deleteAssignmentBtn">
-                        Eliminar
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        Guardar cambios
-                    </button>
+
+                <div class="mt-4 text-end">
+                    <button type="button" class="btn btn-danger me-2" id="deleteAssignmentBtn">Eliminar</button>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
                 </div>
             </form>
         </div>
@@ -168,7 +185,6 @@
     <script>
         const userCrewId = @json(auth()->user()->crew_id);
     </script>
-
 
     <script>
         const routes = {
@@ -189,11 +205,20 @@
 
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
-            modal.classList.remove('show');
+            modal.classList.remove("show");
             setTimeout(() => {
                 modal.style.display = 'none';
+
+                if (modalId === 'assignModal') {
+                    const errorBox = document.getElementById("assignError");
+                    if (errorBox) {
+                        errorBox.textContent = "";
+                        errorBox.classList.add("d-none");
+                    }
+                }
             }, 300);
         }
+
     </script>
 
     <script src="{{ asset('assets/js/calendar.js') }}"></script>

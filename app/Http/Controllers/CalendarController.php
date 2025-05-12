@@ -86,9 +86,6 @@ class CalendarController extends Controller
         return response()->json($events);
     }
 
-
-
-
     public function storeHourAssignment(Request $request)
     {
         $data = $request->validate([
@@ -100,13 +97,29 @@ class CalendarController extends Controller
             'crew_id' => 'nullable|exists:crews,id',
         ]);
 
+        $data['crew_id'] = auth()->user()->crew_id === 1
+            ? $request->input('crew_id')
+            : auth()->user()->crew_id;
+
         $start = strtotime($data['start_time']);
         $end = strtotime($data['end_time']);
         $data['hours'] = ($end - $start) / 3600;
 
-        $data['crew_id'] = auth()->user()->crew_id === 1
-            ? $request->input('crew_id')
-            : auth()->user()->crew_id;
+        if ($data['hours'] <= 0) {
+            return response()->json(['error' => 'El bloque de horas debe ser mayor a cero.'], 422);
+        }
+
+        $exists = HourAssignment::where('staff_id', $data['staff_id'])
+            ->where('date', $data['date'])
+            ->where(function ($query) use ($data) {
+                $query->where('start_time', '<', $data['end_time'])
+                      ->where('end_time', '>', $data['start_time']);
+            })
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['error' => 'Este trabajador ya tiene horas asignadas que se traslapan con ese horario.'], 422);
+        }
 
         HourAssignment::create($data);
 
@@ -125,6 +138,24 @@ class CalendarController extends Controller
             'end_time' => 'sometimes|date_format:H:i|after:start_time',
             'date' => 'sometimes|date'
         ]);
+
+        $staffId = $data['staff_id'] ?? $assignment->staff_id;
+        $date = $data['date'] ?? $assignment->date;
+        $startTime = $data['start_time'] ?? $assignment->start_time;
+        $endTime = $data['end_time'] ?? $assignment->end_time;
+
+        $exists = HourAssignment::where('staff_id', $staffId)
+            ->where('date', $date)
+            ->where('id', '!=', $assignment->id)
+            ->where(function ($query) use ($startTime, $endTime) {
+                $query->where('start_time', '<', $endTime)
+                      ->where('end_time', '>', $startTime);
+            })
+            ->exists();
+
+        if ($exists) {
+            return response()->json(['error' => 'Este trabajador ya tiene horas asignadas que se traslapan con ese horario.'], 422);
+        }
 
         if (isset($data['start_time']) && isset($data['end_time'])) {
             $start = strtotime($data['start_time']);
