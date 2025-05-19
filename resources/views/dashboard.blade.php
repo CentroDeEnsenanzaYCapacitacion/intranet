@@ -38,7 +38,7 @@
             </div>
             @endif
             <div class="col-md-4 d-flex justify-content-center mb-5">
-                <a href="#">
+                <a href="{{ route('tickets.list') }}">
                     <div class="card align-content-center cc">
                         <img class="menu_icon  d-block mx-auto" src="{{ asset('assets/img/ticket.png') }}">
                         <div class="card-body">

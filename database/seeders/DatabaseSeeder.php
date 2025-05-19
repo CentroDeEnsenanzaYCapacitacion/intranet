@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             ReceiptAttributeSeeder::class,
             WebCarouselSeeder::class,
             WebMvvSeeder::class,
-            SubjectSeeder::class
+            SubjectSeeder::class,
+            TicketCategorySeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();

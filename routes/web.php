@@ -48,4 +48,5 @@ Route::middleware(['auth'])->group(function () {
     require 'system_collection.php';
     require 'system_calendars.php';
     require 'web_admin.php';
+    require 'tickets.php';
 });
