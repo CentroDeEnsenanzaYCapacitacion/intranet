@@ -25,7 +25,7 @@ class StudentController extends Controller
         $report = Report::find($request->report_id);
         session([
             'report' => $report,
-            'card_payment' => ($request->card_payment==null) ? 1 : 2
+            'card_payment' => ($request->card_payment == null) ? 1 : 2
         ]);
 
         Student::create([
@@ -89,14 +89,6 @@ class StudentController extends Controller
             $path = $path_webp;
         } else {
             return response()->file(public_path('assets/img/nophoto.jpg'));
-            // $path = public_path('assets/img/nophoto.jpg');
-            // $file = file_get_contents($path);
-
-            // $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            // $type = finfo_file($finfo, $path);
-            // finfo_close($finfo);
-
-            // return response($file, 200)->header('Content-Type', $type);
         }
 
         $fullPath = storage_path('app/' . $path);
@@ -143,7 +135,7 @@ class StudentController extends Controller
         $modalities = Modality::all();
         $amount = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->where('receipt_type_id', 2)->first();
 
-        if($student->first_time) {
+        if ($student->first_time) {
             return view('system.students.new-profile', compact('student', 'schedules', 'payment_periodicities', 'modalities'));
         } else {
             $birthdate = DateTime::createFromFormat('d/m/Y', $student->birthdate);
@@ -155,7 +147,7 @@ class StudentController extends Controller
 
     public function update(Request $request)
     {
-        if($request->operation == "new") {
+        if ($request->operation == "new") {
             $studentRules = (new StudentRequest())->rules();
         } else {
             $studentRules = (new StudentUpdateRequest())->rules();
@@ -182,7 +174,7 @@ class StudentController extends Controller
         $student->sabbatine = $request->sabbatine;
         $student->modality_id = $request->modality_id;
 
-        if($request->operation == "new") {
+        if ($request->operation == "new") {
             $student->birthdate = $request->birthdate;
             $student->curp = $request->curp;
             $student->payment_periodicity_id = $request->payment_periodicity_id;
@@ -209,7 +201,7 @@ class StudentController extends Controller
 
         $student->save();
 
-        if($request->operation == "new") {
+        if ($request->operation == "new") {
             return redirect()->route('system.students.search')->with('success', 'Estudiante registrado correctamente');
         } else {
             return back()->with('success', 'Estudiante actualizado correctamente');
