@@ -8,10 +8,9 @@
     const deepLink = `rico-guide://friend/${friendId}`;
     window.location.href = deepLink;
 
-    // Fallback tras 2 segundos (opcional)
     setTimeout(() => {
       window.location.href = "https://google.com";
-    }, 2000);
+    }, 10000);
   </script>
 </head>
 <body>
