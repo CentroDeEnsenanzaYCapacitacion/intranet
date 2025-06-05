@@ -20,6 +20,13 @@ Route::get('/friend/{friendId}', function (Request $request, $friendId) {
     return view('deeplinks.friend', ['friendId' => $friendId]);
 });
 
+Route::get('/.well-known/apple-app-site-association', function () {
+    $path = public_path('.well-known/apple-app-site-association');
+    return response()->file($path, [
+        'Content-Type' => 'application/json',
+    ]);
+});
+
 // Route::get('/friend/{friendId}', function (Request $request, $friendId) {
 //     $userAgent = $request->header('User-Agent');
 
