@@ -22,6 +22,11 @@ Route::get('/friend/{friendId}', function (Request $request, $friendId) {
 
 Route::get('/.well-known/apple-app-site-association', function () {
     $path = public_path('.well-known/apple-app-site-association');
+
+    if (!file_exists($path)) {
+        abort(404, 'Archivo no encontrado');
+    }
+
     return response()->file($path, [
         'Content-Type' => 'application/json',
     ]);
