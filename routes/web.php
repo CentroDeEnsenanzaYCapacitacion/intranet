@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 Route::post('/heartbeat', function () {
     if (Session::has('active_session')) {
@@ -19,8 +20,19 @@ Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 //     return view('deeplinks.friend', ['friendId' => $friendId]);
 // });
 
-Route::get('/friend/{friendId}', function ($friendId) {
-    return redirect()->away("rico-guide://friend/$friendId");
+Route::get('/friend/{friendId}', function (Request $request, $friendId) {
+    $userAgent = $request->header('User-Agent');
+
+    $deeplink = "rico-guide://friend/$friendId";
+    $fallback = "https://play.google.com/store/apps/details?id=com.tuempresa.ricoapp";
+
+    // Si es Android o iOS, intentamos redirigir a la app
+    if (str_contains($userAgent, 'Android') || str_contains($userAgent, 'iPhone')) {
+        return redirect()->away($deeplink);
+    }
+
+    // Si es otro tipo de navegador, redirige a tienda o web
+    return redirect($fallback);
 });
 
 
