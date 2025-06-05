@@ -16,7 +16,7 @@ Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 
-Route::get('/friend/{friendId}', function ($friendId) {
+Route::get('/friend/{friendId}', function (Request $request, $friendId) {
     return view('deeplinks.friend', ['friendId' => $friendId]);
 });
 
