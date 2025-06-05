@@ -15,9 +15,14 @@ Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 
+// Route::get('/friend/{friendId}', function ($friendId) {
+//     return view('deeplinks.friend', ['friendId' => $friendId]);
+// });
+
 Route::get('/friend/{friendId}', function ($friendId) {
-    return view('deeplinks.friend', ['friendId' => $friendId]);
+    return redirect()->away("rico-guide://friend/$friendId");
 });
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
