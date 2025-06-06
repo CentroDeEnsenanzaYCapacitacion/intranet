@@ -44,16 +44,14 @@
       const isIOS = /iPad|iPhone|iPod/.test(userAgent);
 
       const fallback = isIOS
-        ? "https://apps.apple.com/app/idTU_APP_ID" // Reemplaza con tu app store ID real
-        : "https://play.google.com/store/apps/details?id=com.tuempresa.ricoapp"; // Reemplaza con tu ID de paquete Android
+        ? "https://apps.apple.com/app/idTU_APP_ID" 
+        : "https://play.google.com/store/apps/details?id=com.tuempresa.ricoapp";
 
-      // Intentar abrir la app
       window.location.href = deepLink;
 
-      // Redirigir a la tienda después de 2 segundos si no se abrió la app
       setTimeout(() => {
         window.location.href = fallback;
-      }, 2000);
+      }, 10000);
     })();
   </script>
 </body>

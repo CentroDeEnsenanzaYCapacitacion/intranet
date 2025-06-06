@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.capitaldigital.ricoguide",
+      "sha256_cert_fingerprints": [
+        "FE:E0:5E:59:16:CD:E5:CB:2E:14:4B:67:16:E4:A8:80:5F:A8:98:A2:56:18:71:89:51:64:49:D1:25:9A:A9:76"
+      ]
+    }
+  }
+]
