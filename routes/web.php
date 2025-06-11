@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeepLinkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Session;
@@ -16,9 +17,11 @@ Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 
-Route::get('/friend/{friendId}', function (Request $request, $friendId) {
-    return view('deeplinks.friend', ['friendId' => $friendId]);
-});
+// Route::get('/friend/{friendId}', function ($friendId) {
+//     return view('deeplinks.friend', ['friendId' => $friendId]);
+// });
+
+Route::get('/friend/{friendId}', [DeepLinkController::class, 'friend']);
 
 Route::get('/.well-known/apple-app-site-association', function () {
     $path = public_path('.well-known/apple-app-site-association');
@@ -32,20 +35,17 @@ Route::get('/.well-known/apple-app-site-association', function () {
     ]);
 });
 
-// Route::get('/friend/{friendId}', function (Request $request, $friendId) {
-//     $userAgent = $request->header('User-Agent');
+Route::get('/.well-known/assetlinks.json', function () {
+    $path = public_path('.well-known/assetlinks.json');
 
-//     $deeplink = "rico-guide://friend/$friendId";
-//     $fallback = "https://play.google.com/store/apps/details?id=com.tuempresa.ricoapp";
+    if (!file_exists($path)) {
+        abort(404, 'Archivo no encontrado');
+    }
 
-//     // Si es Android o iOS, intentamos redirigir a la app
-//     if (str_contains($userAgent, 'Android') || str_contains($userAgent, 'iPhone')) {
-//         return redirect()->away($deeplink);
-//     }
-
-//     // Si es otro tipo de navegador, redirige a tienda o web
-//     return redirect($fallback);
-// });
+    return response()->file($path, [
+        'Content-Type' => 'application/json',
+    ]);
+});
 
 
 Route::middleware(['auth'])->group(function () {
