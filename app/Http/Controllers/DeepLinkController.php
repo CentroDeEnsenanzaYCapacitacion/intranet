@@ -8,9 +8,19 @@ class DeepLinkController extends Controller
 {
     public function friend(Request $request, $friendId)
     {
+        return $this->handleDeepLink($request, 'friend', $friendId);
+    }
+
+    public function profile(Request $request, $userId)
+    {
+        return $this->handleDeepLink($request, 'profile', $userId);
+    }
+
+    private function handleDeepLink(Request $request, $type, $id)
+    {
         $userAgent = $request->header('User-Agent');
 
-        $deepLink = "rico-guide://friend/{$friendId}";
+        $deepLink = "rico-guide://{$type}/{$id}";
         $appStoreUrl = 'https://apps.apple.com/app/idTU_APP_ID';
         $playStoreUrl = 'https://play.google.com/store/apps/details?id=com.tuempresa.ricoapp';
 

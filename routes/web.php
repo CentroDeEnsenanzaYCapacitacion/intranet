@@ -17,11 +17,9 @@ Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 
-// Route::get('/friend/{friendId}', function ($friendId) {
-//     return view('deeplinks.friend', ['friendId' => $friendId]);
-// });
-
 Route::get('/friend/{friendId}', [DeepLinkController::class, 'friend']);
+Route::get('/profile/{userId}', [DeepLinkController::class, 'profile']);
+
 
 Route::get('/.well-known/apple-app-site-association', function () {
     $path = public_path('.well-known/apple-app-site-association');
