@@ -19,6 +19,7 @@ Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 
 Route::get('/friend/{friendId}', [DeepLinkController::class, 'friend']);
 Route::get('/profile/{userId}', [DeepLinkController::class, 'profile']);
+Route::get('/list/{listId}', [DeepLinkController::class, 'list']);
 
 
 Route::get('/.well-known/apple-app-site-association', function () {
