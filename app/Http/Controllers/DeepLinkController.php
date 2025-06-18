@@ -16,6 +16,11 @@ class DeepLinkController extends Controller
         return $this->handleDeepLink($request, 'profile', $userId);
     }
 
+    public function list(Request $request, $listId)
+    {
+        return $this->handleDeepLink($request, 'list', $listId);
+    }
+
     private function handleDeepLink(Request $request, $type, $id)
     {
         $userAgent = $request->header('User-Agent');
