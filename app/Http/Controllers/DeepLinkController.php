@@ -26,8 +26,7 @@ class DeepLinkController extends Controller
         $userAgent = $request->header('User-Agent');
 
         $deepLink = "rico-guide://{$type}/{$id}";
-        $appStoreUrl = 'https://apps.apple.com/app/idTU_APP_ID';
-        $playStoreUrl = 'https://play.google.com/store/apps/details?id=com.tuempresa.ricoapp';
+        $redirectUrl = 'https://icon-icons.com/es/';
 
         $isIOS = stripos($userAgent, 'iPhone') !== false ||
                  stripos($userAgent, 'iPad') !== false ||
@@ -39,6 +38,6 @@ class DeepLinkController extends Controller
             return redirect()->away($deepLink);
         }
 
-        return redirect()->away($isIOS ? $appStoreUrl : $playStoreUrl);
+        return redirect()->away($redirectUrl);
     }
 }
