@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\DeepLinkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Session;
@@ -16,10 +15,6 @@ Route::post('/heartbeat', function () {
 Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
-
-Route::get('/friend/{friendId}', [DeepLinkController::class, 'friend']);
-Route::get('/profile/{userId}', [DeepLinkController::class, 'profile']);
-Route::get('/list/{listId}', [DeepLinkController::class, 'list']);
 
 
 Route::get('/.well-known/apple-app-site-association', function () {
