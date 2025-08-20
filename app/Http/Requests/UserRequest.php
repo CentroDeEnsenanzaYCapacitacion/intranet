@@ -15,11 +15,11 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=> 'required',
+            'name' => 'required',
             'surnames' => 'required',
             'email' => 'required|email|unique:users,email,' . $this->id . '|regex:/^[^@]+@[^@]+\.[^@]+$/',
             'role_id' => 'required|integer|min:0',
-            'crew_id' => 'required|integer|min:0',
+            'crew_id' => 'required_unless:role_id,1,5|integer|min:1|exists:crews,id',
             'phone' => 'required_without:cel_phone|numeric|digits:10',
             'cel_phone' => 'required_without:phone|numeric|digits:10',
             'genre' => 'required'

@@ -30,7 +30,7 @@ class UserController extends Controller
 
             $roles = Role::all();
         } else {
-            $roles = Role::where("name","!=","admin")->where("name","!=","Director")->get();
+            $roles = Role::where("name", "!=", "admin")->where("name", "!=", "Director")->get();
         }
         $crews = Crew::all();
         return view('admin.users.new', compact('roles', 'crews'));
@@ -54,6 +54,9 @@ class UserController extends Controller
 
     public function insertUser(UserRequest $request)
     {
+        if (in_array((int) $request->role_id, [1, 5])) {
+            $request->merge(['crew_id' => 1]);
+        }
         $username = $this->getUniqueUsername(explode(' ', trim($request->name))[0]);
 
         $password = Str::random(12);
