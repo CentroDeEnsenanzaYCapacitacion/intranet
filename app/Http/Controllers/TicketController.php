@@ -55,8 +55,18 @@ class TicketController extends Controller
 
         // Procesar imágenes si existen
         if ($request->hasFile('images')) {
-            // Usar ruta relativa desde base_path
-            $uploadPath = public_path('uploads/tickets');
+            // Determinar ruta según ambiente
+            if (app()->environment('production', 'development')) {
+                // En servidor: guardar en public_html
+                $uploadPath = str_replace(
+                    '/intranet_dev/public',
+                    '/public_html/intranet_dev',
+                    public_path('uploads/tickets')
+                );
+            } else {
+                // En local
+                $uploadPath = public_path('uploads/tickets');
+            }
             
             \Log::info('Preparando subida de imágenes', [
                 'upload_path' => $uploadPath,
