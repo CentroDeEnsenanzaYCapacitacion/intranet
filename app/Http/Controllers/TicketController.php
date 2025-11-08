@@ -26,6 +26,14 @@ class TicketController extends Controller
 
     public function save(Request $request)
     {
+        // Debug: Verificar si llegan archivos
+        \Log::info('Creando ticket', [
+            'has_files' => $request->hasFile('images'),
+            'all_files' => $request->allFiles(),
+            'post_max_size' => ini_get('post_max_size'),
+            'upload_max_filesize' => ini_get('upload_max_filesize'),
+        ]);
+
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'nullable',
