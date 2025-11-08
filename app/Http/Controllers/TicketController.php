@@ -55,18 +55,37 @@ class TicketController extends Controller
 
         // Procesar imágenes si existen
         if ($request->hasFile('images')) {
+            // Usar ruta relativa desde base_path
             $uploadPath = public_path('uploads/tickets');
             
-            // Verificar que la carpeta existe y tiene permisos
+            \Log::info('Preparando subida de imágenes', [
+                'upload_path' => $uploadPath,
+                'exists' => file_exists($uploadPath),
+                'writable' => is_writable(public_path('uploads')),
+            ]);
+            
+            // Verificar que la carpeta existe
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0775, true);
             }
             
             foreach ($request->file('images') as $image) {
                 try {
-                    // Guardar directamente en public/uploads/tickets
                     $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                    $image->move($uploadPath, $filename);
+                    
+                    \Log::info('Intentando mover imagen', [
+                        'filename' => $filename,
+                        'from' => $image->getRealPath(),
+                        'to' => $uploadPath . '/' . $filename,
+                    ]);
+                    
+                    // Mover archivo
+                    $moved = $image->move($uploadPath, $filename);
+                    
+                    \Log::info('Imagen movida', [
+                        'success' => (bool)$moved,
+                        'final_path' => $uploadPath . '/' . $filename,
+                    ]);
                     
                     TicketImage::create([
                         'ticket_id' => $ticket->id,
@@ -76,7 +95,8 @@ class TicketController extends Controller
                 } catch (\Exception $e) {
                     \Log::error('Error al guardar imagen de ticket', [
                         'error' => $e->getMessage(),
-                        'path' => $uploadPath,
+                        'trace' => $e->getTraceAsString(),
+                        'upload_path' => $uploadPath,
                     ]);
                 }
             }
