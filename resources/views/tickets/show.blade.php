@@ -38,6 +38,14 @@
                                 'crítica' => 'text-white bg-danger border border-danger',
                                 default => 'text-dark bg-transparent border',
                             };
+
+                            $statusClass = match($ticket->status) {
+                                'abierto' => 'bg-info text-white',
+                                'en progreso' => 'bg-warning text-dark',
+                                'resuelto' => 'bg-success text-white',
+                                'cerrado' => 'bg-secondary text-white',
+                                default => 'bg-light text-dark',
+                            };
                         @endphp
                         <tr
                             style="cursor: pointer;"
@@ -50,7 +58,11 @@
                                     {{ ucfirst($ticket->priority) }}
                                 </span>
                             </td>
-                            <td>{{ ucfirst(str_replace('_', ' ', $ticket->status)) }}</td>
+                            <td>
+                                <span class="badge {{ $statusClass }}">
+                                    {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
+                                </span>
+                            </td>
                             <td>{{ $ticket->created_at->format('d/m/Y H:i') }}</td>
                         </tr>
                     @empty

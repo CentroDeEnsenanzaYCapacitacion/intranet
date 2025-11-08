@@ -5,13 +5,6 @@ use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
-Route::post('/heartbeat', function () {
-    if (Session::has('active_session')) {
-        Session::put('last_heartbeat', time());
-    }
-    return response()->json(['status' => 'success']);
-})->name('heartbeat');
-
 Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');

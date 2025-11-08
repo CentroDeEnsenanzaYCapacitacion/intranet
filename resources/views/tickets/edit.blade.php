@@ -22,6 +22,14 @@
                     'critica' => 'text-white bg-danger border border-danger',
                     default => 'text-dark bg-transparent border',
                 };
+
+                $statusClass = match($ticket->status) {
+                    'abierto' => 'bg-info text-white',
+                    'en progreso' => 'bg-warning text-dark',
+                    'resuelto' => 'bg-success text-white',
+                    'cerrado' => 'bg-secondary text-white',
+                    default => 'bg-light text-dark',
+                };
             @endphp
 
             <p><strong>Prioridad:</strong>
@@ -31,17 +39,27 @@
             </p>
 
             <p><strong>Categoría:</strong> {{ $ticket->category->name ?? 'Sin categoría' }}</p>
-            <p><strong>Estado:</strong> {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}</p>
+            <p><strong>Estado:</strong>
+                <span class="badge {{ $statusClass }}">
+                    {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
+                </span>
+            </p>
             <p><strong>Fecha de creación:</strong> {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
         </div>
 
-        @if($ticket->evidences && $ticket->evidences->count())
+        @if($ticket->images && $ticket->images->count())
             <hr>
-            <h5>Evidencias gráficas</h5>
+            <h5>Imágenes adjuntas</h5>
             <div class="row">
-                @foreach($ticket->evidences as $evidence)
+                @foreach($ticket->images as $image)
                     <div class="col-md-3 mb-3">
-                        <img src="{{ asset('storage/' . $evidence->path) }}" class="img-fluid rounded border" alt="Evidencia">
+                        <a href="{{ asset($image->path) }}" target="_blank">
+                            <img src="{{ asset($image->path) }}" 
+                                 class="img-fluid rounded border" 
+                                 alt="{{ $image->original_name }}"
+                                 style="cursor: pointer; object-fit: cover; height: 200px; width: 100%;">
+                        </a>
+                        <small class="text-muted d-block mt-1">{{ $image->original_name }}</small>
                     </div>
                 @endforeach
             </div>

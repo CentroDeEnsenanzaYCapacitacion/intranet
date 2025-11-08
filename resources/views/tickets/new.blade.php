@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <form action="{{ route('tickets.save') }}" method="POST" class="mt-4">
+        <form action="{{ route('tickets.save') }}" method="POST" enctype="multipart/form-data" class="mt-4">
             @csrf
 
             <div class="mb-3">
@@ -53,6 +53,18 @@
                     @endforeach
                 </select>
                 @error('category_id')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="images" class="form-label">Imágenes (opcional - máximo 5)</label>
+                <input type="file" name="images[]" id="images" class="form-control" accept="image/*" multiple>
+                <small class="text-muted">Puedes seleccionar hasta 5 imágenes. Formatos: JPG, PNG, GIF, WEBP (máx. 5MB cada una)</small>
+                @error('images')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+                @error('images.*')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
             </div>
