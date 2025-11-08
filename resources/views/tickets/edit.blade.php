@@ -104,7 +104,7 @@
         <div class="mb-4">
             @forelse($ticket->messages as $msg)
                 <div class="border rounded p-3 mb-3">
-                    <strong>{{ $msg->user->name }}</strong>
+                    <strong>{{ $msg->user->role_id == 1 ? 'SysAdmin' : $msg->user->name }}</strong>
                     <small class="text-muted">· {{ $msg->created_at->diffForHumans() }}</small>
                     <p class="mb-0">{{ $msg->message }}</p>
                 </div>
