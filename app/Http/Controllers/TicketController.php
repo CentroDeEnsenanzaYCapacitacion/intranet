@@ -26,14 +26,6 @@ class TicketController extends Controller
 
     public function save(Request $request)
     {
-        // Debug: Verificar si llegan archivos
-        \Log::info('Creando ticket', [
-            'has_files' => $request->hasFile('images'),
-            'all_files' => $request->allFiles(),
-            'post_max_size' => ini_get('post_max_size'),
-            'upload_max_filesize' => ini_get('upload_max_filesize'),
-        ]);
-
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'nullable',
@@ -56,8 +48,15 @@ class TicketController extends Controller
         // Procesar imágenes si existen
         if ($request->hasFile('images')) {
             // Determinar ruta según ambiente
-            if (app()->environment('production', 'development')) {
-                // En servidor: guardar en public_html
+            if (app()->environment('production')) {
+                // En producción: /public_html/intranet/
+                $uploadPath = str_replace(
+                    '/intranet_dev/public',
+                    '/public_html/intranet',
+                    public_path('uploads/tickets')
+                );
+            } elseif (app()->environment('development')) {
+                // En desarrollo: /public_html/intranet_dev/
                 $uploadPath = str_replace(
                     '/intranet_dev/public',
                     '/public_html/intranet_dev',
@@ -68,12 +67,6 @@ class TicketController extends Controller
                 $uploadPath = public_path('uploads/tickets');
             }
             
-            \Log::info('Preparando subida de imágenes', [
-                'upload_path' => $uploadPath,
-                'exists' => file_exists($uploadPath),
-                'writable' => is_writable(public_path('uploads')),
-            ]);
-            
             // Verificar que la carpeta existe
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0775, true);
@@ -83,19 +76,8 @@ class TicketController extends Controller
                 try {
                     $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                     
-                    \Log::info('Intentando mover imagen', [
-                        'filename' => $filename,
-                        'from' => $image->getRealPath(),
-                        'to' => $uploadPath . '/' . $filename,
-                    ]);
-                    
                     // Mover archivo
-                    $moved = $image->move($uploadPath, $filename);
-                    
-                    \Log::info('Imagen movida', [
-                        'success' => (bool)$moved,
-                        'final_path' => $uploadPath . '/' . $filename,
-                    ]);
+                    $image->move($uploadPath, $filename);
                     
                     TicketImage::create([
                         'ticket_id' => $ticket->id,
@@ -105,8 +87,6 @@ class TicketController extends Controller
                 } catch (\Exception $e) {
                     \Log::error('Error al guardar imagen de ticket', [
                         'error' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString(),
-                        'upload_path' => $uploadPath,
                     ]);
                 }
             }
