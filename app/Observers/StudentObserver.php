@@ -27,7 +27,7 @@ class StudentObserver
         session()->forget('report');
         session()->forget('card_payment');
 
-        $receipt_type_id = isset($card_payment)?2:1;
+        $receipt_type_id = isset($card_payment) ? 2 : 1;
 
         $concept = 'Colegiatura '.$student->course->name;
         $report_id = null;
@@ -37,7 +37,7 @@ class StudentObserver
                         ->first()->amount;
         $discount = null;
 
-        if($report != null) {
+        if ($report != null) {
             $receipt_type_id = 1;
 
             $amount = Amount::where('crew_id', $report->crew_id)
@@ -47,8 +47,8 @@ class StudentObserver
 
             $sys_request = SysRequest::where('report_id', $report->id)->first();
 
-            if(isset($sys_request)) {
-                if($sys_request->approved) {
+            if (isset($sys_request)) {
+                if ($sys_request->approved) {
                     $discount = strstr($sys_request->description, "%", true);
                     $final_amount = $amount - (($discount * $amount) / 100);
                 } else {
@@ -61,9 +61,9 @@ class StudentObserver
 
             $report_id = $report->id;
 
-            if ($discount==null){
+            if ($discount == null) {
                 $concept = 'Inscripción '.$report->course->name;
-            }else{
+            } else {
                 $concept = 'Inscripción '.$report->course->name.' con descuento del '.$discount.'%';
             }
 
@@ -75,12 +75,12 @@ class StudentObserver
             $receipt_type_id,
             $card_payment,
             $student->id,
+            $concept,
+            $final_amount,
             $report_id,
             null,
             null,
-            null,
-            $concept,
-            $final_amount
+            null
         );
     }
 

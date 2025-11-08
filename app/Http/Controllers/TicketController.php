@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\TicketMessage;
+use App\Models\TicketImage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
 {
@@ -24,24 +26,44 @@ class TicketController extends Controller
 
     public function save(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'title' => 'required|max:255',
             'description' => 'nullable',
             'priority' => 'required|in:baja,media,alta,critica',
             'category_id' => 'required|exists:ticket_categories,id',
+            'images' => 'nullable|array|max:5',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
-        $data['user_id'] = Auth::id();
-        $data['status'] = 'abierto';
+        // Crear ticket sin el campo 'images'
+        $ticket = Ticket::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'priority' => $request->priority,
+            'category_id' => $request->category_id,
+            'user_id' => Auth::id(),
+            'status' => 'abierto',
+        ]);
 
-        Ticket::create($data);
+        // Procesar imágenes si existen
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('tickets', 'public');
+                
+                TicketImage::create([
+                    'ticket_id' => $ticket->id,
+                    'path' => $path,
+                    'original_name' => $image->getClientOriginalName(),
+                ]);
+            }
+        }
 
         return redirect()->route('tickets.list')->with('success', 'Ticket creado correctamente.');
     }
 
     public function detail($id)
     {
-        $ticket = Ticket::with('category', 'user')->findOrFail($id);
+        $ticket = Ticket::with('category', 'user', 'images')->findOrFail($id);
 
         return view('tickets.edit', compact('ticket'));
     }

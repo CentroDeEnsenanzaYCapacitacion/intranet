@@ -25,4 +25,9 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketMessage::class);
     }
+
+    public function images()
+    {
+        return $this->hasMany(TicketImage::class);
+    }
 }

@@ -86,12 +86,12 @@ class CollectionController extends Controller
             $request->receipt_type_id,
             ($request->card_payment == null) ? 1 : 2,
             $request->student_id,
+            $request->concept,
+            $amount,
             null,
             $request->attr_id == 0 ? null : $request->attr_id,
             $request->voucher,
-            $request->has('bill') ? true : false,
-            $request->concept,
-            $amount
+            $request->has('bill') ? true : false
         );
 
         return redirect()->route('algunaRuta')->with('success', 'Recibo emitido correctamente.');

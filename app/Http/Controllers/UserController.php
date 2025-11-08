@@ -17,8 +17,23 @@ class UserController extends Controller
 {
     public function getUsers()
     {
-        $users = User::all()->where('is_active', true)->skip(1);
-        $blocked_users = User::where('is_active', false)->get();
+        $currentUser = Auth::user();
+
+        // Si es admin (role_id = 1), ve todos los usuarios
+        if ($currentUser->role_id == 1) {
+            $users = User::where('is_active', true)->where('id', '!=', 1)->get();
+            $blocked_users = User::where('is_active', false)->get();
+        } else {
+            // Si no es admin, solo ve usuarios de su mismo crew
+            $users = User::where('is_active', true)
+                ->where('crew_id', $currentUser->crew_id)
+                ->where('id', '!=', 1)
+                ->get();
+            $blocked_users = User::where('is_active', false)
+                ->where('crew_id', $currentUser->crew_id)
+                ->get();
+        }
+
         return view('admin.users.show', compact('users', 'blocked_users'));
     }
 
