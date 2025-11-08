@@ -39,7 +39,7 @@ class Utils
         $result->saveToFile($url.'assets/img/qr.png');
     }
 
-    public static function generateReceipt($crew_id, $receipt_type_id, $card_payment, $student_id, $report_id = null, $receipt_attribute_id = null, $voucher = null, $bill = null, $concept, $amount)
+    public static function generateReceipt($crew_id, $receipt_type_id, $card_payment, $student_id, $concept, $amount, $report_id = null, $receipt_attribute_id = null, $voucher = null, $bill = null)
     {
         $finalAmount = $amount;
         if (!isset($report_id)) {

@@ -17,8 +17,23 @@ class UserController extends Controller
 {
     public function getUsers()
     {
-        $users = User::all()->where('is_active', true)->skip(1);
-        $blocked_users = User::where('is_active', false)->get();
+        $currentUser = Auth::user();
+
+        // Si es admin (role_id = 1), ve todos los usuarios
+        if ($currentUser->role_id == 1) {
+            $users = User::where('is_active', true)->where('id', '!=', 1)->get();
+            $blocked_users = User::where('is_active', false)->get();
+        } else {
+            // Si no es admin, solo ve usuarios de su mismo crew
+            $users = User::where('is_active', true)
+                ->where('crew_id', $currentUser->crew_id)
+                ->where('id', '!=', 1)
+                ->get();
+            $blocked_users = User::where('is_active', false)
+                ->where('crew_id', $currentUser->crew_id)
+                ->get();
+        }
+
         return view('admin.users.show', compact('users', 'blocked_users'));
     }
 
@@ -30,7 +45,7 @@ class UserController extends Controller
 
             $roles = Role::all();
         } else {
-            $roles = Role::where("name","!=","admin")->where("name","!=","Director")->get();
+            $roles = Role::where("name", "!=", "admin")->where("name", "!=", "Director")->get();
         }
         $crews = Crew::all();
         return view('admin.users.new', compact('roles', 'crews'));
@@ -54,6 +69,9 @@ class UserController extends Controller
 
     public function insertUser(UserRequest $request)
     {
+        if (in_array((int) $request->role_id, [1, 5])) {
+            $request->merge(['crew_id' => 1]);
+        }
         $username = $this->getUniqueUsername(explode(' ', trim($request->name))[0]);
 
         $password = Str::random(12);
