@@ -53,8 +53,8 @@
             <div class="row">
                 @foreach($ticket->images as $image)
                     <div class="col-md-3 mb-3">
-                        <a href="{{ asset('storage/' . $image->path) }}" target="_blank">
-                            <img src="{{ asset('storage/' . $image->path) }}" 
+                        <a href="{{ asset($image->path) }}" target="_blank">
+                            <img src="{{ asset($image->path) }}" 
                                  class="img-fluid rounded border" 
                                  alt="{{ $image->original_name }}"
                                  style="cursor: pointer; object-fit: cover; height: 200px; width: 100%;">

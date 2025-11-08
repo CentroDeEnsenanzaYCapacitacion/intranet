@@ -48,11 +48,13 @@ class TicketController extends Controller
         // Procesar imágenes si existen
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('tickets', 'public');
+                // Guardar directamente en public/uploads/tickets
+                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/tickets'), $filename);
                 
                 TicketImage::create([
                     'ticket_id' => $ticket->id,
-                    'path' => $path,
+                    'path' => 'uploads/tickets/' . $filename,
                     'original_name' => $image->getClientOriginalName(),
                 ]);
             }
