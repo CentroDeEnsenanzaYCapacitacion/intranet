@@ -8,13 +8,23 @@ use App\Models\TicketCategory;
 use App\Models\TicketMessage;
 use App\Models\TicketImage;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class TicketController extends Controller
 {
     public function list()
     {
-        $tickets = Ticket::with('category', 'user')->latest()->get();
+        $tickets = Ticket::with('category', 'user')
+            ->where(function ($query) {
+                $query->whereNotIn('status', ['cerrado', 'resuelto'])
+                    ->orWhere(function ($q) {
+                        $q->whereIn('status', ['cerrado', 'resuelto'])
+                          ->where('updated_at', '>=', now()->subMonth());
+                    });
+            })
+            ->latest()
+            ->get();
+
         return view('tickets.show', compact('tickets'));
     }
 
@@ -66,26 +76,26 @@ class TicketController extends Controller
                 // En local
                 $uploadPath = public_path('uploads/tickets');
             }
-            
+
             // Verificar que la carpeta existe
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0775, true);
             }
-            
+
             foreach ($request->file('images') as $image) {
                 try {
                     $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                    
+
                     // Mover archivo
                     $image->move($uploadPath, $filename);
-                    
+
                     TicketImage::create([
                         'ticket_id' => $ticket->id,
                         'path' => 'uploads/tickets/' . $filename,
                         'original_name' => $image->getClientOriginalName(),
                     ]);
                 } catch (\Exception $e) {
-                    \Log::error('Error al guardar imagen de ticket', [
+                    Log::error('Error al guardar imagen de ticket', [
                         'error' => $e->getMessage(),
                     ]);
                 }
