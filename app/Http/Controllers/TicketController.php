@@ -47,16 +47,30 @@ class TicketController extends Controller
 
         // Procesar imágenes si existen
         if ($request->hasFile('images')) {
+            $uploadPath = public_path('uploads/tickets');
+            
+            // Verificar que la carpeta existe y tiene permisos
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0775, true);
+            }
+            
             foreach ($request->file('images') as $image) {
-                // Guardar directamente en public/uploads/tickets
-                $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/tickets'), $filename);
-                
-                TicketImage::create([
-                    'ticket_id' => $ticket->id,
-                    'path' => 'uploads/tickets/' . $filename,
-                    'original_name' => $image->getClientOriginalName(),
-                ]);
+                try {
+                    // Guardar directamente en public/uploads/tickets
+                    $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move($uploadPath, $filename);
+                    
+                    TicketImage::create([
+                        'ticket_id' => $ticket->id,
+                        'path' => 'uploads/tickets/' . $filename,
+                        'original_name' => $image->getClientOriginalName(),
+                    ]);
+                } catch (\Exception $e) {
+                    \Log::error('Error al guardar imagen de ticket', [
+                        'error' => $e->getMessage(),
+                        'path' => $uploadPath,
+                    ]);
+                }
             }
         }
 
