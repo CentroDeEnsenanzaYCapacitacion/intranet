@@ -30,7 +30,7 @@ class TicketController extends Controller
 
     public function form()
     {
-        $categories = TicketCategory::orderBy('name')->get();
+        $categories = TicketCategory::orderBy('id')->get();
         return view('tickets.new', compact('categories'));
     }
 
