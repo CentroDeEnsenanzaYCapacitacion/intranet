@@ -11,18 +11,17 @@ class TicketCategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Interfaz / UX',
-            'Lógica / Funcionalidad',
-            'Rendimiento',
-            'Base de datos / Datos',
-            'Integraciones / API',
-            'Seguridad',
-            'Permisos y roles',
-            'Notificaciones / Correos',
-            'Infraestructura / DevOps',
-            'Compatibilidad / Dispositivos',
-            'Internacionalización / Contenido',
-            'Documentación',
+            'Problema de acceso / Login',
+            'Error al cargar página o datos',
+            'Información incorrecta o desactualizada',
+            'No puedo realizar una acción',
+            'Problema con reportes o documentos',
+            'Problema con pagos o recibos',
+            'Problema con estudiantes o cursos',
+            'Problema con usuarios o permisos',
+            'Solicitud de nueva funcionalidad',
+            'Sugerencia de mejora',
+            'Consulta o duda',
             'Otro',
         ];
 
