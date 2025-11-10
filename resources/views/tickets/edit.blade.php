@@ -77,7 +77,7 @@
         @if (in_array(Auth::user()->role_id, [1]))
             <hr class="my-4">
             <h5>Cambiar estado del ticket</h5>
-            <form action="{{ route('tickets.updateStatus', $ticket->id) }}" method="POST" class="row g-2 mb-4">
+            <form action="{{ route('tickets.updateStatus', $ticket->id) }}" method="POST" class="row g-2 mb-4" onsubmit="showLoader(true)">
                 @csrf
                 @method('PUT')
 
@@ -113,7 +113,7 @@
             @endforelse
         </div>
 
-        <form action="{{ route('tickets.message', $ticket->id) }}" method="POST">
+        <form action="{{ route('tickets.message', $ticket->id) }}" method="POST" onsubmit="showLoader(true)">
             @csrf
             <div class="mb-3">
                 <label for="message" class="form-label">Nuevo mensaje</label>

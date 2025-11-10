@@ -32,13 +32,6 @@
             </p>
         </div>
 
-        <p style="margin-top:30px; text-align:center;">
-            <a href="https://intranet.capacitacioncec.edu.mx/tickets/{{ $ticket->id }}"
-               style="background-color:#f37021; color:white; padding:12px 25px;
-                      text-decoration:none; font-size:16px; border-radius:6px; display:inline-block;">
-                Ver ticket
-            </a>
-        </p>
     </div>
 
     <div style="background-color:#f5f5f5; padding:20px; text-align:center;">

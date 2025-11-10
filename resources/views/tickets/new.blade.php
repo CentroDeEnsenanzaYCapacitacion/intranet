@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <form action="{{ route('tickets.save') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+        <form action="{{ route('tickets.save') }}" method="POST" enctype="multipart/form-data" class="mt-4" onsubmit="showLoader(true)">
             @csrf
 
             <div class="mb-3">
