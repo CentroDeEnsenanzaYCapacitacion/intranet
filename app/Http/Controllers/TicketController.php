@@ -114,6 +114,11 @@ class TicketController extends Controller
 
     public function storeMessage(Request $request, Ticket $ticket)
     {
+        // Validar que usuarios no-admin no puedan escribir en tickets cerrados/resueltos
+        if (Auth::user()->role_id !== 1 && in_array($ticket->status, ['cerrado', 'resuelto'])) {
+            return redirect()->back()->with('error', 'No puedes añadir mensajes a un ticket cerrado o resuelto.');
+        }
+
         $request->validate([
             'message' => 'required|string|max:2000',
         ]);
