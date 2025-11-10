@@ -113,19 +113,25 @@
             @endforelse
         </div>
 
-        <form action="{{ route('tickets.message', $ticket->id) }}" method="POST" onsubmit="showLoader(true)">
-            @csrf
-            <div class="mb-3">
-                <label for="message" class="form-label">Nuevo mensaje</label>
-                <textarea name="message" id="message" class="form-control" rows="3" required>{{ old('message') }}</textarea>
-                @error('message')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+        @if(Auth::user()->role_id == 1 || !in_array($ticket->status, ['cerrado', 'resuelto']))
+            <form action="{{ route('tickets.message', $ticket->id) }}" method="POST" onsubmit="showLoader(true)">
+                @csrf
+                <div class="mb-3">
+                    <label for="message" class="form-label">Nuevo mensaje</label>
+                    <textarea name="message" id="message" class="form-control" rows="3" required>{{ old('message') }}</textarea>
+                    @error('message')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        @else
+            <div class="alert alert-info">
+                Este ticket está {{ $ticket->status }}. No se pueden añadir más mensajes.
             </div>
-            <div class="text-end">
-                <button type="submit" class="btn btn-primary">Enviar</button>
-            </div>
-        </form>
+        @endif
 
         <div class="mt-4 text-end">
             <a href="{{ route('tickets.list') }}" class="btn btn-secondary">Volver al listado</a>
