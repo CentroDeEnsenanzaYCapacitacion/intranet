@@ -9,6 +9,7 @@ use App\Models\TicketMessage;
 use App\Models\TicketImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
 {
@@ -57,41 +58,16 @@ class TicketController extends Controller
 
         // Procesar imágenes si existen
         if ($request->hasFile('images')) {
-            // Determinar ruta según ambiente
-            if (app()->environment('production')) {
-                // En producción: /public_html/intranet/
-                $uploadPath = str_replace(
-                    '/intranet/public',
-                    '/public_html/intranet',
-                    public_path('uploads/tickets')
-                );
-            } elseif (app()->environment('development')) {
-                // En desarrollo: /public_html/intranet_dev/
-                $uploadPath = str_replace(
-                    '/intranet_dev/public',
-                    '/public_html/intranet_dev',
-                    public_path('uploads/tickets')
-                );
-            } else {
-                // En local
-                $uploadPath = public_path('uploads/tickets');
-            }
-
-            // Verificar que la carpeta existe
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0775, true);
-            }
-
             foreach ($request->file('images') as $image) {
                 try {
                     $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-                    // Mover archivo
-                    $image->move($uploadPath, $filename);
+                    
+                    // Guardar en storage/app/tickets/
+                    Storage::putFileAs('tickets', $image, $filename);
 
                     TicketImage::create([
                         'ticket_id' => $ticket->id,
-                        'path' => 'uploads/tickets/' . $filename,
+                        'path' => $filename,
                         'original_name' => $image->getClientOriginalName(),
                     ]);
                 } catch (\Exception $e) {
@@ -135,7 +111,7 @@ class TicketController extends Controller
     public function updateStatus(Request $request, Ticket $ticket)
     {
         $request->validate([
-            'status' => 'required|string|in:abierto,en progreso,resuelto,cerrado'
+            'status' => 'required|string|in:abierto,en progreso,esperando respuesta,resuelto,cerrado'
         ]);
 
         $ticket->status = $request->status;
@@ -144,4 +120,17 @@ class TicketController extends Controller
         return redirect()->back()->with('success', 'Estado actualizado.');
     }
 
+    public function getImage($filename)
+    {
+        $path = 'tickets/' . $filename;
+        
+        if (!Storage::exists($path)) {
+            abort(404);
+        }
+
+        $file = Storage::get($path);
+        $mimeType = Storage::mimeType($path);
+
+        return response($file, 200)->header('Content-Type', $mimeType);
+    }
 }

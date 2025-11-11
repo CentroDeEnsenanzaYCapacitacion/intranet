@@ -11,6 +11,7 @@ use App\Models\Receipt;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class Utils
 {
@@ -26,25 +27,8 @@ class Utils
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
 
-        switch (env('APP_ENV')) {
-            case 'local':
-                $url = public_path().'/';
-                break;
-            case 'development':
-                $url = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', public_path().'/');
-                break;
-            case 'production':
-                $url = str_replace('/intranet/public/', '/public_html/intranet/', public_path().'/');
-                break;
-        }
-
-        // Verificar que el directorio existe
-        $qrDir = dirname($url.'assets/img/qr.png');
-        if (!file_exists($qrDir)) {
-            mkdir($qrDir, 0775, true);
-        }
-
-        $result->saveToFile($url.'assets/img/qr.png');
+        // Guardar en storage/app/qr/
+        Storage::put('qr/qr.png', $result->getString());
     }
 
     public static function generateReceipt($crew_id, $receipt_type_id, $card_payment, $student_id, $concept, $amount, $report_id = null, $receipt_attribute_id = null, $voucher = null, $bill = null)
