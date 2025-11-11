@@ -42,6 +42,7 @@
                             $statusClass = match($ticket->status) {
                                 'abierto' => 'bg-info text-white',
                                 'en progreso' => 'bg-warning text-dark',
+                                'esperando respuesta' => 'bg-primary text-white',
                                 'resuelto' => 'bg-success text-white',
                                 'cerrado' => 'bg-secondary text-white',
                                 default => 'bg-light text-dark',
