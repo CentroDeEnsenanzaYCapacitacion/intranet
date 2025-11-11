@@ -61,7 +61,7 @@ class TicketController extends Controller
             if (app()->environment('production')) {
                 // En producción: /public_html/intranet/
                 $uploadPath = str_replace(
-                    '/intranet_dev/public',
+                    '/intranet/public',
                     '/public_html/intranet',
                     public_path('uploads/tickets')
                 );

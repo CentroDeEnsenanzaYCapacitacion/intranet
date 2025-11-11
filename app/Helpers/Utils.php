@@ -31,9 +31,17 @@ class Utils
                 $url = public_path().'/';
                 break;
             case 'development':
-            case 'production':
-                $url = substr(public_path(), 0, -19).env('PUBLIC_PATH');
+                $url = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', public_path().'/');
                 break;
+            case 'production':
+                $url = str_replace('/intranet/public/', '/public_html/intranet/', public_path().'/');
+                break;
+        }
+
+        // Verificar que el directorio existe
+        $qrDir = dirname($url.'assets/img/qr.png');
+        if (!file_exists($qrDir)) {
+            mkdir($qrDir, 0775, true);
         }
 
         $result->saveToFile($url.'assets/img/qr.png');
