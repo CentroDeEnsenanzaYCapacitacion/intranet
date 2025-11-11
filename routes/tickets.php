@@ -9,3 +9,4 @@ Route::post('/tickets/save', [TicketController::class, 'save'])->name('tickets.s
 Route::get('/tickets/{id}', [TicketController::class, 'detail'])->name('tickets.detail');
 Route::post('/tickets/{ticket}/message', [TicketController::class, 'storeMessage'])->name('tickets.message');
 Route::put('/tickets/{ticket}/status', [TicketController::class, 'updateStatus'])->name('tickets.updateStatus');
+Route::get('/tickets/image/{filename}', [TicketController::class, 'getImage'])->name('tickets.image');
