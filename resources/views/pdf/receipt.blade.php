@@ -25,7 +25,7 @@
 </head>
 <body>
     <div class="centered">
-        <img width="150px" src= "{{ $imageUrl }}drac_bw.png">
+        <img width="150px" src="{{ $dracBase64 }}">
     </div>
     <span class="title centered text-uppercase">
         CENTRO DE ENSEÑANZA Y CAPACITACIÓN<br>
@@ -63,12 +63,12 @@
                 <tr>
                     <td width="80" align="center" style="vertical-align: middle;">
                         <div style="display: flex; align-items: center; justify-content: center;">
-                            <img src="{{ $imageUrl }}qr.png">
+                            <img src="{{ $qrBase64 }}">
                         </div>
                     </td>
                     <td width="130">
                         <br><br>
-                        <img src="{{ $imageUrl }}logo.png">
+                        <img src="{{ $logoBase64 }}">
                     </td>
                 </tr>
             </table>

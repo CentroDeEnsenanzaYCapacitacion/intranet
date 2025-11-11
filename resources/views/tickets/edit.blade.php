@@ -26,6 +26,7 @@
                 $statusClass = match($ticket->status) {
                     'abierto' => 'bg-info text-white',
                     'en progreso' => 'bg-warning text-dark',
+                    'esperando respuesta' => 'bg-primary text-white',
                     'resuelto' => 'bg-success text-white',
                     'cerrado' => 'bg-secondary text-white',
                     default => 'bg-light text-dark',
@@ -53,8 +54,8 @@
             <div class="row">
                 @foreach($ticket->images as $image)
                     <div class="col-md-3 mb-3">
-                        <a href="{{ asset($image->path) }}" target="_blank">
-                            <img src="{{ asset($image->path) }}" 
+                        <a href="{{ route('tickets.image', $image->path) }}" target="_blank">
+                            <img src="{{ route('tickets.image', $image->path) }}" 
                                  class="img-fluid rounded border" 
                                  alt="{{ $image->original_name }}"
                                  style="cursor: pointer; object-fit: cover; height: 200px; width: 100%;">
@@ -69,6 +70,7 @@
             $statusOptions = [
                 'abierto' => 'Abierto',
                 'en progreso' => 'En progreso',
+                'esperando respuesta' => 'Esperando respuesta',
                 'resuelto' => 'Resuelto',
                 'cerrado' => 'Cerrado'
             ];
