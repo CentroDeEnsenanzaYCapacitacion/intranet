@@ -81,9 +81,34 @@ class ReportController extends Controller
             $success = Utils::validateAmount($request->report_id, "report");
             if (!$success) {
                 return back()->withErrors(['error' => 'No existe un costo resgistrado para el recibo que se intenta emitir, por favor registre un costo para continuar.']);
-            } else {
-                StudentController::insertStudent($request);
             }
+            
+            // Validar duplicados en estudiantes antes de inscribir
+            $report = Report::find($request->report_id);
+            $duplicateStudents = Student::where(function($query) use ($report) {
+                $query->where('name', $report->name)
+                      ->where('surnames', $report->surnames);
+            })
+            ->orWhere('email', $report->email)
+            ->get();
+
+            if ($duplicateStudents->isNotEmpty()) {
+                $matches = [];
+                foreach ($duplicateStudents as $dup) {
+                    $reasons = [];
+                    if ($dup->name == $report->name && $dup->surnames == $report->surnames) {
+                        $reasons[] = 'nombre completo';
+                    }
+                    if ($dup->email == $report->email) {
+                        $reasons[] = 'email';
+                    }
+                    $matches[] = "Estudiante #{$dup->id}: {$dup->name} {$dup->surnames} (coincide: " . implode(', ', $reasons) . ")";
+                }
+                
+                return back()->withErrors(['duplicado' => 'Ya existen estudiantes con datos similares:<br>' . implode('<br>', $matches)]);
+            }
+            
+            StudentController::insertStudent($request);
         } else {
             if (!$request->reason || $request->reason == '') {
                 return redirect()->route('system.reports.signdiscount', ['report_id' => $request->report_id])
@@ -147,6 +172,39 @@ class ReportController extends Controller
 
     public function insertReport(ReportRequest $request)
     {
+        // Buscar duplicados en informes existentes
+        $duplicates = Report::where(function($query) use ($request) {
+            $query->where('name', $request->name)
+                  ->where('surnames', $request->surnames);
+        })
+        ->orWhere('email', $request->email)
+        ->orWhere(function($query) use ($request) {
+            $query->where('phone', $request->phone)
+                  ->orWhere('cel_phone', $request->cel_phone);
+        })
+        ->get();
+
+        if ($duplicates->isNotEmpty()) {
+            $matches = [];
+            foreach ($duplicates as $dup) {
+                $reasons = [];
+                if ($dup->name == $request->name && $dup->surnames == $request->surnames) {
+                    $reasons[] = 'nombre completo';
+                }
+                if ($dup->email == $request->email) {
+                    $reasons[] = 'email';
+                }
+                if ($dup->phone == $request->phone || $dup->cel_phone == $request->cel_phone) {
+                    $reasons[] = 'teléfono';
+                }
+                $matches[] = "Informe #{$dup->id}: {$dup->name} {$dup->surnames} (coincide: " . implode(', ', $reasons) . ")";
+            }
+            
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['duplicado' => 'Se encontraron informes similares:<br>' . implode('<br>', $matches)]);
+        }
+
         $report = Report::create([
             'name' => $request->name,
             'surnames' => $request->surnames,
