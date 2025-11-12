@@ -32,7 +32,7 @@ class StudentRequest extends FormRequest
                 'required',
                 'string',
                 'size:18',
-                'regex:/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{1}\d{1}$/',
+                'regex:/^[A-Z]{4}\d{6}[HM][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[A-Z0-9]{2}$/',
                 'unique:students,curp' . ($studentId ? ',' . $studentId : '')
             ],
             'name'=>'required',
