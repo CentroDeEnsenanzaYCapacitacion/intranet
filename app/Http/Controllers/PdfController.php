@@ -13,8 +13,15 @@ class PdfController extends Controller
     {
         // Convertir imágenes a base64
         $qrBase64 = 'data:image/png;base64,' . base64_encode(Storage::get('qr/qr.png'));
-        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('/assets/img/logo.png')));
-        $dracBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('/assets/img/drac_bw.png')));
+        
+        // Ajustar rutas para producción
+        $logoPath = str_replace('/intranet/public/', '/public_html/intranet/', public_path('/assets/img/logo.png'));
+        $logoPath = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', $logoPath);
+        $dracPath = str_replace('/intranet/public/', '/public_html/intranet/', public_path('/assets/img/drac_bw.png'));
+        $dracPath = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', $dracPath);
+        
+        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+        $dracBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($dracPath));
         
         $htmlContent = view('pdf.receipt', compact('receipt', 'qrBase64', 'logoBase64', 'dracBase64'))->render();
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, array(80, 297), true, 'UTF-8', false);
@@ -44,8 +51,15 @@ class PdfController extends Controller
     {
         // Convertir imágenes a base64
         $qrBase64 = 'data:image/png;base64,' . base64_encode(Storage::get('qr/qr.png'));
-        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('/assets/img/logo.png')));
-        $dracBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('/assets/img/drac_bw.png')));
+        
+        // Ajustar rutas para producción
+        $logoPath = str_replace('/intranet/public/', '/public_html/intranet/', public_path('/assets/img/logo.png'));
+        $logoPath = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', $logoPath);
+        $dracPath = str_replace('/intranet/public/', '/public_html/intranet/', public_path('/assets/img/drac_bw.png'));
+        $dracPath = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', $dracPath);
+        
+        $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+        $dracBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($dracPath));
         
         $htmlContent = view('pdf.paybill', compact('paybill', 'qrBase64', 'logoBase64', 'dracBase64'))->render();
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, array(80, 297), true, 'UTF-8', false);

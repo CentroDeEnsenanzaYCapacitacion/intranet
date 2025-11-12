@@ -10,3 +10,4 @@ Route::post('/system/student/update', [StudentController::class,'update'])->name
 Route::post('/system/student/upload-profile-image/{student_id}', [StudentController::class, 'upload_profile_image'])->name('system.student.upload-profile-image');
 Route::get('/system/student/profile-image/{student_id}', [StudentController::class, 'profile_image'])->name('system.student.profile-image');
 Route::get('/system/student/image/{student_id}', [StudentController::class, 'get_image'])->name('system.student.image');
+Route::post('/system/student/save-form-data/{student_id}', [StudentController::class, 'saveFormData'])->name('system.student.save-form-data');
