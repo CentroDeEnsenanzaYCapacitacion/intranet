@@ -20,7 +20,7 @@ class TicketController extends Controller
                 $query->whereNotIn('status', ['cerrado', 'resuelto'])
                     ->orWhere(function ($q) {
                         $q->whereIn('status', ['cerrado', 'resuelto'])
-                          ->where('updated_at', '>=', now()->subMonth());
+                          ->where('closed_at', '>=', now()->subMonth());
                     });
             })
             ->latest()
@@ -114,7 +114,19 @@ class TicketController extends Controller
             'status' => 'required|string|in:abierto,en progreso,esperando respuesta,resuelto,cerrado'
         ]);
 
+        $oldStatus = $ticket->status;
         $ticket->status = $request->status;
+        
+        // Si cambia a cerrado o resuelto, registrar fecha
+        if (in_array($request->status, ['cerrado', 'resuelto']) && !in_array($oldStatus, ['cerrado', 'resuelto'])) {
+            $ticket->closed_at = now();
+        }
+        
+        // Si se reabre (estaba cerrado/resuelto y ahora no), resetear fecha
+        if (in_array($oldStatus, ['cerrado', 'resuelto']) && !in_array($request->status, ['cerrado', 'resuelto'])) {
+            $ticket->closed_at = null;
+        }
+        
         $ticket->save();
 
         return redirect()->back()->with('success', 'Estado actualizado.');
