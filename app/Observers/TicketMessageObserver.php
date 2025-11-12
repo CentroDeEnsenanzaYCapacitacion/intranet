@@ -20,14 +20,22 @@ class TicketMessageObserver
             $ticket = $message->ticket;
             $recipients = collect();
             
-            // 1. Agregar al creador del ticket (si no es quien escribió el mensaje)
+            // 1. Siempre agregar al creador del ticket (si no es quien escribió el mensaje)
             if ($ticket->user_id !== $message->user_id) {
                 $recipients->push($ticket->user);
             }
             
-            // 2. Si el mensaje lo escribió un usuario normal (no admin), notificar a los admins
+            // 2. Si el mensaje lo escribió un usuario normal (no admin), notificar a TODOS los admins
             if ($message->user->role_id !== 1) {
                 $admins = User::where('role_id', 1)->where('is_active', true)->get();
+                $recipients = $recipients->merge($admins);
+            }
+            // 3. Si el mensaje lo escribió un admin, notificar a otros admins (excepto quien escribió)
+            else {
+                $admins = User::where('role_id', 1)
+                    ->where('is_active', true)
+                    ->where('id', '!=', $message->user_id)
+                    ->get();
                 $recipients = $recipients->merge($admins);
             }
             
