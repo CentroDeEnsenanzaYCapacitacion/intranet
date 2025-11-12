@@ -98,7 +98,10 @@ class StudentController extends Controller
         } elseif (Storage::disk('local')->exists($path_webp)) {
             $path = $path_webp;
         } else {
-            return response()->file(public_path('assets/img/nophoto.jpg'));
+            // Ajustar ruta para producción
+            $nophotoPath = str_replace('/intranet/public/', '/public_html/intranet/', public_path('assets/img/nophoto.jpg'));
+            $nophotoPath = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', $nophotoPath);
+            return response()->file($nophotoPath);
         }
 
         $fullPath = storage_path('app/' . $path);
