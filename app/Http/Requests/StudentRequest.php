@@ -11,12 +11,12 @@ class StudentRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
-        // Limpiar espacios en blanco del CURP
-        if ($this->has('curp')) {
+        // Limpiar espacios en blanco y convertir a mayúsculas el CURP
+        if ($this->has('curp') && !empty($this->curp)) {
             $this->merge([
-                'curp' => trim(strtoupper($this->curp))
+                'curp' => strtoupper(trim($this->curp))
             ]);
         }
     }
@@ -32,7 +32,7 @@ class StudentRequest extends FormRequest
                 'required',
                 'string',
                 'size:18',
-                'regex:/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{1}\d{1}$/',
+                'regex:/^[A-Z]{4}\d{6}[HM][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[A-Z0-9]\d$/i',
                 'unique:students,curp' . ($studentId ? ',' . $studentId : '')
             ],
             'name'=>'required',

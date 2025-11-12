@@ -38,6 +38,13 @@ class StudentController extends Controller
         ]);
     }
 
+    public function saveFormData($student_id, Request $request)
+    {
+        // Guardar datos del formulario en sesión
+        session(['student_form_data_' . $student_id => $request->all()]);
+        return response()->json(['success' => true]);
+    }
+
     public function profile_image($student_id)
     {
         return view('system.students.profile-image', compact('student_id'));
@@ -70,6 +77,9 @@ class StudentController extends Controller
 
         $imageName = 'photo.' . $request->image->extension();
         $request->image->storeAs($directory, $imageName);
+
+        // Limpiar datos guardados en sesión después de subir la imagen
+        session()->forget('student_form_data_' . $student_id);
 
         return redirect()->route('system.student.profile', ['student_id' => $student_id])
             ->with('success', 'Imagen subida correctamente.');
@@ -135,8 +145,11 @@ class StudentController extends Controller
         $modalities = Modality::all();
         $amount = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->where('receipt_type_id', 2)->first();
 
+        // Recuperar datos guardados en sesión si existen
+        $savedData = session('student_form_data_' . $student_id, []);
+
         if ($student->first_time) {
-            return view('system.students.new-profile', compact('student', 'schedules', 'payment_periodicities', 'modalities'));
+            return view('system.students.new-profile', compact('student', 'schedules', 'payment_periodicities', 'modalities', 'savedData'));
         } else {
             $birthdate = DateTime::createFromFormat('d/m/Y', $student->birthdate);
             $nowdate = new DateTime();

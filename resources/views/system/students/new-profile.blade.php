@@ -36,8 +36,7 @@
                             <img src="{{ route('system.student.image', ['student_id' => $student->id]) }}" alt="Profile Image">
                         </div>
                     </div>
-                    <a href="{{ route('system.student.profile-image', ['student_id' => $student->id]) }}"><button
-                            class="btn bg-orange text-white">Cambiar Fotografía</button></a>
+                    <button type="button" class="btn bg-orange text-white" onclick="saveFormDataAndRedirect()">Cambiar Fotografía</button>
                 </div>
                 <div class="col">
                     <div class="text-start text-uppercase">
@@ -57,18 +56,18 @@
                             <b>Fecha de nacimiento:</b>
                             <input placeholder="selecciona..." type="text" id="datePicker" name="birthdate"
                                 style="height: 35px !important; width:120px;" class="form-control"
-                                value="{{ old('birthdate') }}">
+                                value="{{ old('birthdate', $savedData['birthdate'] ?? '') }}">
                             <br>
                             <b>CURP: </b><input class="form-control text-uppercase" name="curp" type="text"
-                                value="{{ old('curp') }}" /><br>
+                                value="{{ old('curp', $savedData['curp'] ?? '') }}" /><br>
                             <b>Dirección: </b><input class="form-control text-uppercase" type="text" name="address"
-                                value="{{ old('address') }}" /> <br>
+                                value="{{ old('address', $savedData['address'] ?? '') }}" /> <br>
                             <b>Colonia: </b><input class="form-control text-uppercase" type="text" name="colony"
-                                value="{{ old('colony') }}" /><br>
+                                value="{{ old('colony', $savedData['colony'] ?? '') }}" /><br>
                             <b>Municipio: </b><input class="form-control text-uppercase" type="text" name="municipality"
-                                value="{{ old('municipality') }}" /><br>
+                                value="{{ old('municipality', $savedData['municipality'] ?? '') }}" /><br>
                             <b>C.P.: </b><input class="form-control text-uppercase" type="text" name="pc"
-                                value="{{ old('pc') }}" /><br>
+                                value="{{ old('pc', $savedData['pc'] ?? '') }}" /><br>
                             <b>Género: </b>
                             @if ($student->genre == 'M')
                                 Mujer
@@ -79,11 +78,11 @@
                             @endif
                             <br>
                             <b>Teléfono: </b><input class="form-control text-uppercase" type="text" name="phone"
-                                value="{{ old('phone') }}" /><br>
+                                value="{{ old('phone', $savedData['phone'] ?? '') }}" /><br>
                             <b>Celular: </b><input class="form-control text-uppercase" type="text" name="cel_phone"
-                                value="{{ old('cel_phone') }}" /><br>
+                                value="{{ old('cel_phone', $savedData['cel_phone'] ?? '') }}" /><br>
                             <b>Correo electrónico: </b><input class="form-control text-uppercase" type="text"
-                                name="email" value="{{ old('email', $student->email) }}" /><br><br>
+                                name="email" value="{{ old('email', $savedData['email'] ?? $student->email) }}" /><br><br>
                             <h5 class="text-orange"><b>Información académica
                                     <hr>
                                 </b></h5>
@@ -153,20 +152,20 @@
                             <b>Inicio: </b>
                             <input placeholder="selecciona..." type="text" id="datePicker" name="start"
                                 style="height: 35px !important; width:120px;" class="form-control"
-                                value="{{ old('start') }}"><br><br>
+                                value="{{ old('start', $savedData['start'] ?? '') }}"><br><br>
                             <h5 class="text-orange"><b>Información de tutor
                                     <hr>
                                 </b></h5>
                             <b>Nombre: </b><input class="form-control text-uppercase" type="text" name="tutor_name"
-                                value="{{ old('tutor_name') }}" /><br>
+                                value="{{ old('tutor_name', $savedData['tutor_name'] ?? '') }}" /><br>
                             <b>Apellidos: </b><input class="form-control text-uppercase" type="text"
-                                name="tutor_surnames" value="{{ old('tutor_surnames') }}" /><br>
+                                name="tutor_surnames" value="{{ old('tutor_surnames', $savedData['tutor_surnames'] ?? '') }}" /><br>
                             <b>Teléfono: </b><input class="form-control text-uppercase" type="text" name="tutor_phone"
-                                value="{{ old('tutor_phone') }}" /><br>
+                                value="{{ old('tutor_phone', $savedData['tutor_phone'] ?? '') }}" /><br>
                             <b>Celular: </b><input class="form-control text-uppercase" type="text"
-                                name="tutor_cel_phone" value="{{ old('tutor_cel_phone') }}" /><br>
+                                name="tutor_cel_phone" value="{{ old('tutor_cel_phone', $savedData['tutor_cel_phone'] ?? '') }}" /><br>
                             <b>Parentesco: </b><input class="form-control text-uppercase" type="text"
-                                name="relationship" value="{{ old('relationship') }}" /><br>
+                                name="relationship" value="{{ old('relationship', $savedData['relationship'] ?? '') }}" /><br>
                             <div class="d-flex justify-content-center"><button class="btn bg-orange text-white"
                                     type="submit" onclick="showLoader(true)">Guardar</button></div><br><br>
                         </form>
@@ -175,4 +174,45 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function saveFormDataAndRedirect() {
+            const formData = {
+                birthdate: document.querySelector('input[name="birthdate"]').value,
+                curp: document.querySelector('input[name="curp"]').value,
+                address: document.querySelector('input[name="address"]').value,
+                colony: document.querySelector('input[name="colony"]').value,
+                municipality: document.querySelector('input[name="municipality"]').value,
+                pc: document.querySelector('input[name="pc"]').value,
+                phone: document.querySelector('input[name="phone"]').value,
+                cel_phone: document.querySelector('input[name="cel_phone"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                gen_month: document.querySelector('select[name="gen_month"]').value,
+                gen_year: document.querySelector('select[name="gen_year"]').value,
+                payment_periodicity_id: document.querySelector('select[name="payment_periodicity_id"]').value,
+                schedule_id: document.querySelector('select[name="schedule_id"]').value,
+                sabbatine: document.querySelector('input[name="sabbatine"]:checked').value,
+                modality_id: document.querySelector('select[name="modality_id"]').value,
+                start: document.querySelector('input[name="start"]').value,
+                tutor_name: document.querySelector('input[name="tutor_name"]').value,
+                tutor_surnames: document.querySelector('input[name="tutor_surnames"]').value,
+                tutor_phone: document.querySelector('input[name="tutor_phone"]').value,
+                tutor_cel_phone: document.querySelector('input[name="tutor_cel_phone"]').value,
+                relationship: document.querySelector('input[name="relationship"]').value
+            };
+
+            // Enviar datos a la sesión mediante AJAX
+            fetch('{{ route('system.student.save-form-data', ['student_id' => $student->id]) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(formData)
+            }).then(() => {
+                // Redirigir a la página de cambio de foto
+                window.location.href = '{{ route('system.student.profile-image', ['student_id' => $student->id]) }}';
+            });
+        }
+    </script>
 @endsection
