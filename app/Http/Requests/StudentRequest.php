@@ -23,9 +23,18 @@ class StudentRequest extends FormRequest
 
     public function rules(): array
     {
+        // Obtener el ID del estudiante si existe (para permitir actualización)
+        $studentId = $this->input('student_id');
+        
         return [
             'crew_id'=> 'required|integer|min:0',
-            'curp' => 'required|string|size:18|regex:/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{1}\d{1}$/|unique:students,curp',
+            'curp' => [
+                'required',
+                'string',
+                'size:18',
+                'regex:/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{1}\d{1}$/',
+                'unique:students,curp' . ($studentId ? ',' . $studentId : '')
+            ],
             'name'=>'required',
             'surnames' => 'required',
             'sabbatine'=>'required',
