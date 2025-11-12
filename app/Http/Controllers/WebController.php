@@ -56,16 +56,26 @@ class WebController extends Controller
 
     public function webCarouselPost(WebCarouselRequest $request)
     {
-        $environment = env('APP_ENV');
-
-        if ($environment == 'local') {
-            $destinationPath = public_path('assets/img/carousel/');
-        } elseif ($environment == 'development') {
-            $destinationPath = '../../../../public_html/intranet_dev/assets/img/carousel/';
-        } elseif ($environment == 'production') {
-            $destinationPath = '../../../../public_html/intranet/assets/img/carousel/';
+        // Determinar ruta según ambiente
+        if (app()->environment('production')) {
+            $destinationPath = str_replace(
+                '/intranet/public/',
+                '/public_html/intranet/',
+                public_path('assets/img/carousel/')
+            );
+        } elseif (app()->environment('development')) {
+            $destinationPath = str_replace(
+                '/intranet_dev/public/',
+                '/public_html/intranet_dev/',
+                public_path('assets/img/carousel/')
+            );
         } else {
             $destinationPath = public_path('assets/img/carousel/');
+        }
+
+        // Verificar que el directorio existe
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0775, true);
         }
 
         $images = [
