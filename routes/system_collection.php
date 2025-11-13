@@ -13,3 +13,4 @@ Route::get('/system/collection/paybills', [CollectionController::class,'showPayb
 Route::get('/system/collection/paybills/new', [CollectionController::class,'newPaybill'])->name('system.collection.newpaybill');
 Route::post('/system/collection/paybill/insert', [CollectionController::class,'insertPaybill'])->name('system.collection.paybill-post');
 Route::get('/system/collection/paybills/receiptError', [CollectionController::class,'receiptError'])->name('system.collection.receipt.error');
+Route::get('/system/collection/receipt/{receipt_id}/reprint', [CollectionController::class,'reprintReceipt'])->name('system.collection.receipt.reprint');
