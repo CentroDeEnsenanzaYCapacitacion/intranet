@@ -57,8 +57,8 @@
                                 <td>
                                     <a href="{{ route('system.collection.receipt.reprint', ['receipt_id' => $pay->id]) }}" 
                                        target="_blank" 
-                                       title="Reimprimir recibo">
-                                        <i class="fas fa-print text-primary"></i>
+                                       class="btn btn-sm btn-primary">
+                                        🖨️ Reimprimir
                                     </a>
                                 </td>
                             </tr>
