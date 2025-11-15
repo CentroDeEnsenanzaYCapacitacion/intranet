@@ -13,6 +13,7 @@
         <div class="mt-4">
             <p><strong>Título:</strong> {{ $ticket->title }}</p>
             <p><strong>Descripción:</strong> {{ $ticket->description ?? 'Sin descripción' }}</p>
+            <p><strong>Creado por:</strong> {{ $ticket->user->name ?? 'Desconocido' }}</p>
 
             @php
                 $priorityClass = match($ticket->priority) {
