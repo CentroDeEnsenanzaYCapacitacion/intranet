@@ -44,6 +44,7 @@
                             <th>Fecha</th>
                             <th>Concepto</th>
                             <th>Importe</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,6 +54,13 @@
                                 <td class="text-uppercase">{{ $pay->created_at->format('d/m/Y') }}</td>
                                 <td class="text-uppercase">{{ $pay->concept}}</td>
                                 <td class="text-uppercase">${{ number_format($pay->amount, 2, '.', ',') }}</td>
+                                <td>
+                                    <span class="material-symbols-outlined bg-edit">
+                                        <a href="{{ route('system.collection.receipt.reprint', ['receipt_id' => $pay->id]) }}" 
+                                           target="_blank" 
+                                           title="Reimprimir recibo">print</a>
+                                    </span>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

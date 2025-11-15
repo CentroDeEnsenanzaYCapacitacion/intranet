@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PdfController;
+use Illuminate\Support\Facades\Hash;
 
 class CollectionController extends Controller
 {
@@ -143,6 +145,12 @@ class CollectionController extends Controller
         return view('system.collection.tuitions.new', compact('student', 'course', 'crew_course_amounts', 'general_amounts', 'receipt_types', 'student_tuition_receipts', 'receipt_attributes'));
     }
 
-
-
+    public function reprintReceipt($receipt_id)
+    {
+        $receipt = Receipt::findOrFail($receipt_id);
+        
+        // Generar QR y reimprimir recibo
+        Utils::generateQR(Hash::make($receipt->id));
+        PdfController::generateReceipt($receipt);
+    }
 }
