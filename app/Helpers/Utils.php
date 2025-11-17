@@ -27,7 +27,6 @@ class Utils
         $writer = new PngWriter();
         $result = $writer->write($qrCode);
 
-        // Guardar en storage/app/qr/
         Storage::put('qr/qr.png', $result->getString());
     }
 
@@ -41,6 +40,7 @@ class Utils
                 $finalAmount = number_format($formattedNumber, 2, '.', '');
             }
         }
+        
         Receipt::create([
             'crew_id' => $crew_id,
             'user_id' => Auth::user()->id,

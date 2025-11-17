@@ -77,18 +77,31 @@ class CollectionController extends Controller
     public function insertReceipt(Request $request)
     {
         $amount = $request->amount;
+        $concept = $request->concept;
 
         if ($request->receipt_amount != null) {
             $amount = $request->receipt_amount;
         }
 
+        // Calcular recargo si aplica y sumar al monto
+        if ($request->has('apply_surcharge') && $request->apply_surcharge == '1') {
+            $surchargePercentage = $request->surcharge_percentage ?? 0;
+            
+            // Convertir el monto a número para calcular
+            $numericAmount = is_string($amount) ? floatval(str_replace(['$', ','], '', $amount)) : (float)$amount;
+            $surchargeAmount = ($numericAmount * $surchargePercentage) / 100;
+            $amount = $numericAmount + $surchargeAmount;
+            
+            // Ajustar concepto
+            $concept = rtrim($concept) . ' con recargo';
+        }
 
         Utils::generateReceipt(
             $request->crew_id,
             $request->receipt_type_id,
             ($request->card_payment == null) ? 1 : 2,
             $request->student_id,
-            $request->concept,
+            $concept,
             $amount,
             null,
             $request->attr_id == 0 ? null : $request->attr_id,
