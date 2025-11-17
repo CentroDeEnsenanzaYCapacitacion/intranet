@@ -27,7 +27,17 @@ document.getElementById("cardCheck").addEventListener("change", function () {
     showVoucherInput();
 });
 
+document.getElementById("surchargeCheck").addEventListener("change", function () {
+    showSurchargeOptions();
+    updateSurcharge();
+});
+
+document.getElementById("surchargePercentage").addEventListener("change", function () {
+    updateSurcharge();
+});
+
 var selections = [];
+var baseAmountNumeric = 0;
 
 function showVoucherInput() {
     var voucher = document.getElementById("voucher");
@@ -37,6 +47,61 @@ function showVoucherInput() {
         voucher.style.display = "block";
     } else {
         voucher.style.display = "none";
+    }
+}
+
+function showSurchargeOptions() {
+    var surchargeOptions = document.getElementById("surchargeOptions");
+    var checkbox = document.getElementById("surchargeCheck");
+
+    if (checkbox.checked) {
+        surchargeOptions.style.display = "block";
+    } else {
+        surchargeOptions.style.display = "none";
+    }
+}
+
+function updateSurcharge() {
+    var surchargeCheckbox = document.getElementById("surchargeCheck");
+    if (!surchargeCheckbox) return;
+
+    var conceptDiv = document.getElementById("conceptDiv");
+    var amountDiv = document.getElementById("amountDiv");
+
+    // Concepto base (sin recargo al final)
+    var baseConcept = conceptDiv.textContent.trim();
+    baseConcept = baseConcept.replace(/\s*con recargo(\s*\d+%?)?$/i, '').trim();
+
+    if (surchargeCheckbox.checked) {
+        var percentageEl = document.getElementById("surchargePercentage");
+        if (!percentageEl) return;
+        var percentage = parseFloat(percentageEl.value || '0');
+
+        // Monto base numérico, calculado previamente en setAmount
+        var baseAmount = typeof baseAmountNumeric === 'number' && !isNaN(baseAmountNumeric)
+            ? baseAmountNumeric
+            : parseFloat(amountDiv.textContent.replace(/[^0-9.-]+/g, '')) || 0;
+
+        var surchargeAmount = (baseAmount * percentage) / 100;
+        var totalAmount = baseAmount + surchargeAmount;
+
+        // Actualizar concepto y monto visibles
+        conceptDiv.textContent = baseConcept + " con recargo";
+        amountDiv.textContent = totalAmount.toLocaleString("es-MX", {
+            style: "currency",
+            currency: "MXN",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
+    } else {
+        // Restaurar concepto base y monto base
+        conceptDiv.textContent = baseConcept;
+        amountDiv.textContent = (typeof baseAmountNumeric === 'number' ? baseAmountNumeric : 0).toLocaleString("es-MX", {
+            style: "currency",
+            currency: "MXN",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
     }
 }
 
@@ -145,6 +210,11 @@ function establish_elements(element) {
     }
 
     refresh_layout(tuitionNumber, tuition_results.isAdvance);
+    // Reaplicar recargo si estaba activo
+    var sc = document.getElementById("surchargeCheck");
+    if (sc && sc.checked) {
+        updateSurcharge();
+    }
 }
 
 function calculateTuitionNumber() {
@@ -207,7 +277,8 @@ function setAmount(isAdvance) {
         amountValue = parseFloat(amount[0].amount);
     }
 
-
+    // Registrar base numérica para cálculos de recargo
+    baseAmountNumeric = amountValue;
 
     var formattedAmount = amountValue.toLocaleString("es-MX", {
         style: "currency",

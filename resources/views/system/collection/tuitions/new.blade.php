@@ -83,6 +83,23 @@
                                 <b>Factura</b>
                             </label>
                         </div>
+
+                        <div class="text-center mt-3">
+                            <input class="form-check-input" name="apply_surcharge" type="checkbox" value="1" id="surchargeCheck">
+                            <label class="form-check-label" for="surchargeCheck">
+                                <b>Aplicar recargo</b>
+                            </label>
+                            <div id="surchargeOptions" class="mt-3" style="display:none;">
+                                <b>Porcentaje de recargo</b>
+                                <div style="display: flex; justify-content: center;">
+                                    <select name="surcharge_percentage" id="surchargePercentage" class="form-select" style="width: 40%; text-align: center;">
+                                        <option value="5">5%</option>
+                                        <option value="10">10%</option>
+                                        <option value="15">15%</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <br>
                         <button class="btn bg-orange text-white" type="submit" onclick="showLoader(true)">
                             Emitir recibo
