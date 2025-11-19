@@ -7,6 +7,14 @@ document.addEventListener("DOMContentLoaded", function () {
             const reportId = document.querySelector(
                 'input[name="report_id"]'
             ).value;
+            const courseName = document.getElementById("courseName")?.value || "";
+
+            // Si el curso es BACHILLERATO EN UN EXAMEN, omitir validación
+            if (courseName.toUpperCase().includes("BACHILLERATO EN UN EXAMEN")) {
+                showLoader(false);
+                submitFormInNewTab(form);
+                return;
+            }
 
             fetch("/system/validate-amount", {
                 method: "POST",

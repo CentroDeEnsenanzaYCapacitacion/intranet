@@ -24,13 +24,13 @@
             </p>
             <p style="margin:5px 0;">
                 <strong style="color:#f37021;">De:</strong>
-                {{ $message->user->role_id == 1 ? 'SysAdmin' : $message->user->name }}
+                {{ $sender->role_id == 1 ? 'SysAdmin' : $sender->name }}
             </p>
             <p style="margin:15px 0 5px 0;">
                 <strong style="color:#f37021;">Mensaje:</strong>
             </p>
             <p style="margin:5px 0; padding:10px; background-color:#fff; border-radius:4px;">
-                {{ $message->message }}
+                {{ $ticketMessage->message }}
             </p>
         </div>
 
