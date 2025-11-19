@@ -155,7 +155,8 @@ class ReportController extends Controller
     {
         $request = SysRequest::where('report_id', $report_id)->first();
         if (!$request) {
-            return view('system.reports.sign_discount', compact('report_id'));
+            $report = Report::with('course')->findOrFail($report_id);
+            return view('system.reports.sign_discount', compact('report_id', 'report'));
         } else {
             return redirect()->route('system.reports.show')->with('error', 'Este informe ya tiene una solicitud');
         }
