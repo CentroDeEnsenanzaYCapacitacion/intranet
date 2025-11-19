@@ -16,11 +16,13 @@ class NewTicketMessage extends Mailable
 
     public $ticket;
     public $message;
+    public $sender;
 
     public function __construct($ticket, $message)
     {
         $this->ticket = $ticket;
         $this->message = $message;
+        $this->sender = $message->user;
     }
 
     public function envelope(): Envelope
