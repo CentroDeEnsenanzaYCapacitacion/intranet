@@ -11,6 +11,7 @@
         <form id="noDiscountForm" action="{{ route('system.report.receiptorrequest') }}" method="POST">
             @csrf
             <input type="hidden" value="{{ $report_id }}" name="report_id">
+            <input type="hidden" value="{{ $report->course->name ?? '' }}" id="courseName">
             <div class="row d-flex text-center mt-5">
                 <div class="col">
                     <div class="text-center">

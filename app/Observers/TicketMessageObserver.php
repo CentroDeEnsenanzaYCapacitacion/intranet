@@ -17,6 +17,8 @@ class TicketMessageObserver
     public function created(TicketMessage $message): void
     {
         try {
+            // Cargar relaciones necesarias
+            $message->load('user');
             $ticket = $message->ticket;
             $recipients = collect();
             
