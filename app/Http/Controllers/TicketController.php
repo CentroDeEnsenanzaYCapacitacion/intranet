@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Models\TicketCategory;
 use App\Models\TicketMessage;
 use App\Models\TicketImage;
+use App\Models\TicketMessageAttachment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -83,7 +84,7 @@ class TicketController extends Controller
 
     public function detail($id)
     {
-        $ticket = Ticket::with('category', 'user', 'images')->findOrFail($id);
+        $ticket = Ticket::with(['category', 'user', 'images', 'messages.attachments', 'messages.user'])->findOrFail($id);
 
         return view('tickets.edit', compact('ticket'));
     }
@@ -97,13 +98,39 @@ class TicketController extends Controller
 
         $request->validate([
             'message' => 'required|string|max:2000',
+            'attachments' => 'nullable|array|max:5',
+            'attachments.*' => 'file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi,wmv|max:20480',
         ]);
 
-        TicketMessage::create([
+        $message = TicketMessage::create([
             'ticket_id' => $ticket->id,
             'user_id' => auth()->id(),
             'message' => $request->message,
         ]);
+
+        // Procesar adjuntos si existen
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                try {
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    
+                    // Guardar en storage/app/tickets/
+                    Storage::putFileAs('tickets', $file, $filename);
+
+                    TicketMessageAttachment::create([
+                        'ticket_message_id' => $message->id,
+                        'path' => $filename,
+                        'original_name' => $file->getClientOriginalName(),
+                        'mime_type' => $file->getMimeType(),
+                        'file_size' => $file->getSize(),
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Error al guardar adjunto de mensaje', [
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+        }
 
         return redirect()->back()->with('success', 'Mensaje enviado.');
     }
@@ -133,6 +160,20 @@ class TicketController extends Controller
     }
 
     public function getImage($filename)
+    {
+        $path = 'tickets/' . $filename;
+        
+        if (!Storage::exists($path)) {
+            abort(404);
+        }
+
+        $file = Storage::get($path);
+        $mimeType = Storage::mimeType($path);
+
+        return response($file, 200)->header('Content-Type', $mimeType);
+    }
+
+    public function getAttachment($filename)
     {
         $path = 'tickets/' . $filename;
         
