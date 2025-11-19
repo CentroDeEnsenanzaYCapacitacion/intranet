@@ -15,13 +15,13 @@ class NewTicketMessage extends Mailable
     use SerializesModels;
 
     public $ticket;
-    public $message;
+    public $ticketMessage;
     public $sender;
 
     public function __construct($ticket, $message)
     {
         $this->ticket = $ticket;
-        $this->message = $message;
+        $this->ticketMessage = $message;
         $this->sender = $message->user;
     }
 

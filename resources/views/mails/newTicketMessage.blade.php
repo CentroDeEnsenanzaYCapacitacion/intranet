@@ -30,7 +30,7 @@
                 <strong style="color:#f37021;">Mensaje:</strong>
             </p>
             <p style="margin:5px 0; padding:10px; background-color:#fff; border-radius:4px;">
-                {{ $message->message }}
+                {{ $ticketMessage->message }}
             </p>
         </div>
 
