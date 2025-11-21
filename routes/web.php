@@ -34,6 +34,15 @@ Route::get('/.well-known/assetlinks.json', function () {
     ]);
 });
 
+Route::get('/env-check', function() {
+    return [
+        'env_host' => env('DB_HOST'),
+        'config_host' => config('database.connections.mysql.host'),
+        'file' => base_path('.env')
+    ];
+});
+
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
