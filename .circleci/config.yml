@@ -31,25 +31,12 @@ jobs:
       - run:
           name: 📂 Sync files (DEV, excepto public/)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R . "$intra_ftp_dev_path" \
-              --verbose \
-              --exclude-glob public/** \
-              --exclude-glob .git/** \
-              --exclude-glob .circleci/**
-            quit
-            EOF
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path --verbose --exclude-glob public/** --exclude-glob .git/** --exclude-glob .circleci/**; quit"
 
       - run:
           name: 📁 Update assets (DEV)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R "$local_dir" "$intra_ftp_dev_assets_path" \
-              --verbose
-            quit
-            EOF
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_dev_assets_path --verbose; quit"
 
   deploy-production:
     docker:
@@ -81,25 +68,12 @@ jobs:
       - run:
           name: 📂 Sync files (PROD, excepto public/)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R . "$intra_ftp_prod_path" \
-              --verbose \
-              --exclude-glob public/** \
-              --exclude-glob .git/** \
-              --exclude-glob .circleci/**
-            quit
-            EOF
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path --verbose --exclude-glob public/** --exclude-glob .git/** --exclude-glob .circleci/**; quit"
 
       - run:
           name: 📁 Update assets (PROD)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R "$local_dir" "$intra_ftp_prod_assets_path" \
-              --verbose
-            quit
-            EOF
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_prod_assets_path --verbose; quit"
 
 workflows:
   deploy-on-branches:
