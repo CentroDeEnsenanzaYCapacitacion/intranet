@@ -72,6 +72,7 @@ jobs:
               --exclude-glob .env \
               --exclude-glob .env.prod \
               --exclude-glob .env.dev \
+              --exclude-glob .env.example \
               --exclude-glob composer.lock \
               --exclude-glob storage/logs/** \
               --exclude-glob config/local.php; \
@@ -166,6 +167,7 @@ jobs:
               --exclude-glob .env \
               --exclude-glob .env.prod \
               --exclude-glob .env.dev \
+              --exclude-glob .env.example \
               --exclude-glob composer.lock \
               --exclude-glob storage/logs/** \
               --exclude-glob config/local.php; \
