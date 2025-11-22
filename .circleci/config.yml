@@ -9,12 +9,36 @@ jobs:
       - checkout
 
       - run:
+          name: 🔎 Detectar cambios en dependencias (DEV)
+          command: |
+            if git rev-parse HEAD^ >/dev/null 2>&1; then
+              CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+              echo "Archivos modificados:"
+              echo "$CHANGED_FILES"
+              if echo "$CHANGED_FILES" | grep -E '(^|/)composer\.json$|(^|/)composer\.lock$' >/dev/null; then
+                echo "Se han detectado cambios en dependencias."
+                echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+              else
+                echo "No hay cambios en composer.json / composer.lock."
+                echo 'COMPOSER_CHANGED=no' >> "$BASH_ENV"
+              fi
+            else
+              echo "No hay commit previo (primer build); asumimos cambios en dependencias."
+              echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+            fi
+
+      - run:
           name: 🧩 Instalar dependencias PHP (composer, DEV)
           command: |
-            composer install \
-              --no-interaction \
-              --prefer-dist \
-              --optimize-autoloader
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → ejecutando composer install"
+              composer install \
+                --no-interaction \
+                --prefer-dist \
+                --optimize-autoloader
+            else
+              echo "COMPOSER_CHANGED=no → se omite composer install"
+            fi
 
       - run:
           name: 📂 Listar directorio raíz
@@ -37,11 +61,12 @@ jobs:
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (DEV, excepto public/ and others)
+          name: 📂 Sync files (DEV, excepto public/, vendor y otros)
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path \
               --verbose \
               --exclude-glob public/** \
+              --exclude-glob vendor/** \
               --exclude-glob .git/** \
               --exclude-glob .circleci/** \
               --exclude-glob .env \
@@ -51,6 +76,18 @@ jobs:
               --exclude-glob storage/logs/** \
               --exclude-glob config/local.php; \
               quit"
+
+      - run:
+          name: 📦 Sync vendor (DEV, solo si cambian dependencias)
+          command: |
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
+              lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
+                --verbose; \
+                quit"
+            else
+              echo "COMPOSER_CHANGED=no → no se sincroniza vendor/"
+            fi
 
       - run:
           name: 📁 Update assets (DEV)
@@ -65,13 +102,37 @@ jobs:
       - checkout
 
       - run:
+          name: 🔎 Detectar cambios en dependencias (PROD)
+          command: |
+            if git rev-parse HEAD^ >/dev/null 2>&1; then
+              CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+              echo "Archivos modificados:"
+              echo "$CHANGED_FILES"
+              if echo "$CHANGED_FILES" | grep -E '(^|/)composer\.json$|(^|/)composer\.lock$' >/dev/null; then
+                echo "Se han detectado cambios en dependencias."
+                echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+              else
+                echo "No hay cambios en composer.json / composer.lock."
+                echo 'COMPOSER_CHANGED=no' >> "$BASH_ENV"
+              fi
+            else
+              echo "No hay commit previo (primer build); asumimos cambios en dependencias."
+              echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+            fi
+
+      - run:
           name: 🧩 Instalar dependencias PHP (composer, PROD)
           command: |
-            composer install \
-              --no-dev \
-              --no-interaction \
-              --prefer-dist \
-              --optimize-autoloader
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → ejecutando composer install"
+              composer install \
+                --no-dev \
+                --no-interaction \
+                --prefer-dist \
+                --optimize-autoloader
+            else
+              echo "COMPOSER_CHANGED=no → se omite composer install"
+            fi
 
       - run:
           name: 📂 Listar directorio raíz
@@ -94,11 +155,12 @@ jobs:
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (PROD, excepto public/ and others)
+          name: 📂 Sync files (PROD, excepto public/, vendor y otros)
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path \
               --verbose \
               --exclude-glob public/** \
+              --exclude-glob vendor/** \
               --exclude-glob .git/** \
               --exclude-glob .circleci/** \
               --exclude-glob .env \
@@ -108,6 +170,18 @@ jobs:
               --exclude-glob storage/logs/** \
               --exclude-glob config/local.php; \
               quit"
+
+      - run:
+          name: 📦 Sync vendor (PROD, solo si cambian dependencias)
+          command: |
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
+              lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
+                --verbose; \
+                quit"
+            else
+              echo "COMPOSER_CHANGED=no → no se sincroniza vendor/"
+            fi
 
       - run:
           name: 📁 Update assets (PROD)
