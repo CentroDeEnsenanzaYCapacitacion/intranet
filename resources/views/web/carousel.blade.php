@@ -55,7 +55,7 @@
                                 {{ $index + 1 }}
                             </td>
                             <td width="15%">
-                                <img width="90%" src="{{ asset('assets/img/carousel/' . ($index + 1) . '.jpg') }}" onerror="replace_image(this);" />
+                                <img width="90%" src="{{ asset('assets/img/carousel/' . ($index + 1) . '.jpg') . '?v=' . $carousel->updated_at->timestamp }}" onerror="replace_image(this);" />
                             </td>
                             <td width="15%" style="text-align: left;vertical-align: middle;">
                                 <div class="custom-file">
