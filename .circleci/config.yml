@@ -3,10 +3,18 @@ version: 2.1
 jobs:
   deploy-development:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/php:8.2
 
     steps:
       - checkout
+
+      - run:
+          name: 🧩 Instalar dependencias PHP (composer, DEV)
+          command: |
+            composer install \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
 
       - run:
           name: 📂 Listar directorio raíz
@@ -51,10 +59,19 @@ jobs:
 
   deploy-production:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/php:8.2
 
     steps:
       - checkout
+
+      - run:
+          name: 🧩 Instalar dependencias PHP (composer, PROD)
+          command: |
+            composer install \
+              --no-dev \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
 
       - run:
           name: 📂 Listar directorio raíz
@@ -91,6 +108,7 @@ jobs:
               --exclude-glob storage/logs/** \
               --exclude-glob config/local.php; \
               quit"
+
       - run:
           name: 📁 Update assets (PROD)
           command: |
