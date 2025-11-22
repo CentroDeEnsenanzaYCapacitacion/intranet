@@ -60,19 +60,16 @@ class WebController extends Controller
         $intranetPath = public_path('assets/img/carousel/');
         
         // Ruta para la web pública (donde se debe copiar)
+        // Usamos la ruta base y calculamos la ruta web
         $webPath = null;
+        $basePath = base_path(); // Ruta base del proyecto
+        
         if (app()->environment('production')) {
-            $webPath = str_replace(
-                '/intranet/public/',
-                '/public_html/intranet/',
-                public_path('assets/img/carousel/')
-            );
+            // En producción: /home/user/intranet -> /home/user/public_html/intranet
+            $webPath = dirname($basePath) . '/public_html/intranet/assets/img/carousel/';
         } elseif (app()->environment('development')) {
-            $webPath = str_replace(
-                '/intranet_dev/public/',
-                '/public_html/intranet_dev/',
-                public_path('assets/img/carousel/')
-            );
+            // En development: /home/user/intranet_dev -> /home/user/public_html/intranet_dev
+            $webPath = dirname($basePath) . '/public_html/intranet_dev/assets/img/carousel/';
         }
 
         // Verificar que los directorios existen
@@ -84,9 +81,11 @@ class WebController extends Controller
         }
         
         Log::info('Carousel upload paths', [
+            'base_path' => $basePath,
             'intranet' => $intranetPath,
             'web' => $webPath,
-            'environment' => app()->environment()
+            'environment' => app()->environment(),
+            'public_path_result' => public_path('assets/img/carousel/')
         ]);
         
         $destinationPath = $intranetPath;
