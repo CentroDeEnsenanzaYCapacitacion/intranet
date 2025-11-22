@@ -56,27 +56,40 @@ class WebController extends Controller
 
     public function webCarouselPost(WebCarouselRequest $request)
     {
-        // Determinar ruta según ambiente
+        // Ruta para la intranet (donde se sube la imagen)
+        $intranetPath = public_path('assets/img/carousel/');
+        
+        // Ruta para la web pública (donde se debe copiar)
+        $webPath = null;
         if (app()->environment('production')) {
-            $destinationPath = str_replace(
+            $webPath = str_replace(
                 '/intranet/public/',
                 '/public_html/intranet/',
                 public_path('assets/img/carousel/')
             );
         } elseif (app()->environment('development')) {
-            $destinationPath = str_replace(
+            $webPath = str_replace(
                 '/intranet_dev/public/',
                 '/public_html/intranet_dev/',
                 public_path('assets/img/carousel/')
             );
-        } else {
-            $destinationPath = public_path('assets/img/carousel/');
         }
 
-        // Verificar que el directorio existe
-        if (!file_exists($destinationPath)) {
-            mkdir($destinationPath, 0775, true);
+        // Verificar que los directorios existen
+        if (!file_exists($intranetPath)) {
+            mkdir($intranetPath, 0775, true);
         }
+        if ($webPath && !file_exists($webPath)) {
+            mkdir($webPath, 0775, true);
+        }
+        
+        Log::info('Carousel upload paths', [
+            'intranet' => $intranetPath,
+            'web' => $webPath,
+            'environment' => app()->environment()
+        ]);
+        
+        $destinationPath = $intranetPath;
 
         $images = [
             $request->file('img_1'),
@@ -108,8 +121,24 @@ class WebController extends Controller
             ];
 
             if ($image) {
-                $filename = '/' . ($key + 1) . '.jpg';
+                $filename = ($key + 1) . '.jpg';
+                
+                // Guardar en la ruta de intranet
                 $image->move($destinationPath, $filename);
+                
+                // Si hay ruta web, copiar también ahí
+                if ($webPath) {
+                    $sourcePath = $destinationPath . $filename;
+                    $targetPath = $webPath . $filename;
+                    
+                    if (file_exists($sourcePath)) {
+                        copy($sourcePath, $targetPath);
+                        Log::info('Carousel image copied', [
+                            'from' => $sourcePath,
+                            'to' => $targetPath
+                        ]);
+                    }
+                }
             }
 
             WebCarousel::updateOrCreate(
