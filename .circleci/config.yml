@@ -9,59 +9,59 @@ jobs:
       - checkout
 
       - run:
-          name: 🔎 Detectar cambios en dependencias (DEV)
+          name: 🔎 Detect dependency changes (DEV)
           command: |
             if git rev-parse HEAD^ >/dev/null 2>&1; then
               CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
-              echo "Archivos modificados:"
+              echo "Modified files:"
               echo "$CHANGED_FILES"
               if echo "$CHANGED_FILES" | grep -E '(^|/)composer\.json$|(^|/)composer\.lock$' >/dev/null; then
-                echo "Se han detectado cambios en dependencias."
+                echo "Dependency changes detected."
                 echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
               else
-                echo "No hay cambios en composer.json / composer.lock."
+                echo "No changes in composer.json / composer.lock."
                 echo 'COMPOSER_CHANGED=no' >> "$BASH_ENV"
               fi
             else
-              echo "No hay commit previo (primer build); asumimos cambios en dependencias."
+              echo "No previous commit (first build); assuming dependency changes."
               echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
             fi
 
       - run:
-          name: 🧩 Instalar dependencias PHP (composer, DEV)
+          name: 🧩 Install PHP dependencies (composer, DEV)
           command: |
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → ejecutando composer install"
+              echo "COMPOSER_CHANGED=yes → running composer install"
               composer install \
                 --no-interaction \
                 --prefer-dist \
                 --optimize-autoloader
             else
-              echo "COMPOSER_CHANGED=no → se omite composer install"
+              echo "COMPOSER_CHANGED=no → skipping composer install"
             fi
 
       - run:
-          name: 📂 Listar directorio raíz
+          name: 📂 List root directory
           command: ls -la
 
       - run:
-          name: 📂 Listar directorio public
+          name: 📂 List public directory
           command: |
-            ls -la public || echo "No existe el directorio public"
+            ls -la public || echo "public directory does not exist"
 
       - run:
-          name: 📂 Listar directorio public/assets
+          name: 📂 List public/assets directory
           command: |
-            ls -la public/assets || echo "No existe el directorio public/assets"
+            ls -la public/assets || echo "public/assets directory does not exist"
 
       - run:
-          name: 🛠️ Instalar lftp
+          name: 🛠️ Install lftp
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (DEV, excepto public/, vendor y otros)
+          name: 📂 Sync files (DEV, excluding public/, vendor and others)
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path \
               --verbose \
@@ -82,12 +82,12 @@ jobs:
           name: 📦 Sync vendor (DEV)
           command: |
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
+              echo "COMPOSER_CHANGED=yes → syncing vendor/"
               lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
                 --verbose; \
                 quit"
             else
-              echo "COMPOSER_CHANGED=no → no se sincroniza vendor/"
+              echo "COMPOSER_CHANGED=no → vendor/ not synced"
             fi
 
       - run:
@@ -103,60 +103,60 @@ jobs:
       - checkout
 
       - run:
-          name: 🔎 Detectar cambios en dependencias (PROD)
+          name: 🔎 Detect dependency changes (PROD)
           command: |
             if git rev-parse HEAD^ >/dev/null 2>&1; then
               CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
-              echo "Archivos modificados:"
+              echo "Modified files:"
               echo "$CHANGED_FILES"
               if echo "$CHANGED_FILES" | grep -E '(^|/)composer\.json$|(^|/)composer\.lock$' >/dev/null; then
-                echo "Se han detectado cambios en dependencias."
+                echo "Dependency changes detected."
                 echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
               else
-                echo "No hay cambios en composer.json / composer.lock."
+                echo "No changes in composer.json / composer.lock."
                 echo 'COMPOSER_CHANGED=no' >> "$BASH_ENV"
               fi
             else
-              echo "No hay commit previo (primer build); asumimos cambios en dependencias."
+              echo "No previous commit (first build); assuming dependency changes."
               echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
             fi
 
       - run:
-          name: 🧩 Instalar dependencias PHP (composer, PROD)
+          name: 🧩 Install PHP dependencies (composer, PROD)
           command: |
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → ejecutando composer install"
+              echo "COMPOSER_CHANGED=yes → running composer install"
               composer install \
                 --no-dev \
                 --no-interaction \
                 --prefer-dist \
                 --optimize-autoloader
             else
-              echo "COMPOSER_CHANGED=no → se omite composer install"
+              echo "COMPOSER_CHANGED=no → skipping composer install"
             fi
 
       - run:
-          name: 📂 Listar directorio raíz
+          name: 📂 List root directory
           command: ls -la
 
       - run:
-          name: 📂 Listar directorio public
+          name: 📂 List public directory
           command: |
-            ls -la public || echo "No existe el directorio public"
+            ls -la public || echo "public directory does not exist"
 
       - run:
-          name: 📂 Listar directorio public/assets
+          name: 📂 List public/assets directory
           command: |
-            ls -la public/assets || echo "No existe el directorio public/assets"
+            ls -la public/assets || echo "public/assets directory does not exist"
 
       - run:
-          name: 🛠️ Instalar lftp
+          name: 🛠️ Install lftp
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (PROD, excepto public/, vendor y otros)
+          name: 📂 Sync files (PROD, excluding public/, vendor and others)
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path \
               --verbose \
@@ -177,12 +177,12 @@ jobs:
           name: 📦 Sync vendor (PROD)
           command: |
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
+              echo "COMPOSER_CHANGED=yes → syncing vendor/"
               lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
                 --verbose; \
                 quit"
             else
-              echo "COMPOSER_CHANGED=no → no se sincroniza vendor/"
+              echo "COMPOSER_CHANGED=no → vendor/ not synced"
             fi
 
       - run:
