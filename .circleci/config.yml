@@ -3,10 +3,42 @@ version: 2.1
 jobs:
   deploy-development:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/php:8.2
 
     steps:
       - checkout
+
+      - run:
+          name: 🔎 Detectar cambios en dependencias (DEV)
+          command: |
+            if git rev-parse HEAD^ >/dev/null 2>&1; then
+              CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+              echo "Archivos modificados:"
+              echo "$CHANGED_FILES"
+              if echo "$CHANGED_FILES" | grep -E '(^|/)composer\.json$|(^|/)composer\.lock$' >/dev/null; then
+                echo "Se han detectado cambios en dependencias."
+                echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+              else
+                echo "No hay cambios en composer.json / composer.lock."
+                echo 'COMPOSER_CHANGED=no' >> "$BASH_ENV"
+              fi
+            else
+              echo "No hay commit previo (primer build); asumimos cambios en dependencias."
+              echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+            fi
+
+      - run:
+          name: 🧩 Instalar dependencias PHP (composer, DEV)
+          command: |
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → ejecutando composer install"
+              composer install \
+                --no-interaction \
+                --prefer-dist \
+                --optimize-autoloader
+            else
+              echo "COMPOSER_CHANGED=no → se omite composer install"
+            fi
 
       - run:
           name: 📂 Listar directorio raíz
@@ -29,34 +61,79 @@ jobs:
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (DEV, excepto public/)
+          name: 📂 Sync files (DEV, excepto public/, vendor y otros)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R . "$intra_ftp_dev_path" \
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path \
               --verbose \
               --exclude-glob public/** \
+              --exclude-glob vendor/** \
               --exclude-glob .git/** \
-              --exclude-glob .circleci/**
-            quit
-            EOF
+              --exclude-glob .circleci/** \
+              --exclude-glob .env \
+              --exclude-glob .env.prod \
+              --exclude-glob .env.dev \
+              --exclude-glob .env.example \
+              --exclude-glob composer.lock \
+              --exclude-glob storage/logs/** \
+              --exclude-glob config/local.php; \
+              quit"
+
+      - run:
+          name: 📦 Sync vendor (DEV)
+          command: |
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
+              lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
+                --verbose; \
+                quit"
+            else
+              echo "COMPOSER_CHANGED=no → no se sincroniza vendor/"
+            fi
 
       - run:
           name: 📁 Update assets (DEV)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R "$local_dir" "$intra_ftp_dev_assets_path" \
-              --verbose
-            quit
-            EOF
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_dev_assets_path --verbose; quit"
 
   deploy-production:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/php:8.2
 
     steps:
       - checkout
+
+      - run:
+          name: 🔎 Detectar cambios en dependencias (PROD)
+          command: |
+            if git rev-parse HEAD^ >/dev/null 2>&1; then
+              CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+              echo "Archivos modificados:"
+              echo "$CHANGED_FILES"
+              if echo "$CHANGED_FILES" | grep -E '(^|/)composer\.json$|(^|/)composer\.lock$' >/dev/null; then
+                echo "Se han detectado cambios en dependencias."
+                echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+              else
+                echo "No hay cambios en composer.json / composer.lock."
+                echo 'COMPOSER_CHANGED=no' >> "$BASH_ENV"
+              fi
+            else
+              echo "No hay commit previo (primer build); asumimos cambios en dependencias."
+              echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+            fi
+
+      - run:
+          name: 🧩 Instalar dependencias PHP (composer, PROD)
+          command: |
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → ejecutando composer install"
+              composer install \
+                --no-dev \
+                --no-interaction \
+                --prefer-dist \
+                --optimize-autoloader
+            else
+              echo "COMPOSER_CHANGED=no → se omite composer install"
+            fi
 
       - run:
           name: 📂 Listar directorio raíz
@@ -79,27 +156,39 @@ jobs:
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (PROD, excepto public/)
+          name: 📂 Sync files (PROD, excepto public/, vendor y otros)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R . "$intra_ftp_prod_path" \
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path \
               --verbose \
               --exclude-glob public/** \
+              --exclude-glob vendor/** \
               --exclude-glob .git/** \
-              --exclude-glob .circleci/**
-            quit
-            EOF
+              --exclude-glob .circleci/** \
+              --exclude-glob .env \
+              --exclude-glob .env.prod \
+              --exclude-glob .env.dev \
+              --exclude-glob .env.example \
+              --exclude-glob composer.lock \
+              --exclude-glob storage/logs/** \
+              --exclude-glob config/local.php; \
+              quit"
+
+      - run:
+          name: 📦 Sync vendor (PROD)
+          command: |
+            if [ "$COMPOSER_CHANGED" = "yes" ]; then
+              echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
+              lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
+                --verbose; \
+                quit"
+            else
+              echo "COMPOSER_CHANGED=no → no se sincroniza vendor/"
+            fi
 
       - run:
           name: 📁 Update assets (PROD)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" <<EOF
-            set ssl:verify-certificate no
-            mirror -R "$local_dir" "$intra_ftp_prod_assets_path" \
-              --verbose
-            quit
-            EOF
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_prod_assets_path --verbose; quit"
 
 workflows:
   deploy-on-branches:
