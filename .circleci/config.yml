@@ -29,9 +29,20 @@ jobs:
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (DEV, excepto public/)
+          name: 📂 Sync files (DEV, excepto public/ and others)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path --verbose --exclude-glob public/** --exclude-glob .git/** --exclude-glob .circleci/**; quit"
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path \
+              --verbose \
+              --exclude-glob public/** \
+              --exclude-glob .git/** \
+              --exclude-glob .circleci/** \
+              --exclude-glob .env \
+              --exclude-glob .env.prod \
+              --exclude-glob .env.dev \
+              --exclude-glob composer.lock \
+              --exclude-glob storage/logs/** \
+              --exclude-glob config/local.php; \
+              quit"
 
       - run:
           name: 📁 Update assets (DEV)
@@ -66,10 +77,20 @@ jobs:
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (PROD, excepto public/)
+          name: 📂 Sync files (PROD, excepto public/ and others)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path --verbose --exclude-glob public/** --exclude-glob .git/** --exclude-glob .circleci/**; quit"
-
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path \
+              --verbose \
+              --exclude-glob public/** \
+              --exclude-glob .git/** \
+              --exclude-glob .circleci/** \
+              --exclude-glob .env \
+              --exclude-glob .env.prod \
+              --exclude-glob .env.dev \
+              --exclude-glob composer.lock \
+              --exclude-glob storage/logs/** \
+              --exclude-glob config/local.php; \
+              quit"
       - run:
           name: 📁 Update assets (PROD)
           command: |
