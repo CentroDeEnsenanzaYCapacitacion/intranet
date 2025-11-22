@@ -78,7 +78,7 @@ jobs:
               quit"
 
       - run:
-          name: 📦 Sync vendor (DEV, solo si cambian dependencias)
+          name: 📦 Sync vendor (DEV)
           command: |
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
               echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
@@ -172,7 +172,7 @@ jobs:
               quit"
 
       - run:
-          name: 📦 Sync vendor (PROD, solo si cambian dependencias)
+          name: 📦 Sync vendor (PROD)
           command: |
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
               echo "COMPOSER_CHANGED=yes → sincronizando vendor/"
