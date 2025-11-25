@@ -93,7 +93,10 @@ jobs:
       - run:
           name: 📁 Update assets (DEV)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_dev_assets_path --verbose; quit"
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_dev_assets_path \
+            --verbose \
+            --exclude-glob public/assets/img/carousel/** \
+            quit"
 
   deploy-production:
     docker:
@@ -188,7 +191,10 @@ jobs:
       - run:
           name: 📁 Update assets (PROD)
           command: |
-            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_prod_assets_path --verbose; quit"
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_prod_assets_path \
+            --verbose \
+            --exclude-glob public/assets/img/carousel/** \
+             quit"
 
 workflows:
   deploy-on-branches:
