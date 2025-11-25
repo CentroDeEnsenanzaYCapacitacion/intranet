@@ -95,8 +95,9 @@ jobs:
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_dev_assets_path \
               --verbose \
-              --exclude-glob public/assets/img/carousel/**; \
+              --exclude-glob img/carousel/**; \
               quit"
+
 
 
   deploy-production:
@@ -194,8 +195,9 @@ jobs:
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_prod_assets_path \
               --verbose \
-              --exclude-glob public/assets/img/carousel/**; \
+              --exclude-glob img/carousel/**; \
               quit"
+
 
 
 workflows:
