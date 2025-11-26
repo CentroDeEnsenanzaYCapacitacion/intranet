@@ -77,14 +77,20 @@ class ReportController extends Controller
 
     public function receiptOrRequest(Request $request)
     {
+        // Obtener el reporte y verificar si es BACHILLERATO EN UN EXAMEN
+        $report = Report::with('course')->find($request->report_id);
+        $isBachilleratoExamen = $report && $report->course && stripos($report->course->name, 'BACHILLERATO EN UN EXAMEN') !== false;
+        
         if ($request->discount == 0) {
-            $success = Utils::validateAmount($request->report_id, "report");
-            if (!$success) {
-                return back()->withErrors(['error' => 'No existe un costo resgistrado para el recibo que se intenta emitir, por favor registre un costo para continuar.']);
+            // Omitir validación de costo si es BACHILLERATO EN UN EXAMEN
+            if (!$isBachilleratoExamen) {
+                $success = Utils::validateAmount($request->report_id, "report");
+                if (!$success) {
+                    return back()->withErrors(['error' => 'No existe un costo resgistrado para el recibo que se intenta emitir, por favor registre un costo para continuar.']);
+                }
             }
             
             // Validar duplicados en estudiantes antes de inscribir
-            $report = Report::find($request->report_id);
             $duplicateStudents = Student::where(function($query) use ($report) {
                 $query->where('name', $report->name)
                       ->where('surnames', $report->surnames);

@@ -21,7 +21,7 @@ class TicketController extends Controller
                 $query->whereNotIn('status', ['cerrado', 'resuelto'])
                     ->orWhere(function ($q) {
                         $q->whereIn('status', ['cerrado', 'resuelto'])
-                          ->where('closed_at', '>=', now()->subMonth());
+                          ->where('closed_at', '>=', now()->subDays(15));
                     });
             })
             ->latest()
@@ -47,7 +47,6 @@ class TicketController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
-        // Crear ticket sin el campo 'images'
         $ticket = Ticket::create([
             'title' => $request->title,
             'description' => $request->description,
@@ -57,13 +56,11 @@ class TicketController extends Controller
             'status' => 'abierto',
         ]);
 
-        // Procesar imágenes si existen
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 try {
                     $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                    
-                    // Guardar en storage/app/tickets/
+
                     Storage::putFileAs('tickets', $image, $filename);
 
                     TicketImage::create([
@@ -91,7 +88,6 @@ class TicketController extends Controller
 
     public function storeMessage(Request $request, Ticket $ticket)
     {
-        // Validar que usuarios no-admin no puedan escribir en tickets cerrados/resueltos
         if (Auth::user()->role_id !== 1 && in_array($ticket->status, ['cerrado', 'resuelto'])) {
             return redirect()->back()->with('error', 'No puedes añadir mensajes a un ticket cerrado o resuelto.');
         }
@@ -108,13 +104,11 @@ class TicketController extends Controller
             'message' => $request->message,
         ]);
 
-        // Procesar adjuntos si existen
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 try {
                     $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    
-                    // Guardar en storage/app/tickets/
+
                     Storage::putFileAs('tickets', $file, $filename);
 
                     TicketMessageAttachment::create([
@@ -143,17 +137,15 @@ class TicketController extends Controller
 
         $oldStatus = $ticket->status;
         $ticket->status = $request->status;
-        
-        // Si cambia a cerrado o resuelto, registrar fecha
+
         if (in_array($request->status, ['cerrado', 'resuelto']) && !in_array($oldStatus, ['cerrado', 'resuelto'])) {
             $ticket->closed_at = now();
         }
-        
-        // Si se reabre (estaba cerrado/resuelto y ahora no), resetear fecha
+
         if (in_array($oldStatus, ['cerrado', 'resuelto']) && !in_array($request->status, ['cerrado', 'resuelto'])) {
             $ticket->closed_at = null;
         }
-        
+
         $ticket->save();
 
         return redirect()->back()->with('success', 'Estado actualizado.');
@@ -162,7 +154,7 @@ class TicketController extends Controller
     public function getImage($filename)
     {
         $path = 'tickets/' . $filename;
-        
+
         if (!Storage::exists($path)) {
             abort(404);
         }
@@ -176,7 +168,7 @@ class TicketController extends Controller
     public function getAttachment($filename)
     {
         $path = 'tickets/' . $filename;
-        
+
         if (!Storage::exists($path)) {
             abort(404);
         }

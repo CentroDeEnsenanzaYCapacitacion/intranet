@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
             ).value;
             const courseName = document.getElementById("courseName")?.value || "";
 
-            // Si el curso es BACHILLERATO EN UN EXAMEN, omitir validación
             if (courseName.toUpperCase().includes("BACHILLERATO EN UN EXAMEN")) {
                 showLoader(false);
                 submitFormInNewTab(form);
