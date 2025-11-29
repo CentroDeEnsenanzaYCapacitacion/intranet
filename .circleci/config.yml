@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  deploy-development:
+  build-development:
     docker:
       - image: cimg/php:8.2
 
@@ -35,7 +35,34 @@ jobs:
               --no-interaction \
               --prefer-dist \
               --optimize-autoloader
+            # Guardamos el flag en un archivo para usarlo en el job de deploy
+            source "$BASH_ENV"
+            echo "$COMPOSER_CHANGED" > .composer_changed
 
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy-development:
+    docker:
+      - image: cimg/php:8.2
+
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: ♻️ Restore COMPOSER_CHANGED flag (DEV)
+          command: |
+            if [ -f .composer_changed ]; then
+              export COMPOSER_CHANGED="$(cat .composer_changed)"
+              echo "COMPOSER_CHANGED from workspace: $COMPOSER_CHANGED"
+            else
+              echo ".composer_changed not found, assuming yes"
+              export COMPOSER_CHANGED=yes
+            fi
+            echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
 
       - run:
           name: 🗄️ Run migrations (DEV)
@@ -90,13 +117,14 @@ jobs:
       - run:
           name: 📦 Sync vendor (DEV)
           command: |
+            source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → syncing vendor/"
+              echo "COMPOSER_CHANGED=yes → syncing vendor/ (DEV)"
               lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
                 --verbose; \
                 quit"
             else
-              echo "COMPOSER_CHANGED=no → vendor/ not synced"
+              echo "COMPOSER_CHANGED=no → vendor/ not synced (DEV)"
             fi
 
       - run:
@@ -109,7 +137,7 @@ jobs:
 
 
 
-  deploy-production:
+  build-production:
     docker:
       - image: cimg/php:8.2
 
@@ -144,7 +172,34 @@ jobs:
               --no-interaction \
               --prefer-dist \
               --optimize-autoloader
+            # Guardamos el flag en un archivo para usarlo en el job de deploy
+            source "$BASH_ENV"
+            echo "$COMPOSER_CHANGED" > .composer_changed
 
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy-production:
+    docker:
+      - image: cimg/php:8.2
+
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: ♻️ Restore COMPOSER_CHANGED flag (PROD)
+          command: |
+            if [ -f .composer_changed ]; then
+              export COMPOSER_CHANGED="$(cat .composer_changed)"
+              echo "COMPOSER_CHANGED from workspace: $COMPOSER_CHANGED"
+            else
+              echo ".composer_changed not found, assuming yes"
+              export COMPOSER_CHANGED=yes
+            fi
+            echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
 
       - run:
           name: 🗄️ Run migrations (PROD)
@@ -199,13 +254,14 @@ jobs:
       - run:
           name: 📦 Sync vendor (PROD)
           command: |
+            source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → syncing vendor/"
+              echo "COMPOSER_CHANGED=yes → syncing vendor/ (PROD)"
               lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
                 --verbose; \
                 quit"
             else
-              echo "COMPOSER_CHANGED=no → vendor/ not synced"
+              echo "COMPOSER_CHANGED=no → vendor/ not synced (PROD)"
             fi
 
       - run:
@@ -221,12 +277,26 @@ jobs:
 workflows:
   deploy-on-branches:
     jobs:
-      - deploy-development:
+      - build-development:
           filters:
             branches:
               only: development
 
+      - deploy-development:
+          requires:
+            - build-development
+          filters:
+            branches:
+              only: development
+
+      - build-production:
+          filters:
+            branches:
+              only: main
+
       - deploy-production:
+          requires:
+            - build-production
           filters:
             branches:
               only: main

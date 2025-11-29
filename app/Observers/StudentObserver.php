@@ -27,47 +27,36 @@ class StudentObserver
         session()->forget('report');
         session()->forget('card_payment');
 
-        $receipt_type_id = isset($card_payment) ? 2 : 1;
+        // Si no hay report, no generar recibo automático
+        if ($report == null) {
+            return;
+        }
 
-        $concept = 'Colegiatura '.$student->course->name;
-        $report_id = null;
-        $final_amount = Amount::where('crew_id', $student->crew_id)
-                        ->where('course_id', $student->course_id)
-                        ->where('receipt_type_id', $receipt_type_id)
-                        ->first()->amount;
+        // Inscripción desde informe
+        $receipt_type_id = 1;
+        $report_id = $report->id;
         $discount = null;
 
-        if ($report != null) {
-            $receipt_type_id = 1;
+        $amount_record = Amount::where('crew_id', $report->crew_id)
+                ->where('course_id', $report->course_id)
+                ->where('receipt_type_id', 1)
+                ->first();
 
-            $amount = Amount::where('crew_id', $report->crew_id)
-                    ->where('course_id', $report->course_id)
-                    ->where('receipt_type_id', $receipt_type_id)
-                    ->first()->amount;
+        $amount = $amount_record ? $amount_record->amount : 0;
 
-            $sys_request = SysRequest::where('report_id', $report->id)->first();
+        $sys_request = SysRequest::where('report_id', $report->id)->first();
 
-            if (isset($sys_request)) {
-                if ($sys_request->approved) {
-                    $discount = strstr($sys_request->description, "%", true);
-                    $final_amount = $amount - (($discount * $amount) / 100);
-                } else {
-                    $discount = null;
-                    $final_amount = $amount;
-                }
-            } else {
-                $final_amount = $amount;
-            }
+        if ($sys_request && $sys_request->approved) {
+            $discount = strstr($sys_request->description, "%", true);
+            $final_amount = $amount - (($discount * $amount) / 100);
+        } else {
+            $final_amount = $amount;
+        }
 
-            $report_id = $report->id;
-
-            if ($discount == null) {
-                $concept = 'Inscripción '.$report->course->name;
-            } else {
-                $concept = 'Inscripción '.$report->course->name.' con descuento del '.$discount.'%';
-            }
-
-
+        if ($discount == null) {
+            $concept = 'Inscripción '.$report->course->name;
+        } else {
+            $concept = 'Inscripción '.$report->course->name.' con descuento del '.$discount.'%';
         }
 
         Utils::generateReceipt(
