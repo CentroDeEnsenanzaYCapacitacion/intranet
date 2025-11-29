@@ -78,9 +78,9 @@
                             @endif
                             <br>
                             <b>Teléfono: </b><input class="form-control text-uppercase" type="text" name="phone"
-                                value="{{ old('phone', $savedData['phone'] ?? '') }}" /><br>
+                                value="{{ old('phone', $savedData['phone'] ?? $student->phone ?? '') }}" /><br>
                             <b>Celular: </b><input class="form-control text-uppercase" type="text" name="cel_phone"
-                                value="{{ old('cel_phone', $savedData['cel_phone'] ?? '') }}" /><br>
+                                value="{{ old('cel_phone', $savedData['cel_phone'] ?? $student->cel_phone ?? '') }}" /><br>
                             <b>Correo electrónico: </b><input class="form-control text-uppercase" type="text"
                                 name="email" value="{{ old('email', $savedData['email'] ?? $student->email) }}" /><br><br>
                             <h5 class="text-orange"><b>Información académica
@@ -139,6 +139,11 @@
                                     <label class="btn btn-outline-orange text-uppercase" for="sabt">Sabatino</label>
                                 </div>
                             </div><br>
+                            <b>Colegiatura: </b><input class="form-control" type="number" step="0.01" min="0.01" name="tuition"
+                                value="{{ old('tuition', $savedData['tuition'] ?? '') }}" placeholder="0.00" required /><br>
+                            @if ($errors->has('tuition'))
+                                <div class="text-danger">{{ $errors->first('tuition') }}</div>
+                            @endif
                             <div class="form-group">
                                 <label for="exampleSelect"><b>Modalidad:</b></label>
                                 <select class="form-control text-uppercase" name="modality_id" id="modality_id">
@@ -167,7 +172,7 @@
                             <b>Parentesco: </b><input class="form-control text-uppercase" type="text"
                                 name="relationship" value="{{ old('relationship', $savedData['relationship'] ?? '') }}" /><br>
                             <div class="d-flex justify-content-center"><button class="btn bg-orange text-white"
-                                    type="submit" onclick="showLoader(true)">Guardar</button></div><br><br>
+                                    type="submit" onclick="if(this.form.checkValidity()) showLoader(true)">Guardar</button></div><br><br>
                         </form>
                     </div>
                 </div>
@@ -192,6 +197,7 @@
                 payment_periodicity_id: document.querySelector('select[name="payment_periodicity_id"]').value,
                 schedule_id: document.querySelector('select[name="schedule_id"]').value,
                 sabbatine: document.querySelector('input[name="sabbatine"]:checked').value,
+                tuition: document.querySelector('input[name="tuition"]').value,
                 modality_id: document.querySelector('select[name="modality_id"]').value,
                 start: document.querySelector('input[name="start"]').value,
                 tutor_name: document.querySelector('input[name="tutor_name"]').value,

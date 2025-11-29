@@ -34,6 +34,8 @@ class StudentController extends Controller
             'surnames' => $report->surnames,
             'genre' => $report->genre,
             'email' => $report->email,
+            'phone' => $report->phone,
+            'cel_phone' => $report->cel_phone,
             'course_id' => $report->course_id
         ]);
     }
@@ -196,6 +198,7 @@ class StudentController extends Controller
             $student->payment_periodicity_id = $request->payment_periodicity_id;
             $student->start = $request->start;
             $student->generation = $request->gen_month.'-'.$request->gen_year;
+            $student->tuition = $request->tuition;
             $student->first_time = false;
 
             Tutor::create([

@@ -94,6 +94,11 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                                 <label class="btn btn-outline-orange text-uppercase" for="sabt">Sabatino</label>
                             </div>
                         </div><br>
+                        <div class="d-flex align-items-center">
+                            <b>Colegiatura: </b>
+                            <span class="ms-2">${{ number_format($student->tuition ?? 0, 2) }}</span>
+                            <button type="button" class="btn btn-outline-orange btn-sm ms-3">Solicitar cambio</button>
+                        </div><br>
                         <div class="form-group">
                             <label for="exampleSelect"><b>Modalidad:</b></label>
                             <select class="form-control text-uppercase" name="modality_id" id="modality_id">

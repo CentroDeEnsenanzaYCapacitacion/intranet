@@ -44,7 +44,8 @@ class StudentRequest extends FormRequest
             'phone' => 'nullable|required_without:cel_phone|numeric|digits:10',
             'cel_phone' => 'nullable|required_without:phone|numeric|digits:10',
             'email' => 'required|email|regex:/^[^@]+@[^@]+\.[^@]+$/',
-            'course_id' => 'required|integer|min:0'
+            'course_id' => 'required|integer|min:0',
+            'tuition' => 'required|numeric|min:0.01|decimal:0,2'
         ];
     }
 }
