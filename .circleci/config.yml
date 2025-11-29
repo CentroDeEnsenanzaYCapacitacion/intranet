@@ -30,15 +30,12 @@ jobs:
       - run:
           name: 🧩 Install PHP dependencies (composer, DEV)
           command: |
-            if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → running composer install"
-              composer install \
-                --no-interaction \
-                --prefer-dist \
-                --optimize-autoloader
-            else
-              echo "COMPOSER_CHANGED=no → skipping composer install"
-            fi
+            echo "Running composer install (DEV)"
+            composer install \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
+
 
       - run:
           name: 🗄️ Run migrations (DEV)
@@ -141,16 +138,13 @@ jobs:
       - run:
           name: 🧩 Install PHP dependencies (composer, PROD)
           command: |
-            if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → running composer install"
-              composer install \
-                --no-dev \
-                --no-interaction \
-                --prefer-dist \
-                --optimize-autoloader
-            else
-              echo "COMPOSER_CHANGED=no → skipping composer install"
-            fi
+            echo "Running composer install (PROD)"
+            composer install \
+              --no-dev \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
+
 
       - run:
           name: 🗄️ Run migrations (PROD)
