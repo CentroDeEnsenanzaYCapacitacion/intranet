@@ -6,6 +6,8 @@
 /public/assets/img/qr.png
 /storage/*.key
 /vendor
+clear_cache_dev.php
+clear_cache_prod.php
 .env
 .env.backup
 .env.prod
