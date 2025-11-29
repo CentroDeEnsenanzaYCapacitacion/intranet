@@ -41,6 +41,18 @@ jobs:
             fi
 
       - run:
+          name: 🗄️ Run migrations (DEV)
+          command: |
+            echo "Running migrations against DEV DB"
+            export DB_HOST="$DB_HOST_DEV"
+            export DB_PORT="$DB_PORT_DEV"
+            export DB_DATABASE="$DB_DATABASE_DEV"
+            export DB_USERNAME="$DB_USERNAME_DEV"
+            export DB_PASSWORD="$DB_PASSWORD_DEV"
+
+            php artisan migrate --force --no-interaction
+
+      - run:
           name: 📂 List root directory
           command: ls -la
 
@@ -139,6 +151,18 @@ jobs:
             else
               echo "COMPOSER_CHANGED=no → skipping composer install"
             fi
+
+      - run:
+          name: 🗄️ Run migrations (PROD)
+          command: |
+            echo "Running migrations against PROD DB"
+            export DB_HOST="$DB_HOST_PROD"
+            export DB_PORT="$DB_PORT_PROD"
+            export DB_DATABASE="$DB_DATABASE_PROD"
+            export DB_USERNAME="$DB_USERNAME_PROD"
+            export DB_PASSWORD="$DB_PASSWORD_PROD"
+
+            php artisan migrate --force --no-interaction
 
       - run:
           name: 📂 List root directory
