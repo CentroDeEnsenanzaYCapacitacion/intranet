@@ -84,7 +84,7 @@
                             </label>
                         </div>
 
-                        <div class="text-center mt-3">
+                        <div class="text-center mt-3" id="surchargeContainer" style="display:none;">
                             <input class="form-check-input" name="apply_surcharge" type="checkbox" value="1" id="surchargeCheck">
                             <label class="form-check-label" for="surchargeCheck">
                                 <b>Aplicar recargo</b>
@@ -101,11 +101,19 @@
                             </div>
                         </div>
 
-                        <div class="text-center mt-3">
+                        <div class="text-center mt-3" id="earlyDiscountContainer" style="display:none;">
                             <input class="form-check-input" name="apply_early_discount" type="checkbox" value="1" id="earlyDiscountCheck">
                             <label class="form-check-label" for="earlyDiscountCheck">
                                 <b>Aplicar descuento por pronto pago</b>
                             </label>
+                            <div id="earlyDiscountOptions" class="mt-3" style="display:none;">
+                                <b>Porcentaje de descuento</b>
+                                <div style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                                    <input type="number" name="early_discount_percentage" id="earlyDiscountPercentage" 
+                                        class="form-control" style="width: 80px; text-align: center;" 
+                                        min="1" max="10" value="5">%
+                                </div>
+                            </div>
                         </div>
                         <br>
                         <button class="btn bg-orange text-white" type="submit" onclick="showLoader(true)">
