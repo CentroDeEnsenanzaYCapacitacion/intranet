@@ -100,6 +100,13 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="text-center mt-3">
+                            <input class="form-check-input" name="apply_early_discount" type="checkbox" value="1" id="earlyDiscountCheck">
+                            <label class="form-check-label" for="earlyDiscountCheck">
+                                <b>Aplicar descuento por pronto pago</b>
+                            </label>
+                        </div>
                         <br>
                         <button class="btn bg-orange text-white" type="submit" onclick="showLoader(true)">
                             Emitir recibo

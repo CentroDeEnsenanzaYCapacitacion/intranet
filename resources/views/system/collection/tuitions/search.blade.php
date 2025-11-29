@@ -41,7 +41,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($students as $student)
-                                <tr onclick="redirectToStudent('{{ route('system.collection.student.tuitions', $student->id) }}')">
+                                <tr onclick="redirectToStudent('{{ route('system.collection.student.tuitions', $student->id) }}')" style="cursor: pointer;">
                                     <td class="text-uppercase">{{ $student->crew->name[0].'/'.$student->id }}</td>
                                     <td class="text-uppercase">{{ $student->surnames.', '.$student->name }}</td>
                                 </tr>

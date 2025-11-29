@@ -22,7 +22,7 @@
             <div class="col">
                 {{ $student->crew->name[0].'/'.$student->id }} {{ $student->surnames }}, {{ $student->name }}<br>
                 {{ $student->course->name }} {{ $student->generation }} {{ $student->modality->name }} de {{ $student->schedule->name }}<br>
-                {{ $student->paymentPeriodicity->name }}, ${{ number_format($amount->amount, 2, '.', ',') }}<br>
+                {{ $student->paymentPeriodicity->name }}, ${{ number_format($student->tuition, 2, '.', ',') }}<br>
             </div>
         </div>
         <div class="row d-flex mt-5">

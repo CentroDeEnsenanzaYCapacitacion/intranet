@@ -14,7 +14,11 @@
                 </div>
                 <div>
                     <a href="{{ route('admin.catalogues.amounts.generate') }}" onclick="showLoader(true)"
-                        class="btn bg-orange text-white mt-2 mb-2">Generar inscripciones y colegiaturas de cursos</a></h5>
+                        class="btn bg-orange text-white mt-2 mb-2">Generar inscripciones de cursos</a>
+                    @if($amounts->where('receipt_type_id', '!=', 1)->where('crew_id', '!=', 1)->count() > 0)
+                        <a href="{{ route('admin.catalogues.amounts.clean') }}" onclick="return confirm('¿Estás seguro de eliminar todos los costos que no sean inscripciones?') && showLoader(true)"
+                            class="btn btn-danger text-white mt-2 mb-2 ms-2">Limpiar colegiaturas</a>
+                    @endif
                 </div>
                 {{-- <div>
                 <a href="{{ route('admin.users.new') }}"  class="btn bg-orange text-white mb-2">Nuevo costo</a>

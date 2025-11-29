@@ -110,4 +110,16 @@ class AmountController extends Controller
 
         return view('admin.catalogues.amounts.show', compact('amounts'));
     }
+
+    public function cleanAmounts()
+    {
+        // Eliminar todos los amounts que no sean inscripciones (receipt_type_id != 1)
+        // Excluir los que tienen crew_id = 1 (costos generales para todos los crews)
+        Amount::where('receipt_type_id', '!=', 1)
+            ->where('crew_id', '!=', 1)
+            ->delete();
+
+        return redirect()->route('admin.catalogues.amounts.show')
+            ->with('success', 'Se han eliminado todos los costos que no son inscripciones');
+    }
 }

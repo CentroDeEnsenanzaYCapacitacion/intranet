@@ -259,21 +259,27 @@ function setAmount(isAdvance) {
     selections = retrieveSelectedItems();
     var amount = 0;
     var amountValue= 0;
-    amount = amounts.filter(function (item) {
-        return item.receipt_type_id == selections[0].selectedIndex + 1;
-    });
-
-    if (selections[0].selectedIndex==1 && isAdvance ){
-        summatory = 0;
-        for (const receipt of student_tuition_receipts){
-            if(receipt.receipt_attribute_id==1){
-                summatory += parseInt(receipt.amount);
-                amountValue = parseFloat(amount[0].amount) - summatory;
-            }else{
-                break;
+    
+    // Para colegiatura (receipt_type_id = 2), usar student.tuition
+    if (selections[0].selectedIndex + 1 == 2) {
+        if (isAdvance) {
+            summatory = 0;
+            for (const receipt of student_tuition_receipts){
+                if(receipt.receipt_attribute_id==1){
+                    summatory += parseInt(receipt.amount);
+                    amountValue = parseFloat(student.tuition) - summatory;
+                }else{
+                    break;
+                }
             }
+        } else {
+            amountValue = parseFloat(student.tuition);
         }
-    }else{
+    } else {
+        // Para otros tipos de recibo, usar amounts
+        amount = amounts.filter(function (item) {
+            return item.receipt_type_id == selections[0].selectedIndex + 1;
+        });
         amountValue = parseFloat(amount[0].amount);
     }
 
