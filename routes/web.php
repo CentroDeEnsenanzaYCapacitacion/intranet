@@ -2,13 +2,25 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 
+
+Route::get('/internal/clear-cache', function () {
+    $token = request()->query('token');
+    $serverToken = env('CACHE_CLEAR_TOKEN');
+
+    if (!$serverToken || $token !== $serverToken) {
+        abort(403, 'Forbidden');
+    }
+
+    Artisan::call('optimize:clear');
+
+    return 'Laravel cache cleared';
+});
 
 Route::get('/.well-known/apple-app-site-association', function () {
     $path = public_path('.well-known/apple-app-site-association');

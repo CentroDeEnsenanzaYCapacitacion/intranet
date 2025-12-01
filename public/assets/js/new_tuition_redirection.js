@@ -17,15 +17,11 @@ function handleAmounts() {
             return "El valor introducido no es correcto.";
         }
     }
-    for (const amount of crew_course_amounts) {
-        if (amount.receipt_type_id != 1) {
-            if (receipt_amount > parseInt(amount.amount)) {
-                return "El monto no puede ser mayor al valor de la colegiatura";
-            } else {
-                return null;
-            }
-        }
+    // Validar contra la colegiatura del estudiante
+    if (student.tuition && parseFloat(receipt_amount) > parseFloat(student.tuition)) {
+        return "El monto no puede ser mayor al valor de la colegiatura";
     }
+    return null;
 }
 
 function submitFormInNewTab(form) {

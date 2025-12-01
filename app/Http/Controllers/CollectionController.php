@@ -121,17 +121,16 @@ class CollectionController extends Controller
     public function getStudentTuitions($student_id)
     {
         $student = Student::find($student_id);
-        $amount = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->where('receipt_type_id', 2)->first();
         $payments = Receipt::where('student_id', $student_id)->get();
 
         if (!isset($student->generation) || !isset($student->modality->name) || !isset($student->schedule->name)) {
             return redirect()->route('system.collection.tuition')->withInput()->withErrors(['error' => 'No se han registrado los datos del estudiante, por favor complete el expediente para poder emitir recibos de este estudiante.']);
         }
-        if (!isset($amount) || $amount->amount == '0.00') {
-            return redirect()->route('system.collection.tuition')->withInput()->withErrors(['error' => 'No se ha registrado el costo del curso al que pertenece este estudiante, por favor registre el costo del curso para poder emitir recibos.']);
+        if (!isset($student->tuition) || $student->tuition <= 0) {
+            return redirect()->route('system.collection.tuition')->withInput()->withErrors(['error' => 'No se ha registrado la colegiatura del estudiante, por favor complete el expediente para poder emitir recibos.']);
         } else {
             session()->forget('searchResults');
-            return view('system.collection.tuitions.show', compact('student', 'amount', 'payments'));
+            return view('system.collection.tuitions.show', compact('student', 'payments'));
         }
     }
 

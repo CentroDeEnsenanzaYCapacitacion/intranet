@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StudentRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\TutorRequest;
-use App\Models\Amount;
 use App\Models\Modality;
+use App\Models\SysRequest;
 use App\Models\PaymentPeriodicity;
 use App\Models\Report;
 use App\Models\Student;
@@ -34,6 +34,8 @@ class StudentController extends Controller
             'surnames' => $report->surnames,
             'genre' => $report->genre,
             'email' => $report->email,
+            'phone' => $report->phone,
+            'cel_phone' => $report->cel_phone,
             'course_id' => $report->course_id
         ]);
     }
@@ -146,7 +148,6 @@ class StudentController extends Controller
         $schedules = Schedule::all();
         $payment_periodicities = PaymentPeriodicity::all();
         $modalities = Modality::all();
-        $amount = Amount::where('crew_id', $student->crew_id)->where('course_id', $student->course_id)->where('receipt_type_id', 2)->first();
 
         // Recuperar datos guardados en sesión si existen
         $savedData = session('student_form_data_' . $student_id, []);
@@ -157,7 +158,7 @@ class StudentController extends Controller
             $birthdate = DateTime::createFromFormat('d/m/Y', $student->birthdate);
             $nowdate = new DateTime();
             $age = $birthdate->diff($nowdate)->y;
-            return view('system.students.profile', compact('student', 'schedules', 'payment_periodicities', 'modalities', 'amount', 'age'));
+            return view('system.students.profile', compact('student', 'schedules', 'payment_periodicities', 'modalities', 'age'));
         }
     }
 
@@ -196,6 +197,7 @@ class StudentController extends Controller
             $student->payment_periodicity_id = $request->payment_periodicity_id;
             $student->start = $request->start;
             $student->generation = $request->gen_month.'-'.$request->gen_year;
+            $student->tuition = $request->tuition;
             $student->first_time = false;
 
             Tutor::create([
@@ -222,5 +224,35 @@ class StudentController extends Controller
         } else {
             return back()->with('success', 'Estudiante actualizado correctamente');
         }
+    }
+
+    public function requestTuitionChange(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'new_tuition' => 'required|numeric|min:0.01',
+            'reason' => 'required|string|max:500'
+        ]);
+
+        $student = Student::find($request->student_id);
+
+        // Verificar si ya existe una solicitud pendiente para este estudiante
+        $existingRequest = SysRequest::where('student_id', $request->student_id)
+            ->where('request_type_id', 3) // Cambio de colegiatura
+            ->whereNull('approved')
+            ->first();
+
+        if ($existingRequest) {
+            return back()->with('error', 'Ya existe una solicitud de cambio de colegiatura pendiente para este estudiante.');
+        }
+
+        SysRequest::create([
+            'request_type_id' => 3, // Cambio de colegiatura
+            'description' => 'Nueva colegiatura: $' . number_format($request->new_tuition, 2) . ' - ' . $request->reason,
+            'user_id' => Auth::id(),
+            'student_id' => $request->student_id
+        ]);
+
+        return back()->with('success', 'Solicitud de cambio de colegiatura enviada correctamente.');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
 use App\Models\SysRequest;
 use Illuminate\Http\Request;
 
@@ -16,13 +17,24 @@ class RequestController extends Controller
     }
 
     public function updateRequest($request_id,$action){
-        $request= SysRequest::find($request_id);
+        $sysrequest = SysRequest::find($request_id);
         if($action==="approve"){
-            $request->approved = true;
+            $sysrequest->approved = true;
+            
+            // Si es cambio de colegiatura (tipo 3), actualizar el tuition del estudiante
+            if ($sysrequest->request_type_id == 3 && $sysrequest->student_id) {
+                preg_match('/Nueva colegiatura: \$([\d,\.]+)/', $sysrequest->description, $matches);
+                if (isset($matches[1])) {
+                    $newTuition = str_replace(',', '', $matches[1]);
+                    $student = Student::find($sysrequest->student_id);
+                    $student->tuition = $newTuition;
+                    $student->save();
+                }
+            }
         }else{
-            $request->approved = false;
+            $sysrequest->approved = false;
         }
-        $request->save();
+        $sysrequest->save();
 
         return redirect()->route('admin.requests.show');
     }
@@ -38,6 +50,26 @@ class RequestController extends Controller
         $reason = $array[1];
         $sysrequest->description = $request->discount .' - '.$reason;
 
+        $sysrequest->save();
+
+        return redirect()->route('admin.requests.show');
+    }
+
+    public function changeTuition(Request $request, $request_id)
+    {
+        $request->validate([
+            'new_tuition' => 'required|numeric|min:0.01'
+        ]);
+
+        $sysrequest = SysRequest::find($request_id);
+        
+        // Actualizar la colegiatura del estudiante
+        $student = Student::find($sysrequest->student_id);
+        $student->tuition = $request->new_tuition;
+        $student->save();
+
+        // Marcar la solicitud como aprobada
+        $sysrequest->approved = true;
         $sysrequest->save();
 
         return redirect()->route('admin.requests.show');
