@@ -22,4 +22,8 @@ class SysRequest extends Model
     public function report() {
         return $this->belongsTo(Report::class);
     }
+
+    public function student() {
+        return $this->belongsTo(Student::class);
+    }
 }

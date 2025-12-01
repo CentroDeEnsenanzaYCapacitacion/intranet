@@ -1,5 +1,8 @@
 @extends('layout.mainLayout')
 @section('title','Informes')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/calendar-modal.css') }}">
+@endpush
 @section('content')
 
 @php
@@ -22,6 +25,11 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
 @if(session('success'))
     <div id="success" class="alert alert-success mt-content">
         {{ session('success') }}
+    </div>
+@endif
+@if(session('error'))
+    <div class="alert alert-danger mt-content">
+        {{ session('error') }}
     </div>
 @endif
 
@@ -76,7 +84,6 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                         <b>Matrícula: </b>{{ $student->crew->name[0].'/'.$student->id }}<br>
                         <b>Curso: </b>{{ $student->course->name  }}<br>
                         <b>Tipo pago: </b>{{ $student->paymentPeriodicity->name  }}<br>
-                        <b>Colegiatura: </b>${{ $amount->amount }}<br>
                         <div class="form-group">
                             <label for="exampleSelect"><b>Horario:</b></label>
                             <select class="form-control text-uppercase" name="schedule_id" id="schedule_id">
@@ -93,6 +100,11 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                                 <input type="radio" value="true" class="btn-check text-uppercase" name="sabbatine" id="sabt" autocomplete="off" {{ old('sabbatine', $student->sabbatine == 1 ? 'true' : '') == 'true' ? 'checked' : '' }}>
                                 <label class="btn btn-outline-orange text-uppercase" for="sabt">Sabatino</label>
                             </div>
+                        </div><br>
+                        <div class="d-flex align-items-center">
+                            <b>Colegiatura: </b>
+                            <span class="ms-2">${{ number_format($student->tuition ?? 0, 2) }}</span>
+                            <button type="button" class="btn btn-outline-orange btn-sm ms-3" onclick="openModal('tuitionChangeModal')">Solicitar cambio</button>
                         </div><br>
                         <div class="form-group">
                             <label for="exampleSelect"><b>Modalidad:</b></label>
@@ -140,4 +152,57 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
         </div>
     </div>
 </div>
+<!-- Modal Solicitar Cambio de Colegiatura -->
+<div class="custom-modal" id="tuitionChangeModal" onclick="closeOnOverlay(event, 'tuitionChangeModal')">
+    <div class="custom-modal-content">
+        <span class="custom-modal-close" onclick="closeModal('tuitionChangeModal')">&times;</span>
+        <h5>Solicitar cambio de colegiatura</h5>
+        <form method="POST" action="{{ route('system.student.request-tuition-change') }}">
+            @csrf
+            <input type="hidden" name="student_id" value="{{ $student->id }}">
+            <div class="mb-3">
+                <label class="form-label"><b>Colegiatura actual:</b></label>
+                <p>${{ number_format($student->tuition ?? 0, 2) }}</p>
+            </div>
+            <div class="mb-3">
+                <label for="new_tuition" class="form-label"><b>Nueva colegiatura:</b></label>
+                <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" required>
+            </div>
+            <div class="mb-3">
+                <label for="reason" class="form-label"><b>Motivo del cambio:</b></label>
+                <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+            </div>
+            <div class="mt-4 text-end">
+                <button type="button" class="btn btn-secondary me-2" onclick="closeModal('tuitionChangeModal')">Cancelar</button>
+                <button type="submit" class="btn bg-orange text-white">Enviar solicitud</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10);
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    function closeOnOverlay(event, modalId) {
+        if (event.target.id === modalId) {
+            closeModal(modalId);
+        }
+    }
+</script>
+@endpush

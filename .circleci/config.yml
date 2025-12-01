@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  deploy-development:
+  build-development:
     docker:
       - image: cimg/php:8.2
 
@@ -30,15 +30,50 @@ jobs:
       - run:
           name: 🧩 Install PHP dependencies (composer, DEV)
           command: |
-            if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → running composer install"
-              composer install \
-                --no-interaction \
-                --prefer-dist \
-                --optimize-autoloader
+            echo "Running composer install (DEV)"
+            composer install \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
+            source "$BASH_ENV"
+            echo "$COMPOSER_CHANGED" > .composer_changed
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy-development:
+    docker:
+      - image: cimg/php:8.2
+
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: ♻️ Restore COMPOSER_CHANGED flag (DEV)
+          command: |
+            if [ -f .composer_changed ]; then
+              export COMPOSER_CHANGED="$(cat .composer_changed)"
+              echo "COMPOSER_CHANGED from workspace: $COMPOSER_CHANGED"
             else
-              echo "COMPOSER_CHANGED=no → skipping composer install"
+              echo ".composer_changed not found, assuming yes"
+              export COMPOSER_CHANGED=yes
             fi
+            echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
+
+      - run:
+          name: 🗄️ Run migrations (DEV)
+          command: |
+            echo "Running migrations against DEV DB"
+            export DB_HOST="$DB_HOST_DEV"
+            export DB_PORT="$DB_PORT_DEV"
+            export DB_DATABASE="$DB_DATABASE_DEV"
+            export DB_USERNAME="$DB_USERNAME_DEV"
+            export DB_PASSWORD="$DB_PASSWORD_DEV"
+
+            php artisan migrate --force --no-interaction
 
       - run:
           name: 📂 List root directory
@@ -69,6 +104,8 @@ jobs:
               --exclude-glob vendor/** \
               --exclude-glob .git/** \
               --exclude-glob .circleci/** \
+              --exclude-glob clear_cache_dev.php \
+              --exclude-glob clear_cache_prod.php \
               --exclude-glob .env \
               --exclude-glob .env.prod \
               --exclude-glob .env.dev \
@@ -81,13 +118,14 @@ jobs:
       - run:
           name: 📦 Sync vendor (DEV)
           command: |
+            source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → syncing vendor/"
+              echo "COMPOSER_CHANGED=yes → syncing vendor/ (DEV)"
               lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
                 --verbose; \
                 quit"
             else
-              echo "COMPOSER_CHANGED=no → vendor/ not synced"
+              echo "COMPOSER_CHANGED=no → vendor/ not synced (DEV)"
             fi
 
       - run:
@@ -98,9 +136,19 @@ jobs:
               --exclude-glob img/carousel/**; \
               quit"
 
+      - run:
+          name: 🔁 Clear Laravel cache (DEV)
+          command: |
+            if [ -n "$CLEAR_CACHE_DEV_URL" ] && [ -n "$CLEAR_CACHE_TOKEN_DEV" ]; then
+              echo "Calling DEV cache clear endpoint..."
+              curl -sS "${CLEAR_CACHE_DEV_URL}?token=${CLEAR_CACHE_TOKEN_DEV}" || echo "Failed to clear DEV cache"
+            else
+              echo "CLEAR_CACHE_DEV_URL or CLEAR_CACHE_TOKEN_DEV not set, skipping cache clear (DEV)"
+            fi
 
 
-  deploy-production:
+
+  build-production:
     docker:
       - image: cimg/php:8.2
 
@@ -129,16 +177,51 @@ jobs:
       - run:
           name: 🧩 Install PHP dependencies (composer, PROD)
           command: |
-            if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → running composer install"
-              composer install \
-                --no-dev \
-                --no-interaction \
-                --prefer-dist \
-                --optimize-autoloader
+            echo "Running composer install (PROD)"
+            composer install \
+              --no-dev \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
+            source "$BASH_ENV"
+            echo "$COMPOSER_CHANGED" > .composer_changed
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  deploy-production:
+    docker:
+      - image: cimg/php:8.2
+
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: ♻️ Restore COMPOSER_CHANGED flag (PROD)
+          command: |
+            if [ -f .composer_changed ]; then
+              export COMPOSER_CHANGED="$(cat .composer_changed)"
+              echo "COMPOSER_CHANGED from workspace: $COMPOSER_CHANGED"
             else
-              echo "COMPOSER_CHANGED=no → skipping composer install"
+              echo ".composer_changed not found, assuming yes"
+              export COMPOSER_CHANGED=yes
             fi
+            echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
+
+      - run:
+          name: 🗄️ Run migrations (PROD)
+          command: |
+            echo "Running migrations against PROD DB"
+            export DB_HOST="$DB_HOST_PROD"
+            export DB_PORT="$DB_PORT_PROD"
+            export DB_DATABASE="$DB_DATABASE_PROD"
+            export DB_USERNAME="$DB_USERNAME_PROD"
+            export DB_PASSWORD="$DB_PASSWORD_PROD"
+
+            php artisan migrate --force --no-interaction
 
       - run:
           name: 📂 List root directory
@@ -169,6 +252,8 @@ jobs:
               --exclude-glob vendor/** \
               --exclude-glob .git/** \
               --exclude-glob .circleci/** \
+              --exclude-glob clear_cache_dev.php \
+              --exclude-glob clear_cache_prod.php \
               --exclude-glob .env \
               --exclude-glob .env.prod \
               --exclude-glob .env.dev \
@@ -181,13 +266,14 @@ jobs:
       - run:
           name: 📦 Sync vendor (PROD)
           command: |
+            source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → syncing vendor/"
+              echo "COMPOSER_CHANGED=yes → syncing vendor/ (PROD)"
               lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
                 --verbose; \
                 quit"
             else
-              echo "COMPOSER_CHANGED=no → vendor/ not synced"
+              echo "COMPOSER_CHANGED=no → vendor/ not synced (PROD)"
             fi
 
       - run:
@@ -198,17 +284,41 @@ jobs:
               --exclude-glob img/carousel/**; \
               quit"
 
+      - run:
+          name: 🔁 Clear Laravel cache (PROD)
+          command: |
+            if [ -n "$CLEAR_CACHE_PROD_URL" ] && [ -n "$CLEAR_CACHE_TOKEN_PROD" ]; then
+              echo "Calling PROD cache clear endpoint..."
+              curl -sS "${CLEAR_CACHE_PROD_URL}?token=${CLEAR_CACHE_TOKEN_PROD}" || echo "Failed to clear PROD cache"
+            else
+              echo "CLEAR_CACHE_PROD_URL or CLEAR_CACHE_TOKEN_PROD not set, skipping cache clear (PROD)"
+            fi
+
 
 
 workflows:
   deploy-on-branches:
     jobs:
-      - deploy-development:
+      - build-development:
           filters:
             branches:
               only: development
 
+      - deploy-development:
+          requires:
+            - build-development
+          filters:
+            branches:
+              only: development
+
+      - build-production:
+          filters:
+            branches:
+              only: main
+
       - deploy-production:
+          requires:
+            - build-production
           filters:
             branches:
               only: main

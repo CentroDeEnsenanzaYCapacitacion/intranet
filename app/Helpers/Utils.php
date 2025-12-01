@@ -65,7 +65,7 @@ class Utils
                 break;
         }
 
-        if (!isset($amount)) {
+        if (!$amount) {
             return false;
         } else {
             if ($amount->amount == '0.00') {

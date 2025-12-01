@@ -152,6 +152,8 @@ class ReportController extends Controller
             'surnames' => $report->surnames,
             'genre' => $report->genre,
             'email' => $report->email,
+            'phone' => $report->phone,
+            'cel_phone' => $report->cel_phone,
             'course_id' => $report->course_id
         ]);
     }
