@@ -299,10 +299,13 @@ jobs:
 workflows:
   deploy-on-branches:
     jobs:
+      # 👉 build en development y staging, sin deploy en staging
       - build-development:
           filters:
             branches:
-              only: development
+              only:
+                - development
+                - staging
 
       - deploy-development:
           requires:
