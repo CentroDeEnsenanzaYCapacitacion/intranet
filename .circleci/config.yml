@@ -43,6 +43,50 @@ jobs:
           paths:
             - .
 
+  # ⭐ NUEVO JOB PARA STAGING ⭐
+  build-staging:
+    docker:
+      - image: cimg/php:8.2
+
+    steps:
+      - checkout
+
+      - run:
+          name: 🔎 Detect dependency changes (STAGING)
+          command: |
+            if git rev-parse HEAD^ >/dev/null 2>&1; then
+              CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
+              echo "Modified files:"
+              echo "$CHANGED_FILES"
+              if echo "$CHANGED_FILES" | grep -E '(^|/)composer\.json$|(^|/)composer\.lock$' >/dev/null; then
+                echo "Dependency changes detected."
+                echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+              else
+                echo "No changes in composer.json / composer.lock."
+                echo 'COMPOSER_CHANGED=no' >> "$BASH_ENV"
+              fi
+            else
+              echo "No previous commit (first build); assuming dependency changes."
+              echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
+            fi
+
+      - run:
+          name: 🧩 Install PHP dependencies (composer, STAGING)
+          command: |
+            echo "Running composer install (STAGING)"
+            composer install \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
+            source "$BASH_ENV"
+            echo "$COMPOSER_CHANGED" > .composer_changed
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+
   deploy-development:
     docker:
       - image: cimg/php:8.2
@@ -147,7 +191,6 @@ jobs:
             fi
 
 
-
   build-production:
     docker:
       - image: cimg/php:8.2
@@ -190,6 +233,7 @@ jobs:
           root: .
           paths:
             - .
+
 
   deploy-production:
     docker:
@@ -289,7 +333,7 @@ jobs:
           command: |
             if [ -n "$CLEAR_CACHE_PROD_URL" ] && [ -n "$CLEAR_CACHE_TOKEN_PROD" ]; then
               echo "Calling PROD cache clear endpoint..."
-              curl -sS "${CLEAR_CACHE_PROD_URL}?token=${CLEAR_CACHE_TOKEN_PROD}" || echo "Failed to clear PROD cache"
+              curl -sS "${CLEAR_CACHE_PROD_URL}?token=${CLEAR_CACHE_PROD_TOKEN}" || echo "Failed to clear PROD cache"
             else
               echo "CLEAR_CACHE_PROD_URL or CLEAR_CACHE_TOKEN_PROD not set, skipping cache clear (PROD)"
             fi
@@ -299,13 +343,11 @@ jobs:
 workflows:
   deploy-on-branches:
     jobs:
-      # 👉 build en development y staging, sin deploy en staging
+      # DEV → build + deploy
       - build-development:
           filters:
             branches:
-              only:
-                - development
-                - staging
+              only: development
 
       - deploy-development:
           requires:
@@ -314,6 +356,13 @@ workflows:
             branches:
               only: development
 
+      # STAGING → SOLO build-staging
+      - build-staging:
+          filters:
+            branches:
+              only: staging
+
+      # PROD → build + deploy
       - build-production:
           filters:
             branches:
