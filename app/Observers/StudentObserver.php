@@ -42,7 +42,26 @@ class StudentObserver
                 ->where('receipt_type_id', 1)
                 ->first();
 
-        $amount = $amount_record ? $amount_record->amount : 0;
+        // Manejo defensivo: Si no existe monto en amounts
+        if (!$amount_record) {
+            // Verificar si es BACHILLERATO EN UN EXAMEN (puede tener monto 0)
+            $isBachilleratoExamen = $report->course && stripos($report->course->name, 'BACHILLERATO EN UN EXAMEN') !== false;
+
+            if ($isBachilleratoExamen) {
+                $amount = 0;
+            } else {
+                // No generar recibo automático si no hay monto registrado
+                \Log::warning('No se generó recibo de inscripción: monto no encontrado en tabla amounts', [
+                    'report_id' => $report->id,
+                    'crew_id' => $report->crew_id,
+                    'course_id' => $report->course_id,
+                    'student_id' => $student->id
+                ]);
+                return;
+            }
+        } else {
+            $amount = $amount_record->amount;
+        }
 
         $sys_request = SysRequest::where('report_id', $report->id)->first();
 
