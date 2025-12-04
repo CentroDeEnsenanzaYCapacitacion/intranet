@@ -80,16 +80,17 @@ class ReportController extends Controller
         // Obtener el reporte y verificar si es BACHILLERATO EN UN EXAMEN
         $report = Report::with('course')->find($request->report_id);
         $isBachilleratoExamen = $report && $report->course && stripos($report->course->name, 'BACHILLERATO EN UN EXAMEN') !== false;
-        
-        if ($request->discount == 0) {
-            // Omitir validación de costo si es BACHILLERATO EN UN EXAMEN
-            if (!$isBachilleratoExamen) {
-                $success = Utils::validateAmount($request->report_id, "report");
-                if (!$success) {
-                    return back()->withErrors(['error' => 'No existe un costo resgistrado para el recibo que se intenta emitir, por favor registre un costo para continuar.']);
-                }
+
+        // Validar que exista un monto registrado (excepto BACHILLERATO EN UN EXAMEN)
+        // Esta validación aplica tanto para inscripciones directas como para solicitudes de descuento
+        if (!$isBachilleratoExamen) {
+            $success = Utils::validateAmount($request->report_id, "report");
+            if (!$success) {
+                return back()->withErrors(['error' => 'No existe un costo registrado para el recibo que se intenta emitir, por favor registre un costo para continuar.']);
             }
-            
+        }
+
+        if ($request->discount == 0) {
             // Validar duplicados en estudiantes antes de inscribir
             $duplicateStudents = Student::where(function($query) use ($report) {
                 $query->where('name', $report->name)
@@ -110,10 +111,10 @@ class ReportController extends Controller
                     }
                     $matches[] = "Estudiante #{$dup->id}: {$dup->name} {$dup->surnames} (coincide: " . implode(', ', $reasons) . ")";
                 }
-                
+
                 return back()->withErrors(['duplicado' => 'Ya existen estudiantes con datos similares:<br>' . implode('<br>', $matches)]);
             }
-            
+
             StudentController::insertStudent($request);
         } else {
             if (!$request->reason || $request->reason == '') {
