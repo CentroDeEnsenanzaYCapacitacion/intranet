@@ -81,6 +81,15 @@
                                             {{ $roles[2]->name }}
                                         </option>
                                     @endif
+                                @elseif (Auth::user()->role_id == 6)
+                                    @foreach ($roles as $role)
+                                        @if ($role->id == 4)
+                                            <option value="{{ $role->id }}"
+                                                {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                                {{ $role->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 @else
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->id }}"
