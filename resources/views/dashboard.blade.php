@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row d-flex align-items-center justify-content-center text-center mt-content">
-            @if (in_array(Auth::user()->role_id, [1, 2]))
+            @if (in_array(Auth::user()->role_id, [1, 2, 6]))
                 <div class="col-md-4 d-flex justify-content-center mb-5">
                     <a href="{{ route('adminFunctions') }}">
                         <div class="card align-content-center cc">
@@ -25,7 +25,7 @@
                     </div>
                 </a>
             </div>
-            @if (in_array(Auth::user()->role_id, [1]))
+            @if (in_array(Auth::user()->role_id, [1, 6]))
             <div class="col-md-4 d-flex justify-content-center mb-5">
                 <a href="{{ route('web.menu') }}">
                     <div class="card align-content-center cc">

@@ -25,5 +25,8 @@ class RoleSeeder extends Seeder
         Role::create([
             'name' => 'archivo'
         ]);
+        Role::create([
+            'name' => 'director comercial'
+        ]);
     }
 }

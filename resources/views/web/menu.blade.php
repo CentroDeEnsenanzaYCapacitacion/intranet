@@ -2,7 +2,7 @@
 @section('title','dashboard')
 @section('content')
 <div class="row d-flex align-items-center justify-content-center text-center mt-content">
-    @if (in_array(Auth::user()->role_id, [1,2]))
+    @if (in_array(Auth::user()->role_id, [1, 6]))
     <div class="col-md-4 d-flex justify-content-center">
         <a id='reports' href="{{route('web.carousel')}}">
             <div class="card align-content-center cc">
@@ -14,7 +14,7 @@
         </a>
     </div>
     @endif
-    @if (in_array(Auth::user()->role_id, [1]))
+    @if (in_array(Auth::user()->role_id, [1, 6]))
     <div class="col-md-4 d-flex justify-content-center">
         <a id='profiles' href="{{route('web.mvv')}}">
             <div class="card align-content-center cc">

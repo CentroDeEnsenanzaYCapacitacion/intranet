@@ -2,7 +2,7 @@
 @section('title', 'Sistema de gestión')
 @section('content')
     <div class="row d-flex align-items-center justify-content-center text-center mt-content">
-        @if (in_array(Auth::user()->role_id, [1, 4]))
+        @if (in_array(Auth::user()->role_id, [1, 4, 6]))
             <div class="col-md-4 d-flex justify-content-center">
                 <a id='reports' href="{{ route('system.reports.show') }}">
                     <div class="card align-content-center cc">
