@@ -11,7 +11,10 @@ class RequestController extends Controller
     public function getRequests()
     {
         $requests = SysRequest::whereNull('approved')->get();
-        $old_requests = SysRequest::whereNotNull('approved')->get();
+        $old_requests = SysRequest::whereNotNull('approved')
+            ->where('updated_at', '>=', now()->subMonth())
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
         return view('admin.requests.show', compact('requests','old_requests'));
     }

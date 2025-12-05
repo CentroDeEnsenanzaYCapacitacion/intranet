@@ -19,18 +19,31 @@ class UserController extends Controller
     {
         $currentUser = Auth::user();
 
-        // Si es admin (role_id = 1), ve todos los usuarios
+        // Rol 1 (admin): ve todos los usuarios de todos los planteles
         if ($currentUser->role_id == 1) {
             $users = User::where('is_active', true)->where('id', '!=', 1)->get();
-            $blocked_users = User::where('is_active', false)->get();
-        } else {
-            // Si no es admin, solo ve usuarios de su mismo crew
+            $blocked_users = User::where('is_active', false)->where('id', '!=', 1)->get();
+        }
+        // Rol 6 (director comercial): ve solo usuarios rol 4 (rrhh) y 6 (director comercial) de todos los planteles
+        elseif ($currentUser->role_id == 6) {
+            $users = User::where('is_active', true)
+                ->whereIn('role_id', [4, 6])
+                ->where('id', '!=', 1)
+                ->get();
+            $blocked_users = User::where('is_active', false)
+                ->whereIn('role_id', [4, 6])
+                ->where('id', '!=', 1)
+                ->get();
+        }
+        // Otros roles (director, etc.): ven todos los usuarios de su mismo plantel
+        else {
             $users = User::where('is_active', true)
                 ->where('crew_id', $currentUser->crew_id)
                 ->where('id', '!=', 1)
                 ->get();
             $blocked_users = User::where('is_active', false)
                 ->where('crew_id', $currentUser->crew_id)
+                ->where('id', '!=', 1)
                 ->get();
         }
 
@@ -42,8 +55,10 @@ class UserController extends Controller
         $user = Auth::user();
 
         if ($user->role->name === "admin") {
-
             $roles = Role::all();
+        } elseif ($user->role_id == 6) {
+            // Director comercial solo puede crear usuarios RRHH (rol 4)
+            $roles = Role::where("id", 4)->get();
         } else {
             $roles = Role::where("name", "!=", "admin")->where("name", "!=", "Director")->get();
         }
