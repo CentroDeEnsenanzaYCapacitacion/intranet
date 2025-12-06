@@ -122,8 +122,6 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                         <b>Teléfono: </b><input class="form-control text-uppercase" name="tutor_phone"  type="text" value="{{ old('tutor_phone',$student->tutor->tutor_phone) }}"/><br>
                         <b>Celular: </b><input class="form-control text-uppercase" name="tutor_cel_phone"  type="text" value="{{ old('tutor_cel_phone',$student->tutor->tutor_cel_phone) }}"/><br>
                         <b>Parentesco: </b><input class="form-control text-uppercase" name="relationship"  type="text" value="{{ old('tutor_relationship',$student->tutor->relationship) }}"/><br><br>
-                        <div class="d-flex justify-content-center"><button class="btn bg-orange text-white" type="submit" onclick="showLoader(true)">Actualizar datos</button></div><br><br>
-                    </form>
                     <h5 class="text-orange"><b>Documentación<hr></b></h5>
                         <table class="table table-sm">
                             @foreach ($student->documents as $document)
@@ -136,7 +134,9 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                                         <span class="badge bg-danger">&nbsp;</span>
                                     @endif
                                 </td>
-                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-orange btn-sm" onclick="openDocumentModal({{ $document->id }}, '{{ $document->name }}')">Añadir documento</button>
+                                </td>
                             </tr>
                             @endforeach
                         </table><br>
@@ -147,6 +147,11 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                                 <div style="flex-grow: 1; margin-left: 40px; margin-right: 40px; text-align: justify;">{{ $observation->description }}</div>
                             </div>
                         @endforeach
+                        <div class="mt-3">
+                            <textarea class="form-control text-uppercase" name="observation" id="observation" rows="3" placeholder="Escribe una nueva observación..."></textarea>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3"><button class="btn bg-orange text-white" type="submit" onclick="showLoader(true)">Actualizar datos</button></div><br><br>
+                    </form>
                 </div>
             </div>
         </div>
@@ -179,6 +184,27 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
         </form>
     </div>
 </div>
+<!-- Modal Añadir Documento -->
+<div class="custom-modal" id="documentModal" onclick="closeOnOverlay(event, 'documentModal')">
+    <div class="custom-modal-content">
+        <span class="custom-modal-close" onclick="closeModal('documentModal')">&times;</span>
+        <h5 id="documentModalTitle">Añadir documento</h5>
+        <form method="POST" action="{{ route('system.student.upload-document') }}" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="student_id" value="{{ $student->id }}">
+            <input type="hidden" name="document_id" id="document_id">
+            <div class="mb-3">
+                <label for="document_file" class="form-label"><b>Selecciona el archivo:</b></label>
+                <input type="file" class="form-control" id="document_file" name="document_file" accept="image/*,.pdf" required>
+                <small class="form-text text-muted">Formatos permitidos: Imágenes (JPG, PNG, etc.) y PDF</small>
+            </div>
+            <div class="mt-4 text-end">
+                <button type="button" class="btn btn-secondary me-2" onclick="closeModal('documentModal')">Cancelar</button>
+                <button type="submit" class="btn bg-orange text-white">Subir documento</button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -203,6 +229,12 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
         if (event.target.id === modalId) {
             closeModal(modalId);
         }
+    }
+
+    function openDocumentModal(documentId, documentName) {
+        document.getElementById('document_id').value = documentId;
+        document.getElementById('documentModalTitle').textContent = 'Añadir documento: ' + documentName;
+        openModal('documentModal');
     }
 </script>
 @endpush

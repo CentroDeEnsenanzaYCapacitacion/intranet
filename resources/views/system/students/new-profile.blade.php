@@ -171,12 +171,62 @@
                                 name="tutor_cel_phone" value="{{ old('tutor_cel_phone', $savedData['tutor_cel_phone'] ?? '') }}" /><br>
                             <b>Parentesco: </b><input class="form-control text-uppercase" type="text"
                                 name="relationship" value="{{ old('relationship', $savedData['relationship'] ?? '') }}" /><br>
-                            <div class="d-flex justify-content-center"><button class="btn bg-orange text-white"
-                                    type="submit" onclick="if(this.form.checkValidity()) showLoader(true)">Guardar</button></div><br><br>
-                        </form>
+                        <h5 class="text-orange"><b>Documentación<hr></b></h5>
+                        <table class="table table-sm">
+                            @foreach ($student->documents as $document)
+                            <tr>
+                                <td>{{ $document->name }}</td>
+                                <td>
+                                    @if ($document->pivot->uploaded)
+                                        <span class="badge bg-success">&nbsp;</span>
+                                    @else
+                                        <span class="badge bg-danger">&nbsp;</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-orange btn-sm" onclick="openDocumentModal({{ $document->id }}, '{{ $document->name }}')">Añadir documento</button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </table><br>
+                        <h5 class="text-orange"><b>Observaciones<hr></b></h5>
+                        @foreach ($student->observations as $observation)
+                            <div style="display: flex; margin-bottom: 10px; align-items: flex-start;">
+                                <div style="width: 90px; font-weight: bold;">{{ $observation->created_at->format('d/m/Y') }}</div>
+                                <div style="flex-grow: 1; margin-left: 40px; margin-right: 40px; text-align: justify;">{{ $observation->description }}</div>
+                            </div>
+                        @endforeach
+                        <div class="mt-3">
+                            <textarea class="form-control text-uppercase" name="observation" id="observation" rows="3" placeholder="Escribe una nueva observación..."></textarea>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3"><button class="btn bg-orange text-white"
+                                type="submit" onclick="if(this.form.checkValidity()) showLoader(true)">Guardar</button></div><br><br>
+                    </form>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Añadir Documento -->
+    <div class="custom-modal" id="documentModal" onclick="closeOnOverlay(event, 'documentModal')">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close" onclick="closeModal('documentModal')">&times;</span>
+            <h5 id="documentModalTitle">Añadir documento</h5>
+            <form method="POST" action="{{ route('system.student.upload-document') }}" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="student_id" value="{{ $student->id }}">
+                <input type="hidden" name="document_id" id="document_id">
+                <div class="mb-3">
+                    <label for="document_file" class="form-label"><b>Selecciona el archivo:</b></label>
+                    <input type="file" class="form-control" id="document_file" name="document_file" accept="image/*,.pdf" required>
+                    <small class="form-text text-muted">Formatos permitidos: Imágenes (JPG, PNG, etc.) y PDF</small>
+                </div>
+                <div class="mt-4 text-end">
+                    <button type="button" class="btn btn-secondary me-2" onclick="closeModal('documentModal')">Cancelar</button>
+                    <button type="submit" class="btn bg-orange text-white">Subir documento</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -219,6 +269,34 @@
                 // Redirigir a la página de cambio de foto
                 window.location.href = '{{ route('system.student.profile-image', ['student_id' => $student->id]) }}';
             });
+        }
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function closeOnOverlay(event, modalId) {
+            if (event.target.id === modalId) {
+                closeModal(modalId);
+            }
+        }
+
+        function openDocumentModal(documentId, documentName) {
+            document.getElementById('document_id').value = documentId;
+            document.getElementById('documentModalTitle').textContent = 'Añadir documento: ' + documentName;
+            openModal('documentModal');
         }
     </script>
 @endsection

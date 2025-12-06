@@ -12,3 +12,5 @@ Route::get('/system/student/profile-image/{student_id}', [StudentController::cla
 Route::get('/system/student/image/{student_id}', [StudentController::class, 'get_image'])->name('system.student.image');
 Route::post('/system/student/save-form-data/{student_id}', [StudentController::class, 'saveFormData'])->name('system.student.save-form-data');
 Route::post('/system/student/request-tuition-change', [StudentController::class, 'requestTuitionChange'])->name('system.student.request-tuition-change');
+Route::post('/system/student/add-observation', [StudentController::class, 'addObservation'])->name('system.student.add-observation');
+Route::post('/system/student/upload-document', [StudentController::class, 'uploadDocument'])->name('system.student.upload-document');
