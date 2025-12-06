@@ -1,5 +1,8 @@
 @extends('layout.mainLayout')
 @section('title', 'Informes')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/calendar-modal.css') }}">
+@endpush
 @section('content')
 
     @php
@@ -33,10 +36,12 @@
                 <div class="col-3">
                     <div class="d-flex justify-content-center mb-3">
                         <div class="card shadow custom-size">
-                            <img src="{{ route('system.student.image', ['student_id' => $student->id]) }}" alt="Profile Image">
+                            <img src="{{ route('system.student.image', ['student_id' => $student->id]) }}"
+                                alt="Profile Image">
                         </div>
                     </div>
-                    <button type="button" class="btn bg-orange text-white" onclick="saveFormDataAndRedirect()">Cambiar Fotografía</button>
+                    <button type="button" class="btn bg-orange text-white" onclick="saveFormDataAndRedirect()">Cambiar
+                        Fotografía</button>
                 </div>
                 <div class="col">
                     <div class="text-start text-uppercase">
@@ -78,11 +83,12 @@
                             @endif
                             <br>
                             <b>Teléfono: </b><input class="form-control text-uppercase" type="text" name="phone"
-                                value="{{ old('phone', $savedData['phone'] ?? $student->phone ?? '') }}" /><br>
+                                value="{{ old('phone', $savedData['phone'] ?? ($student->phone ?? '')) }}" /><br>
                             <b>Celular: </b><input class="form-control text-uppercase" type="text" name="cel_phone"
-                                value="{{ old('cel_phone', $savedData['cel_phone'] ?? $student->cel_phone ?? '') }}" /><br>
+                                value="{{ old('cel_phone', $savedData['cel_phone'] ?? ($student->cel_phone ?? '')) }}" /><br>
                             <b>Correo electrónico: </b><input class="form-control text-uppercase" type="text"
-                                name="email" value="{{ old('email', $savedData['email'] ?? $student->email) }}" /><br><br>
+                                name="email"
+                                value="{{ old('email', $savedData['email'] ?? $student->email) }}" /><br><br>
                             <h5 class="text-orange"><b>Información académica
                                     <hr>
                                 </b></h5>
@@ -139,8 +145,9 @@
                                     <label class="btn btn-outline-orange text-uppercase" for="sabt">Sabatino</label>
                                 </div>
                             </div><br>
-                            <b>Colegiatura: </b><input class="form-control" type="number" step="0.01" min="0.01" name="tuition"
-                                value="{{ old('tuition', $savedData['tuition'] ?? '') }}" placeholder="0.00" required /><br>
+                            <b>Colegiatura: </b><input class="form-control" type="number" step="0.01" min="0.01"
+                                name="tuition" value="{{ old('tuition', $savedData['tuition'] ?? '') }}"
+                                placeholder="0.00" required /><br>
                             @if ($errors->has('tuition'))
                                 <div class="text-danger">{{ $errors->first('tuition') }}</div>
                             @endif
@@ -164,72 +171,89 @@
                             <b>Nombre: </b><input class="form-control text-uppercase" type="text" name="tutor_name"
                                 value="{{ old('tutor_name', $savedData['tutor_name'] ?? '') }}" /><br>
                             <b>Apellidos: </b><input class="form-control text-uppercase" type="text"
-                                name="tutor_surnames" value="{{ old('tutor_surnames', $savedData['tutor_surnames'] ?? '') }}" /><br>
+                                name="tutor_surnames"
+                                value="{{ old('tutor_surnames', $savedData['tutor_surnames'] ?? '') }}" /><br>
                             <b>Teléfono: </b><input class="form-control text-uppercase" type="text" name="tutor_phone"
                                 value="{{ old('tutor_phone', $savedData['tutor_phone'] ?? '') }}" /><br>
                             <b>Celular: </b><input class="form-control text-uppercase" type="text"
-                                name="tutor_cel_phone" value="{{ old('tutor_cel_phone', $savedData['tutor_cel_phone'] ?? '') }}" /><br>
+                                name="tutor_cel_phone"
+                                value="{{ old('tutor_cel_phone', $savedData['tutor_cel_phone'] ?? '') }}" /><br>
                             <b>Parentesco: </b><input class="form-control text-uppercase" type="text"
-                                name="relationship" value="{{ old('relationship', $savedData['relationship'] ?? '') }}" /><br>
-                        <h5 class="text-orange"><b>Documentación<hr></b></h5>
-                        <table class="table table-sm">
-                            @foreach ($student->documents as $document)
-                            <tr>
-                                <td class="align-middle">{{ $document->name }}</td>
-                                <td class="align-middle">
-                                    @if ($document->pivot->uploaded)
-                                        <span class="badge bg-success">&nbsp;</span>
-                                    @else
-                                        <span class="badge bg-danger">&nbsp;</span>
-                                    @endif
-                                </td>
-                                <td class="align-middle text-center">
-                                    @if ($document->pivot->uploaded)
-                                        @php
-                                            $directory = 'profiles/' . $student->id;
-                                            $baseFileName = str_replace(' ', '_', strtolower($document->name));
-                                            $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
-                                            $isPdf = false;
-                                            foreach ($extensions as $ext) {
-                                                $possiblePath = $directory . '/' . $baseFileName . '.' . $ext;
-                                                if (Storage::disk('local')->exists($possiblePath)) {
-                                                    if ($ext === 'pdf') {
-                                                        $isPdf = true;
-                                                    }
-                                                    break;
-                                                }
-                                            }
-                                        @endphp
-                                        <a href="{{ route('system.student.document', ['student_id' => $student->id, 'document_id' => $document->id]) }}" target="_blank">
-                                            @if ($isPdf)
-                                                <i class="fas fa-file-pdf" style="font-size: 40px; color: #dc3545;"></i>
+                                name="relationship"
+                                value="{{ old('relationship', $savedData['relationship'] ?? '') }}" /><br>
+                            <h5 class="text-orange"><b>Documentación
+                                    <hr>
+                                </b></h5>
+                            <table class="table table-sm">
+                                @foreach ($student->documents as $document)
+                                    <tr>
+                                        <td class="align-middle">{{ $document->name }}</td>
+                                        <td class="align-middle">
+                                            @if ($document->pivot->uploaded)
+                                                <span class="badge bg-success">&nbsp;</span>
                                             @else
-                                                <img src="{{ route('system.student.document', ['student_id' => $student->id, 'document_id' => $document->id]) }}" alt="{{ $document->name }}" style="max-width: 60px; max-height: 60px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;">
+                                                <span class="badge bg-danger">&nbsp;</span>
                                             @endif
-                                        </a>
-                                    @endif
-                                </td>
-                                <td class="align-middle">
-                                    @if (!$document->pivot->uploaded)
-                                        <button type="button" class="btn btn-outline-orange btn-sm" onclick="openDocumentModal({{ $document->id }}, '{{ $document->name }}')">Añadir documento</button>
-                                    @endif
-                                </td>
-                            </tr>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            @if ($document->pivot->uploaded)
+                                                @php
+                                                    $directory = 'profiles/' . $student->id;
+                                                    $baseFileName = str_replace(' ', '_', strtolower($document->name));
+                                                    $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
+                                                    $isPdf = false;
+                                                    foreach ($extensions as $ext) {
+                                                        $possiblePath = $directory . '/' . $baseFileName . '.' . $ext;
+                                                        if (Storage::disk('local')->exists($possiblePath)) {
+                                                            if ($ext === 'pdf') {
+                                                                $isPdf = true;
+                                                            }
+                                                            break;
+                                                        }
+                                                    }
+                                                @endphp
+                                                <a href="{{ route('system.student.document', ['student_id' => $student->id, 'document_id' => $document->id]) }}"
+                                                    target="_blank">
+                                                    @if ($isPdf)
+                                                        <i class="fas fa-file-pdf"
+                                                            style="font-size: 40px; color: #dc3545;"></i>
+                                                    @else
+                                                        <img src="{{ route('system.student.document', ['student_id' => $student->id, 'document_id' => $document->id]) }}"
+                                                            alt="{{ $document->name }}"
+                                                            style="max-width: 60px; max-height: 60px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;">
+                                                    @endif
+                                                </a>
+                                            @endif
+                                        </td>
+                                        <td class="align-middle">
+                                            @if (!$document->pivot->uploaded)
+                                                <button type="button" class="btn btn-outline-orange btn-sm"
+                                                    onclick="openDocumentModal({{ $document->id }}, '{{ $document->name }}')">Añadir
+                                                    documento</button>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table><br>
+                            <h5 class="text-orange"><b>Observaciones
+                                    <hr>
+                                </b></h5>
+                            @foreach ($student->observations as $observation)
+                                <div style="display: flex; margin-bottom: 10px; align-items: flex-start;">
+                                    <div style="width: 90px; font-weight: bold;">
+                                        {{ $observation->created_at->format('d/m/Y') }}</div>
+                                    <div style="flex-grow: 1; margin-left: 40px; margin-right: 40px; text-align: justify;">
+                                        {{ $observation->description }}</div>
+                                </div>
                             @endforeach
-                        </table><br>
-                        <h5 class="text-orange"><b>Observaciones<hr></b></h5>
-                        @foreach ($student->observations as $observation)
-                            <div style="display: flex; margin-bottom: 10px; align-items: flex-start;">
-                                <div style="width: 90px; font-weight: bold;">{{ $observation->created_at->format('d/m/Y') }}</div>
-                                <div style="flex-grow: 1; margin-left: 40px; margin-right: 40px; text-align: justify;">{{ $observation->description }}</div>
+                            <div class="mt-3">
+                                <textarea class="form-control text-uppercase" name="observation" id="observation" rows="3"
+                                    placeholder="Escribe una nueva observación..."></textarea>
                             </div>
-                        @endforeach
-                        <div class="mt-3">
-                            <textarea class="form-control text-uppercase" name="observation" id="observation" rows="3" placeholder="Escribe una nueva observación..."></textarea>
-                        </div>
-                        <div class="d-flex justify-content-center mt-3"><button class="btn bg-orange text-white"
-                                type="submit" onclick="if(this.form.checkValidity()) showLoader(true)">Guardar</button></div><br><br>
-                    </form>
+                            <div class="d-flex justify-content-center mt-3"><button class="btn bg-orange text-white"
+                                    type="submit"
+                                    onclick="if(this.form.checkValidity()) showLoader(true)">Guardar</button></div><br><br>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -245,6 +269,7 @@
                 @csrf
                 <input type="hidden" name="student_id" value="{{ $student->id }}">
                 <input type="hidden" name="document_id" id="document_id">
+
                 <div class="mb-3">
                     <label for="document_file" class="form-label"><b>Selecciona el archivo:</b></label>
                     <input type="file" class="form-control" id="document_file" name="document_file"
@@ -253,6 +278,7 @@
                         Formatos permitidos: Imágenes (JPG, PNG, etc.) y PDF
                     </small>
                 </div>
+
                 <div class="mt-4 text-end">
                     <button type="button" class="btn btn-secondary me-2"
                         onclick="closeModal('documentModal')">Cancelar</button>
@@ -262,73 +288,72 @@
         </div>
     </div>
 
-    <script>
-        function saveFormDataAndRedirect() {
-            const formData = {
-                birthdate: document.querySelector('input[name="birthdate"]').value,
-                curp: document.querySelector('input[name="curp"]').value,
-                address: document.querySelector('input[name="address"]').value,
-                colony: document.querySelector('input[name="colony"]').value,
-                municipality: document.querySelector('input[name="municipality"]').value,
-                pc: document.querySelector('input[name="pc"]').value,
-                phone: document.querySelector('input[name="phone"]').value,
-                cel_phone: document.querySelector('input[name="cel_phone"]').value,
-                email: document.querySelector('input[name="email"]').value,
-                gen_month: document.querySelector('select[name="gen_month"]').value,
-                gen_year: document.querySelector('select[name="gen_year"]').value,
-                payment_periodicity_id: document.querySelector('select[name="payment_periodicity_id"]').value,
-                schedule_id: document.querySelector('select[name="schedule_id"]').value,
-                sabbatine: document.querySelector('input[name="sabbatine"]:checked').value,
-                tuition: document.querySelector('input[name="tuition"]').value,
-                modality_id: document.querySelector('select[name="modality_id"]').value,
-                start: document.querySelector('input[name="start"]').value,
-                tutor_name: document.querySelector('input[name="tutor_name"]').value,
-                tutor_surnames: document.querySelector('input[name="tutor_surnames"]').value,
-                tutor_phone: document.querySelector('input[name="tutor_phone"]').value,
-                tutor_cel_phone: document.querySelector('input[name="tutor_cel_phone"]').value,
-                relationship: document.querySelector('input[name="relationship"]').value
-            };
 
-            // Enviar datos a la sesión mediante AJAX
-            fetch('{{ route('system.student.save-form-data', ['student_id' => $student->id]) }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify(formData)
-            }).then(() => {
-                // Redirigir a la página de cambio de foto
-                window.location.href = '{{ route('system.student.profile-image', ['student_id' => $student->id]) }}';
-            });
-        }
+    @push('scripts')
+        <script>
+            function saveFormDataAndRedirect() {
+                const formData = {
+                    birthdate: document.querySelector('input[name="birthdate"]').value,
+                    curp: document.querySelector('input[name="curp"]').value,
+                    address: document.querySelector('input[name="address"]').value,
+                    colony: document.querySelector('input[name="colony"]').value,
+                    municipality: document.querySelector('input[name="municipality"]').value,
+                    pc: document.querySelector('input[name="pc"]').value,
+                    phone: document.querySelector('input[name="phone"]').value,
+                    cel_phone: document.querySelector('input[name="cel_phone"]').value,
+                    email: document.querySelector('input[name="email"]').value,
+                    gen_month: document.querySelector('select[name="gen_month"]').value,
+                    gen_year: document.querySelector('select[name="gen_year"]').value,
+                    payment_periodicity_id: document.querySelector('select[name="payment_periodicity_id"]').value,
+                    schedule_id: document.querySelector('select[name="schedule_id"]').value,
+                    sabbatine: document.querySelector('input[name="sabbatine"]:checked').value,
+                    tuition: document.querySelector('input[name="tuition"]').value,
+                    modality_id: document.querySelector('select[name="modality_id"]').value,
+                    start: document.querySelector('input[name="start"]').value,
+                    tutor_name: document.querySelector('input[name="tutor_name"]').value,
+                    tutor_surnames: document.querySelector('input[name="tutor_surnames"]').value,
+                    tutor_phone: document.querySelector('input[name="tutor_phone"]').value,
+                    tutor_cel_phone: document.querySelector('input[name="tutor_cel_phone"]').value,
+                    relationship: document.querySelector('input[name="relationship"]').value
+                };
 
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.style.display = 'flex';
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        }
-
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
-
-        function closeOnOverlay(event, modalId) {
-            if (event.target.id === modalId) {
-                closeModal(modalId);
+                fetch('{{ route('system.student.save-form-data', ['student_id' => $student->id]) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify(formData)
+                }).then(() => {
+                    window.location.href =
+                        '{{ route('system.student.profile-image', ['student_id' => $student->id]) }}';
+                });
             }
-        }
 
-        function openDocumentModal(documentId, documentName) {
-            document.getElementById('document_id').value = documentId;
-            document.getElementById('documentModalTitle').textContent = 'Añadir documento: ' + documentName;
-            openModal('documentModal');
-        }
-    </script>
+            function openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (!modal) return;
+                modal.classList.add('show');
+            }
+
+            function closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (!modal) return;
+                modal.classList.remove('show');
+            }
+
+            function closeOnOverlay(event, modalId) {
+                if (event.target.id === modalId) {
+                    closeModal(modalId);
+                }
+            }
+
+            function openDocumentModal(documentId, documentName) {
+                document.getElementById('document_id').value = documentId;
+                document.getElementById('documentModalTitle').textContent =
+                    'Añadir documento: ' + documentName;
+                openModal('documentModal');
+            }
+        </script>
+    @endpush
 @endsection
