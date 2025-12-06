@@ -26,6 +26,7 @@ class User extends Authenticatable
         'phone',
         'cel_phone',
         'genre',
+        'last_login',
     ];
 
     protected $hidden = [

@@ -126,16 +126,44 @@ $edad = $fechaActual->diffInYears($fechaNacimiento);
                         <table class="table table-sm">
                             @foreach ($student->documents as $document)
                             <tr>
-                                <td>{{ $document->name }}</td>
-                                <td>
+                                <td class="align-middle">{{ $document->name }}</td>
+                                <td class="align-middle">
                                     @if ($document->pivot->uploaded)
                                         <span class="badge bg-success">&nbsp;</span>
                                     @else
                                         <span class="badge bg-danger">&nbsp;</span>
                                     @endif
                                 </td>
-                                <td>
-                                    <button type="button" class="btn btn-outline-orange btn-sm" onclick="openDocumentModal({{ $document->id }}, '{{ $document->name }}')">Añadir documento</button>
+                                <td class="align-middle text-center">
+                                    @if ($document->pivot->uploaded)
+                                        @php
+                                            $directory = 'profiles/' . $student->id;
+                                            $baseFileName = str_replace(' ', '_', strtolower($document->name));
+                                            $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
+                                            $isPdf = false;
+                                            foreach ($extensions as $ext) {
+                                                $possiblePath = $directory . '/' . $baseFileName . '.' . $ext;
+                                                if (Storage::disk('local')->exists($possiblePath)) {
+                                                    if ($ext === 'pdf') {
+                                                        $isPdf = true;
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
+                                        <a href="{{ route('system.student.document', ['student_id' => $student->id, 'document_id' => $document->id]) }}" target="_blank">
+                                            @if ($isPdf)
+                                                <i class="fas fa-file-pdf" style="font-size: 40px; color: #dc3545;"></i>
+                                            @else
+                                                <img src="{{ route('system.student.document', ['student_id' => $student->id, 'document_id' => $document->id]) }}" alt="{{ $document->name }}" style="max-width: 60px; max-height: 60px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;">
+                                            @endif
+                                        </a>
+                                    @endif
+                                </td>
+                                <td class="align-middle">
+                                    @if (!$document->pivot->uploaded)
+                                        <button type="button" class="btn btn-outline-orange btn-sm" onclick="openDocumentModal({{ $document->id }}, '{{ $document->name }}')">Añadir documento</button>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

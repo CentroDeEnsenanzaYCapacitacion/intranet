@@ -326,4 +326,42 @@ class StudentController extends Controller
         return redirect()->route('system.student.profile', ['student_id' => $student_id])
             ->with('success', 'Documento subido correctamente.');
     }
+
+    public function getDocument($student_id, $document_id)
+    {
+        $student = Student::find($student_id);
+        $document = \App\Models\StudentDocument::find($document_id);
+
+        if (!$document || !$student) {
+            abort(404);
+        }
+
+        $directory = 'profiles/' . $student_id;
+        $baseFileName = str_replace(' ', '_', strtolower($document->name));
+
+        // Buscar el archivo con cualquier extensión permitida
+        $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
+        $filePath = null;
+
+        foreach ($extensions as $ext) {
+            $possiblePath = $directory . '/' . $baseFileName . '.' . $ext;
+            if (Storage::disk('local')->exists($possiblePath)) {
+                $filePath = $possiblePath;
+                break;
+            }
+        }
+
+        if (!$filePath) {
+            abort(404);
+        }
+
+        $fullPath = storage_path('app/' . $filePath);
+        $file = Storage::disk('local')->get($filePath);
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $type = finfo_file($finfo, $fullPath);
+        finfo_close($finfo);
+
+        return response($file, 200)->header('Content-Type', $type);
+    }
 }

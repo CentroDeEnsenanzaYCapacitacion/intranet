@@ -14,3 +14,4 @@ Route::post('/system/student/save-form-data/{student_id}', [StudentController::c
 Route::post('/system/student/request-tuition-change', [StudentController::class, 'requestTuitionChange'])->name('system.student.request-tuition-change');
 Route::post('/system/student/add-observation', [StudentController::class, 'addObservation'])->name('system.student.add-observation');
 Route::post('/system/student/upload-document', [StudentController::class, 'uploadDocument'])->name('system.student.upload-document');
+Route::get('/system/student/document/{student_id}/{document_id}', [StudentController::class, 'getDocument'])->name('system.student.document');
