@@ -332,14 +332,18 @@
 
             function openModal(modalId) {
                 const modal = document.getElementById(modalId);
-                if (!modal) return;
-                modal.classList.add('show');
+                modal.style.display = 'flex';
+                setTimeout(() => {
+                    modal.classList.add('show');
+                }, 10);
             }
 
             function closeModal(modalId) {
                 const modal = document.getElementById(modalId);
-                if (!modal) return;
                 modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
             }
 
             function closeOnOverlay(event, modalId) {
@@ -350,8 +354,7 @@
 
             function openDocumentModal(documentId, documentName) {
                 document.getElementById('document_id').value = documentId;
-                document.getElementById('documentModalTitle').textContent =
-                    'Añadir documento: ' + documentName;
+                document.getElementById('documentModalTitle').textContent = 'Añadir documento: ' + documentName;
                 openModal('documentModal');
             }
         </script>
