@@ -237,7 +237,7 @@
     </div>
 
     <!-- Modal Añadir Documento -->
-    <div class="custom-modal" id="documentModal" onclick="closeOnOverlay(event, 'documentModal')">
+    <div class="custom-modal" id="documentModal" style="display:none;" onclick="closeOnOverlay(event, 'documentModal')">
         <div class="custom-modal-content">
             <span class="custom-modal-close" onclick="closeModal('documentModal')">&times;</span>
             <h5 id="documentModalTitle">Añadir documento</h5>
@@ -247,11 +247,15 @@
                 <input type="hidden" name="document_id" id="document_id">
                 <div class="mb-3">
                     <label for="document_file" class="form-label"><b>Selecciona el archivo:</b></label>
-                    <input type="file" class="form-control" id="document_file" name="document_file" accept="image/*,.pdf" required>
-                    <small class="form-text text-muted">Formatos permitidos: Imágenes (JPG, PNG, etc.) y PDF</small>
+                    <input type="file" class="form-control" id="document_file" name="document_file"
+                        accept="image/*,.pdf" required>
+                    <small class="form-text text-muted">
+                        Formatos permitidos: Imágenes (JPG, PNG, etc.) y PDF
+                    </small>
                 </div>
                 <div class="mt-4 text-end">
-                    <button type="button" class="btn btn-secondary me-2" onclick="closeModal('documentModal')">Cancelar</button>
+                    <button type="button" class="btn btn-secondary me-2"
+                        onclick="closeModal('documentModal')">Cancelar</button>
                     <button type="submit" class="btn bg-orange text-white">Subir documento</button>
                 </div>
             </form>
