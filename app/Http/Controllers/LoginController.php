@@ -20,6 +20,9 @@ class LoginController extends Controller
         $credentials['is_active'] = true;
 
         if (Auth::attempt($credentials)) {
+            // Actualizar el último acceso del usuario
+            Auth::user()->update(['last_login' => now()]);
+
             return redirect()->intended(route('dashboard'));
         }
 

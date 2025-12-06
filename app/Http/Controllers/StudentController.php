@@ -7,6 +7,7 @@ use App\Http\Requests\StudentRequest;
 use App\Http\Requests\StudentUpdateRequest;
 use App\Http\Requests\TutorRequest;
 use App\Models\Modality;
+use App\Models\Observation;
 use App\Models\SysRequest;
 use App\Models\PaymentPeriodicity;
 use App\Models\Report;
@@ -219,6 +220,15 @@ class StudentController extends Controller
 
         $student->save();
 
+        // Guardar observación si existe
+        if ($request->has('observation') && !empty($request->observation)) {
+            Observation::create([
+                'student_id' => $student->id,
+                'description' => $request->observation,
+                'user_id' => Auth::id()
+            ]);
+        }
+
         if ($request->operation == "new") {
             return redirect()->route('system.students.search')->with('success', 'Estudiante registrado correctamente');
         } else {
@@ -233,8 +243,6 @@ class StudentController extends Controller
             'new_tuition' => 'required|numeric|min:0.01',
             'reason' => 'required|string|max:500'
         ]);
-
-        $student = Student::find($request->student_id);
 
         // Verificar si ya existe una solicitud pendiente para este estudiante
         $existingRequest = SysRequest::where('student_id', $request->student_id)
@@ -254,5 +262,106 @@ class StudentController extends Controller
         ]);
 
         return back()->with('success', 'Solicitud de cambio de colegiatura enviada correctamente.');
+    }
+
+    public function addObservation(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'description' => 'required|string|max:1000'
+        ]);
+
+        Observation::create([
+            'student_id' => $request->student_id,
+            'description' => $request->description,
+            'user_id' => Auth::id()
+        ]);
+
+        return back()->with('success', 'Observación agregada correctamente.');
+    }
+
+    public function uploadDocument(Request $request)
+    {
+        $messages = [
+            'document_file.required' => 'Es necesario que seleccione un archivo.',
+            'document_file.file' => 'El archivo debe ser válido.',
+            'document_file.mimes' => 'El archivo debe ser una imagen o PDF.',
+            'document_file.max' => 'El tamaño máximo permitido para el archivo es de 5MB.'
+        ];
+
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'document_id' => 'required|exists:student_documents,id',
+            'document_file' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp,pdf|max:5120'
+        ], $messages);
+
+        $student_id = $request->student_id;
+        $document_id = $request->document_id;
+
+        // Obtener el nombre del documento
+        $document = \App\Models\StudentDocument::find($document_id);
+
+        // Crear directorio si no existe
+        $directory = 'profiles/' . $student_id;
+
+        // Generar nombre de archivo basado en el nombre del documento
+        $fileName = str_replace(' ', '_', strtolower($document->name)) . '.' . $request->document_file->extension();
+
+        // Verificar si ya existe un archivo con este nombre base y eliminarlo
+        $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
+        foreach ($extensions as $ext) {
+            $existingFile = $directory . '/' . str_replace(' ', '_', strtolower($document->name)) . '.' . $ext;
+            if (Storage::disk('local')->exists($existingFile)) {
+                Storage::disk('local')->delete($existingFile);
+            }
+        }
+
+        // Guardar el archivo
+        $request->document_file->storeAs($directory, $fileName);
+
+        // Actualizar el estado en la tabla pivot
+        $student = Student::find($student_id);
+        $student->documents()->updateExistingPivot($document_id, ['uploaded' => true]);
+
+        return redirect()->route('system.student.profile', ['student_id' => $student_id])
+            ->with('success', 'Documento subido correctamente.');
+    }
+
+    public function getDocument($student_id, $document_id)
+    {
+        $student = Student::find($student_id);
+        $document = \App\Models\StudentDocument::find($document_id);
+
+        if (!$document || !$student) {
+            abort(404);
+        }
+
+        $directory = 'profiles/' . $student_id;
+        $baseFileName = str_replace(' ', '_', strtolower($document->name));
+
+        // Buscar el archivo con cualquier extensión permitida
+        $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
+        $filePath = null;
+
+        foreach ($extensions as $ext) {
+            $possiblePath = $directory . '/' . $baseFileName . '.' . $ext;
+            if (Storage::disk('local')->exists($possiblePath)) {
+                $filePath = $possiblePath;
+                break;
+            }
+        }
+
+        if (!$filePath) {
+            abort(404);
+        }
+
+        $fullPath = storage_path('app/' . $filePath);
+        $file = Storage::disk('local')->get($filePath);
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $type = finfo_file($finfo, $fullPath);
+        finfo_close($finfo);
+
+        return response($file, 200)->header('Content-Type', $type);
     }
 }
