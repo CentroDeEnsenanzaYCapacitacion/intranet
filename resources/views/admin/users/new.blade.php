@@ -125,7 +125,7 @@
 
                                 function togglePlantel() {
                                     const v = roleSelect.value;
-                                    const mustForceCrew1 = (v === "1" || v === "5");
+                                    const mustForceCrew1 = (v === "1" || v === "5" || v === "6");
 
                                     if (mustForceCrew1) {
 
