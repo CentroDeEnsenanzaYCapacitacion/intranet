@@ -26,6 +26,7 @@ class User extends Authenticatable
         'phone',
         'cel_phone',
         'genre',
+        'last_login',
     ];
 
     protected $hidden = [
@@ -36,6 +37,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'last_login' => 'datetime',
     ];
 
     public function role()
@@ -67,7 +69,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ticket::class);
     }
-    
+
     public function ticketMessages()
     {
         return $this->hasMany(TicketMessage::class);
