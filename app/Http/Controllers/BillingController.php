@@ -12,6 +12,11 @@ use Carbon\Carbon;
 
 class BillingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:1,2');
+    }
+
     public function index(Request $request)
     {
         $user = auth()->user();
@@ -25,8 +30,12 @@ class BillingController extends Controller
             // Rol 2: solo puede ver su propio plantel
             $plantelId = $user->crew_id;
         } elseif ($user->role_id == 1 && $request->filled('plantel')) {
-            // Rol 1: puede seleccionar cualquier plantel
-            $plantelId = intval($request->plantel);
+            // Rol 1: crew_id=1 significa "Todos", cualquier otro ID filtra por ese plantel
+            $selectedPlantel = intval($request->plantel);
+            if ($selectedPlantel !== 1) {
+                $plantelId = $selectedPlantel;
+            }
+            // Si selectedPlantel es 1, plantelId queda null = muestra todos
         }
 
         // 🗓 Obtener el rango de fechas (puede ser null)

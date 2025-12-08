@@ -7,6 +7,12 @@ use App\Models\AdjustmentDefinition;
 
 class PerceptionsController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger catálogo de nómina - admin, director y RRHH
+        $this->middleware('role:1,2,4');
+    }
+
     public function getData()
     {
         $perceptions = AdjustmentDefinition::where('type', 'perception')->orderBy('name')->get();

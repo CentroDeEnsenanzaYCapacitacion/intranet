@@ -21,6 +21,12 @@ use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger gestión de estudiantes
+        $this->middleware('role:1,2,3');
+    }
+
     public static function insertStudent($request)
     {
         $report = Report::find($request->report_id);
