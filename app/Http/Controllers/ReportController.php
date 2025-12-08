@@ -17,6 +17,13 @@ use Illuminate\Support\Facades\Log;
 
 class ReportController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger todas las rutas de informes
+        // Solo roles con acceso al sistema de informes
+        $this->middleware('role:1,2,3,6');
+    }
+
     public function getReports()
     {
         if (Auth::user()->role_id == 1) {

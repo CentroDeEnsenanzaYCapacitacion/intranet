@@ -10,6 +10,12 @@ use App\Models\Crew;
 
 class CalendarController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger gestión de calendario y horarios - admin, director y RRHH
+        $this->middleware('role:1,2,4');
+    }
+
     public function calendar()
     {
         $assignments = HourAssignment::with(['staff', 'subject'])->get();

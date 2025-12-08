@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger gestión de catálogos
+        $this->middleware('role:1,2');
+    }
+
     public function getCourses()
     {
         $courses = Course::orderBy('name', 'asc')->where('is_active', true)->get();
