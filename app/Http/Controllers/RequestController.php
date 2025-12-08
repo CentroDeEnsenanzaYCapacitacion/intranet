@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 
 class RequestController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger aprobaciones financieras - solo admin y directores
+        $this->middleware('role:1,2');
+    }
+
     public function getRequests()
     {
         $requests = SysRequest::whereNull('approved')->get();

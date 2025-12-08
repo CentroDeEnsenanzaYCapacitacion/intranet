@@ -17,6 +17,12 @@ use Illuminate\Support\Facades\Hash;
 
 class CollectionController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger todas las rutas de cobranza
+        $this->middleware('role:1,2,3');
+    }
+
     public function getMenu()
     {
         return view('system.collection.menu');

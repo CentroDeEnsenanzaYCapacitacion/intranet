@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger todas las rutas de gestión de usuarios
+        // Roles permitidos: 1 (admin), 2 (director), 6 (director comercial)
+        $this->middleware('role:1,2,6');
+    }
+
     public function getUsers()
     {
         $currentUser = Auth::user();

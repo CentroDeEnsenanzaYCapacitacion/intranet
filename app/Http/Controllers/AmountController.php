@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AmountController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger gestión de montos/catálogos
+        $this->middleware('role:1,2');
+    }
+
     public function getAmounts()
     {
         $amounts = Amount::with(['crew', 'course', 'receiptType'])->get();

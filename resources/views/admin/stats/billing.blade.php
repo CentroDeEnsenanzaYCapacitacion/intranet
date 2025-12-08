@@ -39,13 +39,19 @@
                 <div class="row align-items-end">
                     <div class="col-md-2">
                         <label>Plantel:</label>
-                        <select name="plantel" class="form-control">
-                            @foreach ($crews as $crew)
-                                <option value="{{ $crew->id }}" {{ request('plantel') == $crew->id ? 'selected' : '' }}>
-                                    {{ $crew->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        @if (Auth::user()->role_id == 1)
+                            <select name="plantel" class="form-control">
+                                @foreach ($crews as $crew)
+                                    <option value="{{ $crew->id }}" {{ request('plantel') == $crew->id ? 'selected' : '' }}>
+                                        {{ $crew->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        @else
+                            <div class="form-control bg-light">
+                                {{ Auth::user()->crew->name }}
+                            </div>
+                        @endif
                     </div>
 
                     <div class="col-md-2">

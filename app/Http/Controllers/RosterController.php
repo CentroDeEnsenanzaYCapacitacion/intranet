@@ -12,6 +12,12 @@ use App\Models\StaffAdjustment;
 
 class RosterController extends Controller
 {
+    public function __construct()
+    {
+        // Proteger gestión de nómina
+        $this->middleware('role:1,2,4');
+    }
+
     public function index()
     {
         $staff = Staff::where('isActive', true)->get();
