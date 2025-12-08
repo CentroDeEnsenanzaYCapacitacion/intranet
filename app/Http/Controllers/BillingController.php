@@ -14,10 +14,20 @@ class BillingController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
         $crews = Crew::all();
         $receiptTypes = ReceiptType::all();
         $paymentTypes = PaymentType::all();
 
+        // Determinar el plantel según el rol
+        $plantelId = null;
+        if ($user->role_id == 2) {
+            // Rol 2: solo puede ver su propio plantel
+            $plantelId = $user->crew_id;
+        } elseif ($user->role_id == 1 && $request->filled('plantel')) {
+            // Rol 1: puede seleccionar cualquier plantel
+            $plantelId = intval($request->plantel);
+        }
 
         // 🗓 Obtener el rango de fechas (puede ser null)
         $rangoFechas = $this->getFechaRango($request);
@@ -27,8 +37,8 @@ class BillingController extends Controller
             ->when($rangoFechas, function ($query) use ($rangoFechas) {
                 $query->whereBetween('created_at', $rangoFechas);
             })
-            ->when($request->filled('plantel') && intval($request->plantel) !== 1, function ($query) use ($request) {
-                $query->where('crew_id', intval($request->plantel));
+            ->when($plantelId, function ($query) use ($plantelId) {
+                $query->where('crew_id', $plantelId);
             })
             ->when($request->filled('tipo_recibo'), function ($query) use ($request) {
                 $query->where('receipt_type_id', intval($request->tipo_recibo));
@@ -38,10 +48,13 @@ class BillingController extends Controller
             })
             ->get();
 
-        // 💸 Gastos solo con filtro de fecha
+        // 💸 Gastos solo con filtro de fecha y plantel
         $paybills = Paybill::with('crew')
             ->when($rangoFechas, function ($query) use ($rangoFechas) {
                 $query->whereBetween('created_at', $rangoFechas);
+            })
+            ->when($plantelId, function ($query) use ($plantelId) {
+                $query->where('crew_id', $plantelId);
             })
             ->get();
 
