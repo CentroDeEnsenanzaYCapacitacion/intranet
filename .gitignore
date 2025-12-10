@@ -8,18 +8,57 @@
 /vendor
 clear_cache_dev.php
 clear_cache_prod.php
+
+# Environment files
 .env
+.env.*
+!.env.example
 .env.backup
 .env.prod
 .env.dev
+
+# PHPUnit
 .phpunit.result.cache
+
+# Homestead
 Homestead.json
 Homestead.yaml
+
+# Composer
 auth.json
+
+# NPM/Yarn
 npm-debug.log
 yarn-error.log
+node_modules/
+
+# IDE
 /.fleet
 /.idea
 /.vscode
-
 .qodo
+
+# Claude Code
+/.claude/settings.local.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+/storage/logs/*
+!/storage/logs/.gitignore
+
+# Cache
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+# Uploads
+/public/uploads/*
+!/public/uploads/.gitignore
+
+# Custom development files
+public/index_dev.php
+public/index_prod.php
+public/create-storage-link-fixed.php
