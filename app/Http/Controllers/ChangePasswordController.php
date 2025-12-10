@@ -34,15 +34,19 @@ class ChangePasswordController extends Controller
 
         $user = Auth::user();
 
+        // Limpiar espacios en blanco de las contraseñas
+        $currentPassword = trim($request->current_password);
+        $newPassword = trim($request->password);
+
         // Verificar que la contraseña actual sea correcta
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (!Hash::check($currentPassword, $user->password)) {
             return back()->withErrors([
                 'current_password' => 'La contraseña actual es incorrecta.',
             ]);
         }
 
         // Actualizar contraseña
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make($newPassword);
         $user->save();
 
         return back()->with('success', 'Tu contraseña ha sido actualizada exitosamente.');

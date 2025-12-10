@@ -15,9 +15,12 @@ class LoginController extends Controller
     }
     public function attemptLogin(LoginRequest $request)
     {
-        $credentials = $request->only('username', 'password');
-
-        $credentials['is_active'] = true;
+        // Limpiar espacios en blanco de las credenciales
+        $credentials = [
+            'username' => trim($request->username),
+            'password' => trim($request->password),
+            'is_active' => true,
+        ];
 
         if (Auth::attempt($credentials)) {
             // Actualizar el último acceso del usuario

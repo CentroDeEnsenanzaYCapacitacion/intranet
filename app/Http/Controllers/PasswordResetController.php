@@ -129,7 +129,7 @@ class PasswordResetController extends Controller
 
         // Actualizar contraseña
         $user = User::where('email', $request->email)->first();
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make(trim($request->password));
         $user->save();
 
         // Eliminar el token usado
