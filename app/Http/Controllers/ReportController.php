@@ -21,7 +21,7 @@ class ReportController extends Controller
     {
         // Proteger todas las rutas de informes
         // Solo roles con acceso al sistema de informes
-        $this->middleware('role:1,2,3,6');
+        $this->middleware('role:1,4,6');
     }
 
     public function getReports()
