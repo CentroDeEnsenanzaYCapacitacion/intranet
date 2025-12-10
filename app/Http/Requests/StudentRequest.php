@@ -11,12 +11,12 @@ class StudentRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
 
         if ($this->has('curp')) {
             $this->merge([
-                'curp' => trim(strtoupper($this->curp))
+                'curp' => strtoupper(trim($this->curp))
             ]);
         }
     }
@@ -32,7 +32,7 @@ class StudentRequest extends FormRequest
                 'required',
                 'string',
                 'size:18',
-                'regex:/^[A-Z]{4}\d{6}[HM][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[A-Z0-9]{2}$/',
+                'regex:/^[A-Z]{4}\d{6}[HM][A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}[A-Z0-9]\d$/i',
                 'unique:students,curp' . ($studentId ? ',' . $studentId : '')
             ],
             'name'=>'required',
