@@ -16,7 +16,7 @@ class TicketController extends Controller
 {
     public function list()
     {
-        $tickets = Ticket::with('category', 'user')
+        $tickets = Ticket::with('category', 'user.crew')
             ->where(function ($query) {
                 $query->whereNotIn('status', ['cerrado', 'resuelto'])
                     ->orWhere(function ($q) {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>IntraCEC</title>
+    <title>Restablecer contraseña - IntraCEC</title>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
@@ -27,54 +27,62 @@
                     <a href="/" class="h1"><b>Intra</b>CEC</a>
                 </div>
                 <div class="card-body">
-                    <p class="login-box-msg">Bienvenid@</p>
-                    <form method="POST" class="needs-validation" novalidate action="{{ route('attemptLogin') }}">
+                    <p class="login-box-msg">Restablecer contraseña</p>
+                    <form method="POST" action="{{ route('password.update') }}">
                         @csrf
+                        <input type="hidden" name="token" value="{{ $token }}">
+                        <input type="hidden" name="email" value="{{ $email }}">
+
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Usuario" name="username"
-                                onchange="validateInput(event,'text')" required>
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-user"></span>
-                                </div>
-                            </div>
-                            <div class="valid-feedback"></div>
-                            <div class="invalid-feedback">Campo obligatorio.</div>
-                        </div>
-                        <div class="input-group mb-3">
-                            <input type="password" class="form-control" placeholder="Contraseña" name="password"
-                                required>
+                            <input type="password"
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   placeholder="Nueva contraseña"
+                                   name="password"
+                                   required>
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-lock"></span>
                                 </div>
                             </div>
-                            <div class="valid-feedback"></div>
-                            <div class="invalid-feedback">Campo obligatorio.</div>
+                            @error('password')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
-                        <div class="row">
-                            <div class="col-2">
+
+                        <div class="input-group mb-3">
+                            <input type="password"
+                                   class="form-control"
+                                   placeholder="Confirmar contraseña"
+                                   name="password_confirmation"
+                                   required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
                             </div>
-                            <div class="col-8 mt-2">
+                        </div>
+
+                        <p class="text-muted text-center mb-3" style="font-size: 13px;">
+                            La contraseña debe tener al menos 8 caracteres.
+                        </p>
+
+                        <div class="row">
+                            <div class="col-12 mt-2">
                                 <button type="submit" class="btn bg-orange btn-block"
-                                    style="color:white !important">Acceder</button>
+                                    style="color:white !important">Restablecer contraseña</button>
                             </div>
                         </div>
                     </form>
-
-                    <p class="mt-3 mb-1 text-center">
-                        <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
-                    </p>
                 </div>
             </div>
-            @if (session('error'))
-                <div class="alert alert-danger text-center  mt-2">
-                    {{ session('error') }}
-                </div>
-            @endif
-            @if (session('success'))
-                <div class="alert alert-success text-center  mt-2">
-                    {{ session('success') }}
+
+            @if ($errors->any() && !$errors->has('password'))
+                <div class="alert alert-danger text-center mt-2">
+                    @foreach ($errors->all() as $error)
+                        {{ $error }}
+                    @endforeach
                 </div>
             @endif
         </div>

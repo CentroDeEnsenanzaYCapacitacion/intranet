@@ -6,6 +6,9 @@
         <div class="col-12 col-lg-auto ml-lg-auto d-flex align-items-center">
             {{-- <a href="javascript:history.back()"><img class="header_icon" src="{{asset('assets/img/back.png')}}"></a> --}}
             <a href="{{route('dashboard')}}"><img class="header_icon" src="{{asset('assets/img/home.png')}}"></a>
+            <a href="{{ route('password.change') }}" title="Cambiar contraseña">
+                <i class="fas fa-key header_icon" style="color: white; font-size: 24px; margin: 0 10px;"></i>
+            </a>
             <a href="{{ route('logout') }}"><img class="header_icon" src="{{asset('assets/img/exit.png')}}" style="margin-right: 10px;"></a>
         </div>
     </div>
