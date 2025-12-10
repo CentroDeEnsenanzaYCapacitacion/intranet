@@ -19,7 +19,7 @@ class CollectionController extends Controller
 {
     public function __construct()
     {
-        // Proteger todas las rutas de cobranza
+
         $this->middleware('role:1,2,3');
     }
 
@@ -89,16 +89,13 @@ class CollectionController extends Controller
             $amount = $request->receipt_amount;
         }
 
-        // Calcular recargo si aplica y sumar al monto
         if ($request->has('apply_surcharge') && $request->apply_surcharge == '1') {
             $surchargePercentage = $request->surcharge_percentage ?? 0;
-            
-            // Convertir el monto a número para calcular
+
             $numericAmount = is_string($amount) ? floatval(str_replace(['$', ','], '', $amount)) : (float)$amount;
             $surchargeAmount = ($numericAmount * $surchargePercentage) / 100;
             $amount = $numericAmount + $surchargeAmount;
-            
-            // Ajustar concepto
+
             $concept = rtrim($concept) . ' con recargo';
         }
 
@@ -166,8 +163,7 @@ class CollectionController extends Controller
     public function reprintReceipt($receipt_id)
     {
         $receipt = Receipt::findOrFail($receipt_id);
-        
-        // Generar QR y reimprimir recibo
+
         Utils::generateQR(Hash::make($receipt->id));
         PdfController::generateReceipt($receipt);
     }

@@ -109,7 +109,6 @@
                 </div>
             </div>
 
-
             <button type="submit" class="btn bg-orange text-white">Guardar empleado</button>
             <a href="{{ route('admin.staff.show') }}" class="btn btn-secondary ms-2">Cancelar</a>
         </form>

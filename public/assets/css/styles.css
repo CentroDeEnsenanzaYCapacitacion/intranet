@@ -101,24 +101,24 @@ a:hover {
 
 .modal.fade .modal-dialog {
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    /* Asegúrate de que la transformación comience desde el centro */
+
     transform: translate(0, 0);
 }
 
 .modal-dialog {
-    position: fixed; /* Usar fixed para posicionar en relación a la ventana del navegador */
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(
         -50%,
         -50%
-    ); /* Ajustar tanto horizontal como verticalmente */
+    );
 }
 
 .modal-footer {
     display: flex;
-    justify-content: center; /* Centra los elementos horizontalmente */
-    align-items: center; /* Alinea los elementos verticalmente */
+    justify-content: center;
+    align-items: center;
 }
 
 .clean-button {

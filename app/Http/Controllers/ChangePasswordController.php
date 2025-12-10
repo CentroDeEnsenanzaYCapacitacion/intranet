@@ -8,17 +8,12 @@ use Illuminate\Support\Facades\Hash;
 
 class ChangePasswordController extends Controller
 {
-    /**
-     * Muestra el formulario para cambiar contraseña
-     */
+
     public function showChangeForm()
     {
         return view('auth.change-password');
     }
 
-    /**
-     * Procesa el cambio de contraseña
-     */
     public function changePassword(Request $request)
     {
         $request->validate([
@@ -34,18 +29,15 @@ class ChangePasswordController extends Controller
 
         $user = Auth::user();
 
-        // Limpiar espacios en blanco de las contraseñas
         $currentPassword = trim($request->current_password);
         $newPassword = trim($request->password);
 
-        // Verificar que la contraseña actual sea correcta
         if (!Hash::check($currentPassword, $user->password)) {
             return back()->withErrors([
                 'current_password' => 'La contraseña actual es incorrecta.',
             ]);
         }
 
-        // Actualizar contraseña
         $user->password = Hash::make($newPassword);
         $user->save();
 

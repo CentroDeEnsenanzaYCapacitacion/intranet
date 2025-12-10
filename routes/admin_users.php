@@ -1,5 +1,5 @@
-<?php 
-    use Illuminate\Support\Facades\Route;   
+<?php
+    use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\UserController;
 
     Route::get('/admin/users', [UserController::class,'getUsers'])->name('admin.users.show');

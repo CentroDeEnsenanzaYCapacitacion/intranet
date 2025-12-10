@@ -104,8 +104,6 @@
                                     ? $staff->cost * $periodDays
                                     : $staff->cost * $hoursForThisCrew;
 
-                                // Recalcular los ajustes para este trabajador en el plantel ($crewId) actual,
-                                // en vez de usar $staff->filtered_adjustments que pudo haberse guardado de otro plantel.
                                 $adjustmentsForCrew = $staff
                                     ->adjustments()
                                     ->where('year', request('year', now()->year))

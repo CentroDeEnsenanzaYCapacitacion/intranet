@@ -2,17 +2,17 @@
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
   }
-  
+
   body {
     padding: 0;
     margin: 0;
   }
-  
+
   #notfound {
     position: relative;
     height: 100vh;
   }
-  
+
   #notfound .notfound-bg {
     position: absolute;
     width: 100%;
@@ -20,7 +20,7 @@
     background-image: url('../img/bg.jpg');
     background-size: cover;
   }
-  
+
   #notfound .notfound-bg:after {
     content: '';
     position: absolute;
@@ -28,7 +28,7 @@
     height: 100%;
     background-color: #ff690080;
   }
-  
+
   #notfound .notfound {
     position: absolute;
     left: 50%;
@@ -37,19 +37,19 @@
         -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
   }
-  
+
   .notfound {
     max-width: 910px;
     width: 100%;
     line-height: 1.4;
     text-align: center;
   }
-  
+
   .notfound .notfound-404 {
     position: relative;
     height: 200px;
   }
-  
+
   .notfound .notfound-404 h1 {
     font-family: 'Montserrat', sans-serif;
     position: absolute;
@@ -65,7 +65,7 @@
     text-transform: uppercase;
     letter-spacing: 10px;
   }
-  
+
   .notfound h2 {
     font-family: 'Montserrat', sans-serif;
     font-size: 22px;
@@ -75,7 +75,7 @@
     margin-top: 20px;
     margin-bottom: 15px;
   }
-  
+
   .notfound .home-btn, .notfound .contact-btn {
     font-family: 'Montserrat', sans-serif;
     display: inline-block;
@@ -91,25 +91,25 @@
     -webkit-transition: 0.2s all;
     transition: 0.2s all;
   }
-  
+
   .notfound .home-btn:hover, .notfound .contact-btn:hover {
     opacity: 0.9;
   }
-  
+
   .notfound .home-btn {
     color: rgba(255, 0, 36, 0.7);
     background: #fff;
   }
-  
+
   .notfound .contact-btn {
     border: 2px solid rgba(255, 255, 255, 0.9);
     color: rgba(255, 255, 255, 0.9);
   }
-  
+
   .notfound-social {
     margin-top: 25px;
   }
-  
+
   .notfound-social>a {
     display: inline-block;
     height: 40px;
@@ -126,13 +126,13 @@
     background-color: #fff;
     border-radius: 50%;
   }
-  
+
   @media only screen and (max-width: 767px) {
     .notfound .notfound-404 h1 {
       font-size: 182px;
     }
   }
-  
+
   @media only screen and (max-width: 480px) {
     .notfound .notfound-404 {
       height: 146px;
@@ -147,4 +147,3 @@
       font-size: 14px;
     }
   }
-  

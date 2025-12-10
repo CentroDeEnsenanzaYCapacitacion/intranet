@@ -77,9 +77,7 @@
         @endif
     </ul>
 </div>
-{{-- <script>
-    const appEnv = @json(env('APP_ENV'));
-</script> --}}
+
 @endsection
 @push('scripts')
 <script src="{{ asset('assets/js/sign.js') }}"></script>

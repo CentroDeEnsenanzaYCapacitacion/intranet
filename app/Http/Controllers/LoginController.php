@@ -15,7 +15,7 @@ class LoginController extends Controller
     }
     public function attemptLogin(LoginRequest $request)
     {
-        // Limpiar espacios en blanco de las credenciales
+
         $credentials = [
             'username' => trim($request->username),
             'password' => trim($request->password),
@@ -23,7 +23,7 @@ class LoginController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            // Actualizar el último acceso del usuario
+
             Auth::user()->update(['last_login' => now()]);
 
             return redirect()->intended(route('dashboard'));

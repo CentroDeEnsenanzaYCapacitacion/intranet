@@ -39,7 +39,6 @@
         </div>
     </div>
 
-    {{-- Modal Asignar --}}
     <div class="custom-modal" id="assignModal" onclick="closeOnOverlay(event, 'assignModal')">
         <div class="custom-modal-content">
             <span class="custom-modal-close" onclick="closeModal('assignModal')">&times;</span>
@@ -109,7 +108,6 @@
         </div>
     </div>
 
-    {{-- Modal Editar --}}
     <div class="custom-modal" id="editModal" onclick="closeOnOverlay(event, 'editModal')">
         <div class="custom-modal-content">
             <span class="custom-modal-close" onclick="closeModal('editModal')">&times;</span>

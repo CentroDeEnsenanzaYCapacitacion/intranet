@@ -240,7 +240,7 @@
             </div>
         </div>
     </div>
-    <!-- Modal Solicitar Cambio de Colegiatura -->
+
     <div class="custom-modal" id="tuitionChangeModal" style="display:none;"
         onclick="closeOnOverlay(event, 'tuitionChangeModal')">
         <div class="custom-modal-content">
@@ -271,7 +271,6 @@
         </div>
     </div>
 
-    <!-- Modal Añadir Documento -->
     <div class="custom-modal" id="documentModal" style="display:none;" onclick="closeOnOverlay(event, 'documentModal')">
         <div class="custom-modal-content">
             <span class="custom-modal-close" onclick="closeModal('documentModal')">&times;</span>

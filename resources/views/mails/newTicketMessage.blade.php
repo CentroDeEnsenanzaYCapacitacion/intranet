@@ -14,7 +14,7 @@
 
     <div style="padding:20px;">
         <h2 style="color:#f37021; margin-bottom:5px;">Nuevo mensaje en ticket</h2>
-        
+
         <p style="margin:20px 0;">Se ha añadido un nuevo mensaje a tu ticket:</p>
 
         <div style="background-color:#f5f5f5; padding:15px; border-left:4px solid #f37021; margin:20px 0;">

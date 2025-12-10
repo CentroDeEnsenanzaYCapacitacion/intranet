@@ -20,9 +20,7 @@
                             class="btn btn-danger text-white mt-2 mb-2 ms-2">Limpiar colegiaturas</a>
                     @endif
                 </div>
-                {{-- <div>
-                <a href="{{ route('admin.users.new') }}"  class="btn bg-orange text-white mb-2">Nuevo costo</a>
-            </div> --}}
+
             </div>
             <div class="row d-flex text-center mt-5">
                 <div class="col">

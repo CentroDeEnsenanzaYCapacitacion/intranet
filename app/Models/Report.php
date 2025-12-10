@@ -14,7 +14,7 @@ class Report extends Model
     public function course() {
         return $this->belongsTo(Course::class);
     }
-    
+
     public function crew() {
         return $this->belongsTo(Crew::class);
     }

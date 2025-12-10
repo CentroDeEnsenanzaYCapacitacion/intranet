@@ -42,7 +42,7 @@ document.getElementById("earlyDiscountCheck").addEventListener("change", functio
 });
 
 document.getElementById("earlyDiscountPercentage").addEventListener("input", function () {
-    // Validar rango 1-10
+
     var value = parseInt(this.value);
     if (value < 1) this.value = 1;
     if (value > 10) this.value = 10;
@@ -69,7 +69,7 @@ function showSurchargeOptions() {
 
     if (checkbox.checked) {
         surchargeOptions.style.display = "block";
-        // Desactivar descuento si se activa recargo
+
         document.getElementById("earlyDiscountCheck").checked = false;
         showEarlyDiscountOptions();
     } else {
@@ -83,7 +83,7 @@ function showEarlyDiscountOptions() {
 
     if (checkbox.checked) {
         earlyDiscountOptions.style.display = "block";
-        // Desactivar recargo si se activa descuento
+
         document.getElementById("surchargeCheck").checked = false;
         showSurchargeOptions();
     } else {
@@ -97,7 +97,6 @@ function updateAmountModifiers() {
     var conceptDiv = document.getElementById("conceptDiv");
     var amountDiv = document.getElementById("amountDiv");
 
-    // Concepto base (sin modificadores)
     var baseConcept = conceptDiv.textContent.trim();
     baseConcept = baseConcept.replace(/\s*con recargo(\s*\d+%?)?$/i, '').trim();
     baseConcept = baseConcept.replace(/\s*con descuento por pronto pago(\s*\d+%?)?$/i, '').trim();
@@ -144,15 +143,14 @@ function showColegiaturaOptions() {
     var surchargeContainer = document.getElementById("surchargeContainer");
     var receiptTypeSelect = document.getElementById("receipt_type_id");
     var selectedValue = parseInt(receiptTypeSelect.value);
-    
-    // Solo mostrar para colegiatura (receipt_type_id = 2)
+
     if (selectedValue === 2) {
         earlyDiscountContainer.style.display = "block";
         surchargeContainer.style.display = "block";
     } else {
         earlyDiscountContainer.style.display = "none";
         surchargeContainer.style.display = "none";
-        // Desmarcar los checkboxes si estaban marcados
+
         var earlyDiscountCheck = document.getElementById("earlyDiscountCheck");
         var surchargeCheck = document.getElementById("surchargeCheck");
         if (earlyDiscountCheck.checked) {
@@ -263,7 +261,7 @@ function establish_elements(element) {
     }
 
     refresh_layout(tuitionNumber, tuition_results.isAdvance);
-    // Reaplicar modificadores si estaban activos
+
     updateAmountModifiers();
 }
 
@@ -285,7 +283,6 @@ function calculateTuitionNumber() {
             };
         }
     }
-
 
 }
 
@@ -309,8 +306,7 @@ function setAmount(isAdvance) {
     selections = retrieveSelectedItems();
     var amount = 0;
     var amountValue= 0;
-    
-    // Para colegiatura (receipt_type_id = 2), usar student.tuition
+
     if (selections[0].selectedIndex + 1 == 2) {
         if (isAdvance) {
             summatory = 0;
@@ -326,14 +322,13 @@ function setAmount(isAdvance) {
             amountValue = parseFloat(student.tuition);
         }
     } else {
-        // Para otros tipos de recibo, usar amounts
+
         amount = amounts.filter(function (item) {
             return item.receipt_type_id == selections[0].selectedIndex + 1;
         });
         amountValue = parseFloat(amount[0].amount);
     }
 
-    // Registrar base numérica para cálculos de recargo
     baseAmountNumeric = amountValue;
 
     var formattedAmount = amountValue.toLocaleString("es-MX", {

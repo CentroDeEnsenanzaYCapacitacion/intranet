@@ -10,7 +10,7 @@ class RequestController extends Controller
 {
     public function __construct()
     {
-        // Proteger aprobaciones financieras - solo admin y directores
+
         $this->middleware('role:1,2');
     }
 
@@ -29,8 +29,7 @@ class RequestController extends Controller
         $sysrequest = SysRequest::find($request_id);
         if($action==="approve"){
             $sysrequest->approved = true;
-            
-            // Si es cambio de colegiatura (tipo 3), actualizar el tuition del estudiante
+
             if ($sysrequest->request_type_id == 3 && $sysrequest->student_id) {
                 preg_match('/Nueva colegiatura: \$([\d,\.]+)/', $sysrequest->description, $matches);
                 if (isset($matches[1])) {
@@ -71,13 +70,11 @@ class RequestController extends Controller
         ]);
 
         $sysrequest = SysRequest::find($request_id);
-        
-        // Actualizar la colegiatura del estudiante
+
         $student = Student::find($sysrequest->student_id);
         $student->tuition = $request->new_tuition;
         $student->save();
 
-        // Marcar la solicitud como aprobada
         $sysrequest->approved = true;
         $sysrequest->save();
 

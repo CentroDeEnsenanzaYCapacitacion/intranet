@@ -24,24 +24,21 @@ class BillingController extends Controller
         $receiptTypes = ReceiptType::all();
         $paymentTypes = PaymentType::all();
 
-        // Determinar el plantel según el rol
         $plantelId = null;
         if ($user->role_id == 2) {
-            // Rol 2: solo puede ver su propio plantel
+
             $plantelId = $user->crew_id;
         } elseif ($user->role_id == 1 && $request->filled('plantel')) {
-            // Rol 1: crew_id=1 significa "Todos", cualquier otro ID filtra por ese plantel
+
             $selectedPlantel = intval($request->plantel);
             if ($selectedPlantel !== 1) {
                 $plantelId = $selectedPlantel;
             }
-            // Si selectedPlantel es 1, plantelId queda null = muestra todos
+
         }
 
-        // 🗓 Obtener el rango de fechas (puede ser null)
         $rangoFechas = $this->getFechaRango($request);
 
-        // 📄 Recibos con todos los filtros
         $receipts = Receipt::with(['receiptType', 'payment', 'student'])
             ->when($rangoFechas, function ($query) use ($rangoFechas) {
                 $query->whereBetween('created_at', $rangoFechas);
@@ -57,7 +54,6 @@ class BillingController extends Controller
             })
             ->get();
 
-        // 💸 Gastos solo con filtro de fecha y plantel
         $paybills = Paybill::with('crew')
             ->when($rangoFechas, function ($query) use ($rangoFechas) {
                 $query->whereBetween('created_at', $rangoFechas);
@@ -79,12 +75,9 @@ class BillingController extends Controller
         ];
     });
 
-
-
         $receiptsTotal = $receipts->sum('amount');
         $paybillsTotal = $paybills->sum('amount');
         $diferenciaTotal = $receiptsTotal - $paybillsTotal;
-
 
         return view('admin.stats.billing', compact(
             'crews',
@@ -97,8 +90,6 @@ class BillingController extends Controller
             'diferenciaTotal',
             'tiposPagoConTotales'
         ));
-
-
 
     }
 
@@ -126,7 +117,6 @@ class BillingController extends Controller
                 break;
         }
 
-        // Si es "histórico" o no se seleccionó nada válido, no se aplica filtro
         return null;
     }
 }

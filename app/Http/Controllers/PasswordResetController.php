@@ -12,17 +12,12 @@ use App\Mail\ResetPassword;
 
 class PasswordResetController extends Controller
 {
-    /**
-     * Muestra el formulario para solicitar reseteo de contraseña
-     */
+
     public function showForgotForm()
     {
         return view('auth.forgot-password');
     }
 
-    /**
-     * Envía el correo con el enlace de reseteo
-     */
     public function sendResetLink(Request $request)
     {
         $request->validate([
@@ -33,7 +28,6 @@ class PasswordResetController extends Controller
             'email.exists' => 'No existe una cuenta con este correo electrónico.',
         ]);
 
-        // Verificar que el usuario esté activo
         $user = User::where('email', $request->email)->first();
 
         if (!$user->is_active) {
@@ -42,20 +36,16 @@ class PasswordResetController extends Controller
             ]);
         }
 
-        // Eliminar tokens anteriores del usuario
         PasswordReset::where('email', $request->email)->delete();
 
-        // Generar token único
         $token = Str::random(64);
 
-        // Guardar token en la base de datos
         PasswordReset::create([
             'email' => $request->email,
             'token' => $token,
             'created_at' => now(),
         ]);
 
-        // Enviar correo
         try {
             Mail::to($request->email)->send(new ResetPassword($user, $token));
 
@@ -67,12 +57,9 @@ class PasswordResetController extends Controller
         }
     }
 
-    /**
-     * Muestra el formulario para restablecer la contraseña con el token
-     */
     public function showResetForm($token)
     {
-        // Verificar que el token existe
+
         $passwordReset = PasswordReset::where('token', $token)->first();
 
         if (!$passwordReset) {
@@ -81,7 +68,6 @@ class PasswordResetController extends Controller
             ]);
         }
 
-        // Verificar que el token no haya expirado (1 hora)
         if (now()->diffInMinutes($passwordReset->created_at) > 60) {
             PasswordReset::where('token', $token)->delete();
             return redirect()->route('login')->withErrors([
@@ -92,9 +78,6 @@ class PasswordResetController extends Controller
         return view('auth.reset-password', ['token' => $token, 'email' => $passwordReset->email]);
     }
 
-    /**
-     * Procesa el reseteo de la contraseña
-     */
     public function resetPassword(Request $request)
     {
         $request->validate([
@@ -107,7 +90,6 @@ class PasswordResetController extends Controller
             'password.confirmed' => 'Las contraseñas no coinciden.',
         ]);
 
-        // Verificar token
         $passwordReset = PasswordReset::where([
             'token' => $request->token,
             'email' => $request->email,
@@ -119,7 +101,6 @@ class PasswordResetController extends Controller
             ]);
         }
 
-        // Verificar que no haya expirado
         if (now()->diffInMinutes($passwordReset->created_at) > 60) {
             PasswordReset::where('token', $request->token)->delete();
             return back()->withErrors([
@@ -127,12 +108,10 @@ class PasswordResetController extends Controller
             ]);
         }
 
-        // Actualizar contraseña
         $user = User::where('email', $request->email)->first();
         $user->password = Hash::make(trim($request->password));
         $user->save();
 
-        // Eliminar el token usado
         PasswordReset::where('email', $request->email)->delete();
 
         return redirect()->route('login')->with('success', 'Tu contraseña ha sido restablecida exitosamente.');

@@ -131,9 +131,18 @@ class TicketController extends Controller
 
     public function updateStatus(Request $request, Ticket $ticket)
     {
+        $user = Auth::user();
+
         $request->validate([
             'status' => 'required|string|in:abierto,en progreso,esperando respuesta,resuelto,cerrado'
         ]);
+
+        if ($user->role_id != 1) {
+
+            if (!in_array($request->status, ['abierto', 'resuelto'])) {
+                return redirect()->back()->with('error', 'No tienes permisos para cambiar a este estado.');
+            }
+        }
 
         $oldStatus = $ticket->status;
         $ticket->status = $request->status;

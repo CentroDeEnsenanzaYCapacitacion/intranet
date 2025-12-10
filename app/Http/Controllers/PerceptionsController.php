@@ -9,7 +9,7 @@ class PerceptionsController extends Controller
 {
     public function __construct()
     {
-        // Proteger catálogo de nómina - admin, director y RRHH
+
         $this->middleware('role:1,2,4');
     }
 

@@ -18,21 +18,21 @@ class StaffObserver
 
     public function updated(Staff $staff): void
     {
-        //
+
     }
 
     public function deleted(Staff $staff): void
     {
-        //
+
     }
 
     public function restored(Staff $staff): void
     {
-        //
+
     }
 
     public function forceDeleted(Staff $staff): void
     {
-        //
+
     }
 }

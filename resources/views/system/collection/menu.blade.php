@@ -26,15 +26,6 @@
         </a>
     </div>
     @endif
-    {{-- <div class="col-md-4 d-flex justify-content-center">
-        <a id='profiles' href="{{route('system.collection.menu')}}">
-            <div class="card align-content-center cc">
-                <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/pay.webp')}}">
-                <div class="card-body">
-                    <h6 class="card-title">Cobranza</h6>
-                </div>
-            </div>
-        </a>
-    </div> --}}
+
 </div>
 @endsection

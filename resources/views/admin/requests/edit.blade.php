@@ -4,7 +4,7 @@
 <div class="card shadow ccont">
     <div class="card-body">
         @if($request->request_type_id == 3)
-            {{-- Cambio de colegiatura --}}
+
             <div class="row d-flex text-center mt-3">
                 <div class="col">
                     <h1>Cambio de colegiatura</h1>
@@ -26,7 +26,7 @@
                         <p class="form-control-plaintext">${{ number_format($request->student->tuition ?? 0, 2) }}</p>
                     </div>
                     @php
-                        // Extraer nueva colegiatura de la descripción: "Nueva colegiatura: $X.XX - motivo"
+
                         preg_match('/Nueva colegiatura: \$([\d,\.]+)/', $request->description, $matches);
                         $newTuition = isset($matches[1]) ? str_replace(',', '', $matches[1]) : '';
                         $reason = preg_replace('/Nueva colegiatura: \$[\d,\.]+ - /', '', $request->description);
@@ -49,7 +49,7 @@
                 </div>
             </div>
         @else
-            {{-- Descuento de inscripción u otras solicitudes de informes --}}
+
             <div class="row d-flex text-center mt-3">
                 <div class="col">
                     <h1>Cambio de porcentaje de inscripción</h1>
