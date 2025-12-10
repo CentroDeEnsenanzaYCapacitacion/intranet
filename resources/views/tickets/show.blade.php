@@ -23,6 +23,7 @@
                         <th>#</th>
                         <th>Título</th>
                         <th>Categoría</th>
+                        <th>Plantel</th>
                         <th>Prioridad</th>
                         <th>Estado</th>
                         <th>Fecha</th>
@@ -55,6 +56,13 @@
                             <td>{{ $ticket->title }}</td>
                             <td>{{ $ticket->category?->name ?? 'Sin categoría' }}</td>
                             <td>
+                                @if($ticket->user?->crew_id == 1)
+                                    General
+                                @else
+                                    {{ $ticket->user?->crew?->name ?? 'Sin plantel' }}
+                                @endif
+                            </td>
+                            <td>
                                 <span class="badge {{ $priorityClass }}">
                                     {{ ucfirst($ticket->priority) }}
                                 </span>
@@ -68,7 +76,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">No hay tickets registrados.</td>
+                            <td colspan="7">No hay tickets registrados.</td>
                         </tr>
                     @endforelse
                 </tbody>
