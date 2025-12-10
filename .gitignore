@@ -35,7 +35,7 @@ yarn-error.log
 .qodo/
 
 # Claude Code
-.claude/settings.local.json
+.claude/
 
 # AI Context
 context/
