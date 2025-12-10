@@ -19,8 +19,7 @@ class ReportController extends Controller
 {
     public function __construct()
     {
-        // Proteger todas las rutas de informes
-        // Solo roles con acceso al sistema de informes
+
         $this->middleware('role:1,4,6');
     }
 
@@ -57,7 +56,6 @@ class ReportController extends Controller
             return in_array($report->id, $idsToRemove);
         });
 
-
         return view('system.reports.show', compact('crew_reports', 'crew_requests'));
     }
 
@@ -84,12 +82,10 @@ class ReportController extends Controller
 
     public function receiptOrRequest(Request $request)
     {
-        // Obtener el reporte y verificar si es BACHILLERATO EN UN EXAMEN
+
         $report = Report::with('course')->find($request->report_id);
         $isBachilleratoExamen = $report && $report->course && stripos($report->course->name, 'BACHILLERATO EN UN EXAMEN') !== false;
 
-        // Validar que exista un monto registrado (excepto BACHILLERATO EN UN EXAMEN)
-        // Esta validación aplica tanto para inscripciones directas como para solicitudes de descuento
         if (!$isBachilleratoExamen) {
             $success = Utils::validateAmount($request->report_id, "report");
             if (!$success) {
@@ -98,7 +94,7 @@ class ReportController extends Controller
         }
 
         if ($request->discount == 0) {
-            // Validar duplicados en estudiantes antes de inscribir
+
             $duplicateStudents = Student::where(function($query) use ($report) {
                 $query->where('name', $report->name)
                       ->where('surnames', $report->surnames);
@@ -166,7 +162,6 @@ class ReportController extends Controller
         ]);
     }
 
-
     public function signDiscount($report_id)
     {
         $request = SysRequest::where('report_id', $report_id)->first();
@@ -189,7 +184,7 @@ class ReportController extends Controller
 
     public function insertReport(ReportRequest $request)
     {
-        // Buscar duplicados en informes existentes
+
         $duplicates = Report::where(function($query) use ($request) {
             $query->where('name', $request->name)
                   ->where('surnames', $request->surnames);
@@ -216,7 +211,7 @@ class ReportController extends Controller
                 }
                 $matches[] = "Informe #{$dup->id}: {$dup->name} {$dup->surnames} (coincide: " . implode(', ', $reasons) . ")";
             }
-            
+
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['duplicado' => 'Se encontraron informes similares:<br>' . implode('<br>', $matches)]);

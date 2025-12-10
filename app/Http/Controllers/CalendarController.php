@@ -12,7 +12,7 @@ class CalendarController extends Controller
 {
     public function __construct()
     {
-        // Proteger gestión de calendario y horarios - admin, director y RRHH
+
         $this->middleware('role:1,2,4');
     }
 
@@ -132,7 +132,6 @@ class CalendarController extends Controller
         return response()->json(['message' => 'Horas asignadas correctamente']);
     }
 
-
     public function updateHourAssignment(Request $request, $id)
     {
         $assignment = HourAssignment::findOrFail($id);
@@ -173,8 +172,6 @@ class CalendarController extends Controller
 
         return response()->json(['message' => 'Asignación actualizada correctamente']);
     }
-
-
 
     public function deleteHourAssignment($id)
     {

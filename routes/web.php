@@ -10,12 +10,10 @@ Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 Route::get('/', [LoginController::class,'login'])->name('login');
 Route::post('/', [LoginController::class,'attemptLogin'])->name('attemptLogin');
 
-// Rutas para reseteo de contraseña (sin autenticación)
 Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])->name('password.request');
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
-
 
 Route::get('/internal/clear-cache', function () {
     $token = request()->query('token');
@@ -75,7 +73,6 @@ Route::middleware(['auth'])->group(function () {
         return view('admin.rosters.menu');
     })->name('admin.rosters.menu');
 
-    // Rutas para cambio de contraseña (con autenticación)
     Route::get('/change-password', [ChangePasswordController::class, 'showChangeForm'])->name('password.change');
     Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])->name('password.change.update');
 

@@ -13,7 +13,7 @@ class StudentRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        // Limpiar espacios en blanco del CURP
+
         if ($this->has('curp')) {
             $this->merge([
                 'curp' => trim(strtoupper($this->curp))
@@ -23,9 +23,9 @@ class StudentRequest extends FormRequest
 
     public function rules(): array
     {
-        // Obtener el ID del estudiante si existe (para permitir actualización)
+
         $studentId = $this->input('student_id');
-        
+
         return [
             'crew_id'=> 'required|integer|min:0',
             'curp' => [

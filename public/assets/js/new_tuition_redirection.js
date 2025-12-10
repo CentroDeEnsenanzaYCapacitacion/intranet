@@ -17,7 +17,7 @@ function handleAmounts() {
             return "El valor introducido no es correcto.";
         }
     }
-    // Validar contra la colegiatura del estudiante
+
     if (student.tuition && parseFloat(receipt_amount) > parseFloat(student.tuition)) {
         return "El monto no puede ser mayor al valor de la colegiatura";
     }

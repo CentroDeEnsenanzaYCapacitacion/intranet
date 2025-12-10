@@ -9,7 +9,7 @@ class StaffController extends Controller
 {
     public function __construct()
     {
-        // Proteger visualización de personal - admin, director y RRHH
+
         $this->middleware('role:1,2,4');
     }
 

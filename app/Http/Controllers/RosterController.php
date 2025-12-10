@@ -14,7 +14,7 @@ class RosterController extends Controller
 {
     public function __construct()
     {
-        // Proteger gestión de nómina
+
         $this->middleware('role:1,2,4');
     }
 
@@ -57,7 +57,6 @@ class RosterController extends Controller
 
         return redirect()->back()->with('success', 'Ajuste agregado correctamente.');
     }
-
 
     public function destroyAdjustment($id)
     {
@@ -208,8 +207,6 @@ class RosterController extends Controller
                     return $staff;
                 });
 
-
-
             $mergedStaff = $staffWithHours->merge($rosterStaff)->unique('id')->map(function ($staff) use ($year, $month, $period, $crew) {
                 if (!isset($staff->filtered_adjustments)) {
                     $staff->filtered_adjustments = $staff->adjustments()
@@ -222,7 +219,6 @@ class RosterController extends Controller
                 }
                 return $staff;
             });
-
 
             $staffGrouped[$crew->id] = $mergedStaff;
 
@@ -281,7 +277,6 @@ class RosterController extends Controller
         }
 
         $adjustmentDefinitions = \App\Models\AdjustmentDefinition::all();
-
 
         return view('admin.rosters.rosters.panel', compact(
             'allCrews',

@@ -10,12 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     openModalButtons.forEach(function(btn) {
         btn.addEventListener("click", function(event) {
             event.preventDefault();
-            var userId = btn.getAttribute('data-user-id'); 
+            var userId = btn.getAttribute('data-user-id');
             document.getElementById('confirmBlockButton').setAttribute('data-user-id', userId);
             blockModal.show();
         });
     });
-    
+
     document.getElementById('confirmBlockButton').addEventListener('click', function() {
         var button = this;
         button.innerHTML = 'Bloqueando... <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE) {
                 if (this.status === 200) {
-                    blockModal.hide(); 
+                    blockModal.hide();
                     window.location.reload();
                 } else {
                     button.innerHTML = 'Error. Intentar de nuevo';
@@ -40,8 +40,4 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.send("userId=" + encodeURIComponent(userId));
     });
 });
-
-
-
-
 

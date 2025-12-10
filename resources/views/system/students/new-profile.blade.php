@@ -23,8 +23,6 @@
         </div>
     @endif
 
-
-
     <div class="card shadow ccont pb-3">
         <div class="card-body">
             <div class="row d-flex text-center mt-3">
@@ -260,7 +258,6 @@
         </div>
     </div>
 
-    <!-- Modal Añadir Documento -->
     <div class="custom-modal" id="documentModal" style="display:none;" onclick="closeOnOverlay(event, 'documentModal')">
         <div class="custom-modal-content">
             <span class="custom-modal-close" onclick="closeModal('documentModal')">&times;</span>
@@ -287,7 +284,6 @@
             </form>
         </div>
     </div>
-
 
     @push('scripts')
         <script>

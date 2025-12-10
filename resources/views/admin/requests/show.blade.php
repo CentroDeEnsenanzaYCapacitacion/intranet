@@ -45,17 +45,17 @@
                                 <td class="text-uppercase">{{ $request->user->crew->name}}</td>
                                 <td class="text-center">
                                     @if($request->request_type_id == 3)
-                                        {{-- Cambio de colegiatura --}}
+
                                         <span class="material-symbols-outlined bg-done"><a onclick="showLoader(true)" href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}">done</a></span>
                                         <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)" href="{{ route('admin.requests.edit',['request_id' => $request->id]) }}">edit</a></span>
                                         <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('request',{{ $request->id }})">close</a></span>
                                     @else
-                                        {{-- Solicitudes de informes --}}
+
                                         <span class="material-symbols-outlined bg-done"><a onclick="showLoader(true)" href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}">done</a></span>
                                         <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)" href="{{ route('admin.requests.edit',['request_id' => $request->id]) }}">edit</a></span>
                                         <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('request',{{ $request->id }})">close</a></span>
                                     @endif
-                                </td> 
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -110,7 +110,7 @@
                                     @else
                                         <span class="text-danger">Rechazada</span>
                                     @endif
-                                </td> 
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

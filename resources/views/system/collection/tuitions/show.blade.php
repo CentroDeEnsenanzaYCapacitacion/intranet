@@ -56,8 +56,8 @@
                                 <td class="text-uppercase">${{ number_format($pay->amount, 2, '.', ',') }}</td>
                                 <td>
                                     <span class="material-symbols-outlined bg-edit">
-                                        <a href="{{ route('system.collection.receipt.reprint', ['receipt_id' => $pay->id]) }}" 
-                                           target="_blank" 
+                                        <a href="{{ route('system.collection.receipt.reprint', ['receipt_id' => $pay->id]) }}"
+                                           target="_blank"
                                            title="Reimprimir recibo">print</a>
                                     </span>
                                 </td>

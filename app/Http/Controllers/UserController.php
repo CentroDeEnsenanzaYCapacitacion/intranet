@@ -17,8 +17,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        // Proteger todas las rutas de gestión de usuarios
-        // Roles permitidos: 1 (admin), 2 (director), 6 (director comercial)
+
         $this->middleware('role:1,2,6');
     }
 
@@ -26,12 +25,11 @@ class UserController extends Controller
     {
         $currentUser = Auth::user();
 
-        // Rol 1 (admin): ve todos los usuarios de todos los planteles
         if ($currentUser->role_id == 1) {
             $users = User::where('is_active', true)->where('id', '!=', 1)->get();
             $blocked_users = User::where('is_active', false)->where('id', '!=', 1)->get();
         }
-        // Rol 6 (director comercial): ve solo usuarios rol 4 (rrhh) y 6 (director comercial) de todos los planteles
+
         elseif ($currentUser->role_id == 6) {
             $users = User::where('is_active', true)
                 ->whereIn('role_id', [4, 6])
@@ -42,7 +40,7 @@ class UserController extends Controller
                 ->where('id', '!=', 1)
                 ->get();
         }
-        // Otros roles (director, etc.): ven todos los usuarios de su mismo plantel
+
         else {
             $users = User::where('is_active', true)
                 ->where('crew_id', $currentUser->crew_id)
@@ -64,7 +62,7 @@ class UserController extends Controller
         if ($user->role->name === "admin") {
             $roles = Role::all();
         } elseif ($user->role_id == 6) {
-            // Director comercial solo puede crear usuarios RRHH (rol 4)
+
             $roles = Role::where("id", 4)->get();
         } else {
             $roles = Role::where("name", "!=", "admin")->where("name", "!=", "Director")->get();

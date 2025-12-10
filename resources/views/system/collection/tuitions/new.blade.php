@@ -109,8 +109,8 @@
                             <div id="earlyDiscountOptions" class="mt-3" style="display:none;">
                                 <b>Porcentaje de descuento</b>
                                 <div style="display: flex; justify-content: center; align-items: center; gap: 5px;">
-                                    <input type="number" name="early_discount_percentage" id="earlyDiscountPercentage" 
-                                        class="form-control" style="width: 80px; text-align: center;" 
+                                    <input type="number" name="early_discount_percentage" id="earlyDiscountPercentage"
+                                        class="form-control" style="width: 80px; text-align: center;"
                                         min="1" max="10" value="5">%
                                 </div>
                             </div>

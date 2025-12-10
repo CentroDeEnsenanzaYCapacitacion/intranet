@@ -34,7 +34,6 @@
                 <h1>Datos de cobranza</h1>
             </div>
 
-            <!-- 🔍 Filtros -->
             <form method="GET" action="{{ route('admin.stats.billing') }}" id="filtersForm">
                 <div class="row align-items-end">
                     <div class="col-md-2">
@@ -85,8 +84,6 @@
                                     </button>
                                 </div>
 
-
-
                             </div>
                         </div>
                     </div>
@@ -123,7 +120,6 @@
                 </div>
             </form>
 
-            <!-- 📋 Tabla de Recibos -->
             <div class="mt-5 d-flex align-items-center flex-wrap gap-3 mb-3">
                 <h4 class="mb-0 d-flex align-items-center gap-3">
                     {{ $receipts->count() }} recibos
@@ -177,7 +173,6 @@
                 @endif
             </div>
 
-            <!-- 📋 Tabla de Gastos (Paybills) -->
             <h4 class="mt-5">
                 <div class="d-flex align-items-center">
                     <h4 class="mb-0">
@@ -188,7 +183,6 @@
                     </span>
                 </div>
             </h4>
-
 
             <div class="table-container">
                 @if ($paybills->isNotEmpty())

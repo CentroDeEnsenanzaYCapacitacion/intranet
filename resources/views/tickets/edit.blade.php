@@ -56,8 +56,8 @@
                 @foreach($ticket->images as $image)
                     <div class="col-md-3 mb-3">
                         <a href="{{ route('tickets.image', $image->path) }}" target="_blank">
-                            <img src="{{ route('tickets.image', $image->path) }}" 
-                                 class="img-fluid rounded border" 
+                            <img src="{{ route('tickets.image', $image->path) }}"
+                                 class="img-fluid rounded border"
                                  alt="{{ $image->original_name }}"
                                  style="cursor: pointer; object-fit: cover; height: 200px; width: 100%;">
                         </a>
@@ -68,39 +68,44 @@
         @endif
 
         @php
-            $statusOptions = [
+
+            $adminStatusOptions = [
                 'abierto' => 'Abierto',
                 'en progreso' => 'En progreso',
                 'esperando respuesta' => 'Esperando respuesta',
                 'resuelto' => 'Resuelto',
                 'cerrado' => 'Cerrado'
             ];
+
+            $userStatusOptions = [
+                'abierto' => 'Abierto',
+                'resuelto' => 'Resuelto'
+            ];
+
+            $statusOptions = Auth::user()->role_id == 1 ? $adminStatusOptions : $userStatusOptions;
         @endphp
 
-        @if (in_array(Auth::user()->role_id, [1]))
-            <hr class="my-4">
-            <h5>Cambiar estado del ticket</h5>
-            <form action="{{ route('tickets.updateStatus', $ticket->id) }}" method="POST" class="row g-2 mb-4" onsubmit="showLoader(true)">
-                @csrf
-                @method('PUT')
+        <hr class="my-4">
+        <h5>Cambiar estado del ticket</h5>
+        <form action="{{ route('tickets.updateStatus', $ticket->id) }}" method="POST" class="row g-2 mb-4" onsubmit="showLoader(true)">
+            @csrf
+            @method('PUT')
 
-                <div class="col-md-6">
-                    <select name="status" class="form-select" required>
-                        @foreach($statusOptions as $key => $label)
-                            <option value="{{ $key }}" {{ $ticket->status === $key ? 'selected' : '' }}>
-                                {{ $label }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            <div class="col-md-6">
+                <select name="status" class="form-select" required>
+                    @foreach($statusOptions as $key => $label)
+                        <option value="{{ $key }}" {{ $ticket->status === $key ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-                <div class="col-md-6 text-end">
-                    <button type="submit" class="btn btn-warning">Actualizar estado</button>
-                </div>
-            </form>
-        @endif
+            <div class="col-md-6 text-end">
+                <button type="submit" class="btn btn-warning">Actualizar estado</button>
+            </div>
+        </form>
 
-        {{-- Conversación --}}
         <hr class="my-5">
         <h5>Conversación</h5>
 
@@ -110,7 +115,7 @@
                     <strong>{{ $msg->user->role_id == 1 ? 'SysAdmin' : $msg->user->name }}</strong>
                     <small class="text-muted">· {{ $msg->created_at->diffForHumans() }}</small>
                     <p class="mb-0">{{ $msg->message }}</p>
-                    
+
                     @if($msg->attachments && $msg->attachments->count())
                         <div class="mt-3">
                             <small class="text-muted"><strong>Adjuntos:</strong></small>
@@ -120,12 +125,12 @@
                                         $isImage = str_starts_with($attachment->mime_type, 'image/');
                                         $isVideo = str_starts_with($attachment->mime_type, 'video/');
                                     @endphp
-                                    
+
                                     <div class="col-md-3 mb-2">
                                         @if($isImage)
                                             <a href="{{ route('tickets.attachment', $attachment->path) }}" target="_blank">
-                                                <img src="{{ route('tickets.attachment', $attachment->path) }}" 
-                                                     class="img-fluid rounded border" 
+                                                <img src="{{ route('tickets.attachment', $attachment->path) }}"
+                                                     class="img-fluid rounded border"
                                                      alt="{{ $attachment->original_name }}"
                                                      style="cursor: pointer; object-fit: cover; height: 150px; width: 100%;">
                                             </a>

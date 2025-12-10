@@ -10,12 +10,11 @@ use App\Models\ReceiptType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class AmountController extends Controller
 {
     public function __construct()
     {
-        // Proteger gestión de montos/catálogos
+
         $this->middleware('role:1,2');
     }
 
@@ -59,8 +58,6 @@ class AmountController extends Controller
         $new_amount->receipt_type_id = $type;
         $amounts_to_store[] = $new_amount;
     }
-
-
 
     public function generateAmounts()
     {
@@ -119,8 +116,7 @@ class AmountController extends Controller
 
     public function cleanAmounts()
     {
-        // Eliminar todos los amounts que no sean inscripciones (receipt_type_id != 1)
-        // Excluir los que tienen crew_id = 1 (costos generales para todos los crews)
+
         Amount::where('receipt_type_id', '!=', 1)
             ->where('crew_id', '!=', 1)
             ->delete();

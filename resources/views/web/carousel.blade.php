@@ -14,15 +14,7 @@
             </div>
         </div>
         <div class="content ml-5">
-            {{-- @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif --}}
+
             <form id="form" action="{{ route('web.carousel.post') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <table class="table table-borderless" width="100%">

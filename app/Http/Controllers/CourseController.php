@@ -8,12 +8,11 @@ use App\Models\Course;
 use App\Models\Crew;
 use Illuminate\Support\Facades\Auth;
 
-
 class CourseController extends Controller
 {
     public function __construct()
     {
-        // Proteger gestión de catálogos
+
         $this->middleware('role:1,2');
     }
 

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     openModalButtons.forEach(function(btn) {
         btn.addEventListener("click", function(event) {
             event.preventDefault();
-            var courseId = btn.getAttribute('data-course-id'); 
+            var courseId = btn.getAttribute('data-course-id');
             document.getElementById('confirmDeleteButton').setAttribute('data-course-id', courseId);
             deleteModal.show();
         });
@@ -23,13 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         var courseId = this.getAttribute('data-course-id');
         var xhr = new XMLHttpRequest();
-    
+
         xhr.open("POST", "../../msrvs/courses/deleteCourse.php", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE) {
                 if (this.status === 200) {
-                    deleteModal.hide(); 
+                    deleteModal.hide();
                     window.location.reload();
                 } else {
                     button.innerHTML = 'Error. Intentar de nuevo';
@@ -40,8 +40,4 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.send("id=" + encodeURIComponent(courseId));
     });
 });
-
-
-
-
 

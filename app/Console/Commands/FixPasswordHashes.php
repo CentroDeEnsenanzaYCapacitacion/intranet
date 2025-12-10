@@ -8,28 +8,15 @@ use Illuminate\Support\Facades\Hash;
 
 class FixPasswordHashes extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'password:fix-double-hash';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Resetea la contraseña del superadmin a la del .env en caso de doble encriptación';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $this->info('Verificando y corrigiendo hash de contraseña del superadmin...');
 
-        // Obtener el superadmin
         $superadmin = User::where('username', 'superadmin')->first();
 
         if (!$superadmin) {
@@ -37,7 +24,6 @@ class FixPasswordHashes extends Command
             return 1;
         }
 
-        // Obtener la contraseña del .env
         $passwordFromEnv = env('SEED_ADMIN_PASSWORD');
 
         if (!$passwordFromEnv) {
@@ -45,7 +31,6 @@ class FixPasswordHashes extends Command
             return 1;
         }
 
-        // Verificar si la contraseña actual es válida
         try {
             if (Hash::check($passwordFromEnv, $superadmin->password)) {
                 $this->info('La contraseña del superadmin ya es correcta. No se requieren cambios.');
@@ -55,7 +40,6 @@ class FixPasswordHashes extends Command
             $this->warn('La contraseña actual tiene un hash inválido. Procediendo a corregir...');
         }
 
-        // Regenerar el hash correctamente
         $superadmin->password = Hash::make($passwordFromEnv);
         $superadmin->save();
 

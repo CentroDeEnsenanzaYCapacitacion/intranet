@@ -1,11 +1,11 @@
 <?php
-        use Illuminate\Support\Facades\Route;   
+        use Illuminate\Support\Facades\Route;
         use App\Http\Controllers\CourseController;
 
         Route::get('/admin/catalogues_menu', function () {
             return view('admin.catalogues.menu');
         })->name('admin.catalogues.menu');
-    
+
         Route::get('/admin/catalogues/courses', [CourseController::class,'getCourses'])->name('admin.catalogues.courses.show');
         Route::get('/admin/catalogues/course/new', [CourseController::class,'newCourse'])->name('admin.catalogues.courses.new');
         Route::get('/admin/catalogues/course/edit/{id}', [CourseController::class,'editCourse'])->name('admin.catalogues.courses.edit');

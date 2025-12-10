@@ -24,21 +24,21 @@ class ReceiptObserver
 
     public function updated(Receipt $receipt): void
     {
-        //
+
     }
 
     public function deleted(Receipt $receipt): void
     {
-        //
+
     }
 
     public function restored(Receipt $receipt): void
     {
-        //
+
     }
 
     public function forceDeleted(Receipt $receipt): void
     {
-        //
+
     }
 }

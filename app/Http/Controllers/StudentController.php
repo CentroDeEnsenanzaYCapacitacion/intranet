@@ -23,7 +23,7 @@ class StudentController extends Controller
 {
     public function __construct()
     {
-        // Proteger gestión de estudiantes
+
         $this->middleware('role:1,2,3');
     }
 
@@ -49,7 +49,7 @@ class StudentController extends Controller
 
     public function saveFormData($student_id, Request $request)
     {
-        // Guardar datos del formulario en sesión
+
         session(['student_form_data_' . $student_id => $request->all()]);
         return response()->json(['success' => true]);
     }
@@ -87,7 +87,6 @@ class StudentController extends Controller
         $imageName = 'photo.' . $request->image->extension();
         $request->image->storeAs($directory, $imageName);
 
-        // Limpiar datos guardados en sesión después de subir la imagen
         session()->forget('student_form_data_' . $student_id);
 
         return redirect()->route('system.student.profile', ['student_id' => $student_id])
@@ -107,7 +106,7 @@ class StudentController extends Controller
         } elseif (Storage::disk('local')->exists($path_webp)) {
             $path = $path_webp;
         } else {
-            // Ajustar ruta para producción
+
             $nophotoPath = str_replace('/intranet/public/', '/public_html/intranet/', public_path('assets/img/nophoto.jpg'));
             $nophotoPath = str_replace('/intranet_dev/public/', '/public_html/intranet_dev/', $nophotoPath);
             return response()->file($nophotoPath);
@@ -156,7 +155,6 @@ class StudentController extends Controller
         $payment_periodicities = PaymentPeriodicity::all();
         $modalities = Modality::all();
 
-        // Recuperar datos guardados en sesión si existen
         $savedData = session('student_form_data_' . $student_id, []);
 
         if ($student->first_time) {
@@ -226,7 +224,6 @@ class StudentController extends Controller
 
         $student->save();
 
-        // Guardar observación si existe
         if ($request->has('observation') && !empty($request->observation)) {
             Observation::create([
                 'student_id' => $student->id,
@@ -250,9 +247,8 @@ class StudentController extends Controller
             'reason' => 'required|string|max:500'
         ]);
 
-        // Verificar si ya existe una solicitud pendiente para este estudiante
         $existingRequest = SysRequest::where('student_id', $request->student_id)
-            ->where('request_type_id', 3) // Cambio de colegiatura
+            ->where('request_type_id', 3)
             ->whereNull('approved')
             ->first();
 
@@ -261,7 +257,7 @@ class StudentController extends Controller
         }
 
         SysRequest::create([
-            'request_type_id' => 3, // Cambio de colegiatura
+            'request_type_id' => 3,
             'description' => 'Nueva colegiatura: $' . number_format($request->new_tuition, 2) . ' - ' . $request->reason,
             'user_id' => Auth::id(),
             'student_id' => $request->student_id
@@ -304,16 +300,12 @@ class StudentController extends Controller
         $student_id = $request->student_id;
         $document_id = $request->document_id;
 
-        // Obtener el nombre del documento
         $document = \App\Models\StudentDocument::find($document_id);
 
-        // Crear directorio si no existe
         $directory = 'profiles/' . $student_id;
 
-        // Generar nombre de archivo basado en el nombre del documento
         $fileName = str_replace(' ', '_', strtolower($document->name)) . '.' . $request->document_file->extension();
 
-        // Verificar si ya existe un archivo con este nombre base y eliminarlo
         $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
         foreach ($extensions as $ext) {
             $existingFile = $directory . '/' . str_replace(' ', '_', strtolower($document->name)) . '.' . $ext;
@@ -322,10 +314,8 @@ class StudentController extends Controller
             }
         }
 
-        // Guardar el archivo
         $request->document_file->storeAs($directory, $fileName);
 
-        // Actualizar el estado en la tabla pivot
         $student = Student::find($student_id);
         $student->documents()->updateExistingPivot($document_id, ['uploaded' => true]);
 
@@ -345,7 +335,6 @@ class StudentController extends Controller
         $directory = 'profiles/' . $student_id;
         $baseFileName = str_replace(' ', '_', strtolower($document->name));
 
-        // Buscar el archivo con cualquier extensión permitida
         $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
         $filePath = null;
 
