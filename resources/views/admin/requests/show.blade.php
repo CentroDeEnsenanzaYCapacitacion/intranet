@@ -44,16 +44,20 @@
                                 <td class="text-uppercase">{{ $request->user->name}}</td>
                                 <td class="text-uppercase">{{ $request->user->crew->name}}</td>
                                 <td class="text-center">
-                                    @if($request->request_type_id == 3)
+                                    @if(in_array(Auth::user()->role_id, [1, 2]))
+                                        @if($request->request_type_id == 3)
 
-                                        <span class="material-symbols-outlined bg-done"><a onclick="showLoader(true)" href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}">done</a></span>
-                                        <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)" href="{{ route('admin.requests.edit',['request_id' => $request->id]) }}">edit</a></span>
-                                        <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('request',{{ $request->id }})">close</a></span>
+                                            <span class="material-symbols-outlined bg-done"><a onclick="showLoader(true)" href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}">done</a></span>
+                                            <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)" href="{{ route('admin.requests.edit',['request_id' => $request->id]) }}">edit</a></span>
+                                            <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('request',{{ $request->id }})">close</a></span>
+                                        @else
+
+                                            <span class="material-symbols-outlined bg-done"><a onclick="showLoader(true)" href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}">done</a></span>
+                                            <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)" href="{{ route('admin.requests.edit',['request_id' => $request->id]) }}">edit</a></span>
+                                            <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('request',{{ $request->id }})">close</a></span>
+                                        @endif
                                     @else
-
-                                        <span class="material-symbols-outlined bg-done"><a onclick="showLoader(true)" href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}">done</a></span>
-                                        <span class="material-symbols-outlined bg-edit"><a onclick="showLoader(true)" href="{{ route('admin.requests.edit',['request_id' => $request->id]) }}">edit</a></span>
-                                        <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('request',{{ $request->id }})">close</a></span>
+                                        <span class="text-muted">Solo lectura</span>
                                     @endif
                                 </td>
                             </tr>

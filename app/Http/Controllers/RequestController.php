@@ -11,7 +11,7 @@ class RequestController extends Controller
     public function __construct()
     {
 
-        $this->middleware('role:1,2');
+        $this->middleware('role:1,2,3,5');
     }
 
     public function getRequests()
@@ -26,6 +26,10 @@ class RequestController extends Controller
     }
 
     public function updateRequest($request_id,$action){
+        if (!in_array(auth()->user()->role_id, [1, 2])) {
+            abort(403, 'No tienes permisos para realizar esta acción.');
+        }
+
         $sysrequest = SysRequest::find($request_id);
         if($action==="approve"){
             $sysrequest->approved = true;
@@ -48,11 +52,19 @@ class RequestController extends Controller
     }
 
     public function editRequest($request_id){
+        if (!in_array(auth()->user()->role_id, [1, 2])) {
+            abort(403, 'No tienes permisos para realizar esta acción.');
+        }
+
         $request = SysRequest::find($request_id);
         return view('admin.requests.edit',compact('request'));
     }
 
     public function changePercentage(Request $request,$request_id){
+        if (!in_array(auth()->user()->role_id, [1, 2])) {
+            abort(403, 'No tienes permisos para realizar esta acción.');
+        }
+
         $sysrequest = SysRequest::find($request_id);
         $array = explode("-",$sysrequest->description);
         $reason = $array[1];
@@ -65,6 +77,10 @@ class RequestController extends Controller
 
     public function changeTuition(Request $request, $request_id)
     {
+        if (!in_array(auth()->user()->role_id, [1, 2])) {
+            abort(403, 'No tienes permisos para realizar esta acción.');
+        }
+
         $request->validate([
             'new_tuition' => 'required|numeric|min:0.01'
         ]);

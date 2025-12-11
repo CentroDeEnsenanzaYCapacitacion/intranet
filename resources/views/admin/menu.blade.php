@@ -27,7 +27,7 @@
             </a>
         </div>
         @endif
-        @if (in_array(Auth::user()->role_id, [1, 2]))
+        @if (in_array(Auth::user()->role_id, [1, 2, 3, 5]))
         <div class="col-md-4 d-flex justify-content-center mb-5">
             <a id="adminUsers" id="adminUsers" href="{{route('admin.requests.show')}}">
                 <div class="card align-content-center cc">
