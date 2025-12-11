@@ -19,7 +19,9 @@
                             <th>Descripción</th>
                             <th>Solicitado por</th>
                             <th>Plantel</th>
+                            @if(Auth::user()->role_id === 1)
                             <th>Acciones</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +45,7 @@
                                 <td class="text-uppercase">{{ $request->description}}</td>
                                 <td class="text-uppercase">{{ $request->user->name}}</td>
                                 <td class="text-uppercase">{{ $request->user->crew->name}}</td>
+                                @if(Auth::user()->role_id === 1)
                                 <td class="text-center">
                                     @if($request->request_type_id == 3)
 
@@ -56,6 +59,7 @@
                                         <span class="material-symbols-outlined bg-red"><a onclick="confirmDelete('request',{{ $request->id }})">close</a></span>
                                     @endif
                                 </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
