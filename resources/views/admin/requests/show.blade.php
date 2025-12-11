@@ -44,7 +44,7 @@
                                 <td class="text-uppercase">{{ $request->user->name}}</td>
                                 <td class="text-uppercase">{{ $request->user->crew->name}}</td>
                                 <td class="text-center">
-                                    @if(in_array(Auth::user()->role_id, [1, 2]))
+                                    @if(Auth::user()->role_id === 1)
                                         @if($request->request_type_id == 3)
 
                                             <span class="material-symbols-outlined bg-done"><a onclick="showLoader(true)" href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}">done</a></span>

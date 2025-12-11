@@ -26,7 +26,7 @@ class RequestController extends Controller
     }
 
     public function updateRequest($request_id,$action){
-        if (!in_array(auth()->user()->role_id, [1, 2])) {
+        if (auth()->user()->role_id !== 1) {
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
 
@@ -52,7 +52,7 @@ class RequestController extends Controller
     }
 
     public function editRequest($request_id){
-        if (!in_array(auth()->user()->role_id, [1, 2])) {
+        if (auth()->user()->role_id !== 1) {
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
 
@@ -61,7 +61,7 @@ class RequestController extends Controller
     }
 
     public function changePercentage(Request $request,$request_id){
-        if (!in_array(auth()->user()->role_id, [1, 2])) {
+        if (auth()->user()->role_id !== 1) {
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
 
@@ -77,7 +77,7 @@ class RequestController extends Controller
 
     public function changeTuition(Request $request, $request_id)
     {
-        if (!in_array(auth()->user()->role_id, [1, 2])) {
+        if (auth()->user()->role_id !== 1) {
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
 
