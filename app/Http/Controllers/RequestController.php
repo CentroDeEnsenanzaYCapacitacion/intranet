@@ -16,11 +16,30 @@ class RequestController extends Controller
 
     public function getRequests()
     {
-        $requests = SysRequest::whereNull('approved')->get();
-        $old_requests = SysRequest::whereNotNull('approved')
-            ->where('updated_at', '>=', now()->subMonth())
-            ->orderBy('updated_at', 'desc')
-            ->get();
+        $user = auth()->user();
+
+        if ($user->role_id === 1) {
+            // Admin ve todas las solicitudes
+            $requests = SysRequest::whereNull('approved')->get();
+            $old_requests = SysRequest::whereNotNull('approved')
+                ->where('updated_at', '>=', now()->subMonth())
+                ->orderBy('updated_at', 'desc')
+                ->get();
+        } else {
+            // Otros roles solo ven solicitudes de su plantel
+            $requests = SysRequest::whereNull('approved')
+                ->whereHas('user', function($query) use ($user) {
+                    $query->where('crew_id', $user->crew_id);
+                })
+                ->get();
+            $old_requests = SysRequest::whereNotNull('approved')
+                ->where('updated_at', '>=', now()->subMonth())
+                ->whereHas('user', function($query) use ($user) {
+                    $query->where('crew_id', $user->crew_id);
+                })
+                ->orderBy('updated_at', 'desc')
+                ->get();
+        }
 
         return view('admin.requests.show', compact('requests','old_requests'));
     }
