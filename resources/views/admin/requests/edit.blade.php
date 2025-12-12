@@ -75,6 +75,9 @@
                     <div class="col">
                         <div class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                <input type="radio" value="10%" {{ $discount == '10%' ? 'checked' : '' }} class="btn-check" name="discount" id="discount10"  autocomplete="off">
+                                <label class="btn btn-outline-orange" for="discount10">10%</label>
+
                                 <input type="radio" value="30%" {{ $discount == '30%' ? 'checked' : '' }} class="btn-check" name="discount" id="discount30"  autocomplete="off">
                                 <label class="btn btn-outline-orange" for="discount30">30%</label>
 

@@ -19,6 +19,9 @@
                             <input type="radio" value="0" class="btn-check" name="discount" id="discount0"  autocomplete="off" checked>
                             <label class="btn btn-outline-orange" for="discount0">No aplicar descuento</label>
 
+                            <input type="radio" value="10" {{ session('selection') && session('selection') == '10' ? 'checked' : '' }} class="btn-check" name="discount" id="discount10"  autocomplete="off">
+                            <label class="btn btn-outline-orange" for="discount10">10%</label>
+
                             <input type="radio" value="30" {{ session('selection') && session('selection') == '30' ? 'checked' : '' }} class="btn-check" name="discount" id="discount30"  autocomplete="off">
                             <label class="btn btn-outline-orange" for="discount30">30%</label>
 
