@@ -3,13 +3,14 @@
 @section('content')
 <div class="card shadow ccont">
     <div class="card-body">
-        @if($request->request_type_id == 3)
-
-            <div class="row d-flex text-center mt-3">
-                <div class="col">
-                    <h1>Cambio de colegiatura</h1>
-                </div>
+        <div class="row d-flex text-center mt-3">
+            <div class="col">
+                <h1>{{ $request->requestType->name }}</h1>
             </div>
+        </div>
+
+        @if($request->request_type_id == 3)
+            {{-- Cambio de colegiatura --}}
             <div class="row mt-4">
                 <div class="col-md-6 offset-md-3">
                     <div class="mb-3">
@@ -26,7 +27,6 @@
                         <p class="form-control-plaintext">${{ number_format($request->student->tuition ?? 0, 2) }}</p>
                     </div>
                     @php
-
                         preg_match('/Nueva colegiatura: \$([\d,\.]+)/', $request->description, $matches);
                         $newTuition = isset($matches[1]) ? str_replace(',', '', $matches[1]) : '';
                         $reason = preg_replace('/Nueva colegiatura: \$[\d,\.]+ - /', '', $request->description);
@@ -49,56 +49,19 @@
                 </div>
             </div>
         @else
-
-            <div class="row d-flex text-center mt-3">
-                <div class="col">
-                    <h1>Cambio de porcentaje de inscripción</h1>
-                </div>
-            </div>
-            @if($request->report)
+            {{-- Otros tipos de solicitudes --}}
             <div class="row mt-4">
                 <div class="col-md-6 offset-md-3">
                     <div class="mb-3">
-                        <label class="form-label"><b>Prospecto:</b></label>
-                        <p class="form-control-plaintext">{{ $request->report->surnames }}, {{ $request->report->name }}</p>
+                        <label class="form-label"><b>Descripción:</b></label>
+                        <p class="form-control-plaintext">{{ $request->description }}</p>
+                    </div>
+                    <div class="text-center mt-4">
+                        <p class="text-muted">Esta solicitud no requiere edición.</p>
+                        <a href="{{ route('admin.requests.show') }}" class="btn btn-outline-secondary">Volver</a>
                     </div>
                 </div>
             </div>
-            @endif
-            <form id="myForm" action="{{ route('admin.requests.changePercentage',['request_id'=>$request->id]) }}" method="POST">
-                @csrf
-                @php
-                    $array = explode("-",$request->description);
-                    $discount = trim($array[0]);
-                @endphp
-                <div class="row d-flex text-center mt-3">
-                    <div class="col">
-                        <div class="text-center">
-                            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                <input type="radio" value="10%" {{ $discount == '10%' ? 'checked' : '' }} class="btn-check" name="discount" id="discount10"  autocomplete="off">
-                                <label class="btn btn-outline-orange" for="discount10">10%</label>
-
-                                <input type="radio" value="30%" {{ $discount == '30%' ? 'checked' : '' }} class="btn-check" name="discount" id="discount30"  autocomplete="off">
-                                <label class="btn btn-outline-orange" for="discount30">30%</label>
-
-                                <input type="radio" value="50%" {{ $discount == '50%' ? 'checked' : '' }} class="btn-check" name="discount" id="discount50"  autocomplete="off">
-                                <label class="btn btn-outline-orange" for="discount50">50%</label>
-
-                                <input type="radio" value="100%" {{ $discount == '100%' ? 'checked' : '' }} class="btn-check" name="discount" id="discount100"  autocomplete="off">
-                                <label class="btn btn-outline-orange" for="discount100">100%</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row d-flex text-center mt-5">
-                    <div class="col">
-                        <div class="text-center">
-                            <button onclick="showLoader(true)" id="sign" class="btn bg-orange text-white" type="submit">Cambiar porcentaje</button>
-                            <a href="{{ route('admin.requests.show') }}" class="btn btn-outline-secondary ms-2">Cancelar</a>
-                        </div>
-                    </div>
-                </div>
-            </form>
         @endif
     </div>
 </div>

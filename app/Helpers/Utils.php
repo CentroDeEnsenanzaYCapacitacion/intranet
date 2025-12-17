@@ -41,7 +41,7 @@ class Utils
             }
         }
 
-        Receipt::create([
+        return Receipt::create([
             'crew_id' => $crew_id,
             'user_id' => Auth::user()->id,
             'receipt_type_id' => $receipt_type_id,

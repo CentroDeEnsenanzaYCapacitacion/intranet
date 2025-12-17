@@ -114,29 +114,6 @@ class ReportController extends Controller
             return back()->withErrors(['duplicado' => 'Ya existen estudiantes con datos similares:<br>' . implode('<br>', $matches)]);
         }
 
-        if ($request->filled('price_explanation')) {
-            $amount_record = \App\Models\Amount::where('crew_id', 1)
-                ->where('course_id', $report->course_id)
-                ->where('receipt_type_id', 1)
-                ->first();
-
-            if ($amount_record) {
-                $catalog_amount = $amount_record->amount;
-                $entered_amount = $request->amount;
-
-                \App\Models\SysRequest::create([
-                    'user_id' => Auth::id(),
-                    'report_id' => $report->id,
-                    'request_type_id' => 1,
-                    'approved' => true,
-                    'description' => "DIFERENCIA DE PRECIO\n" .
-                                   "Precio catálogo: $" . number_format($catalog_amount, 2) . "\n" .
-                                   "Precio cobrado: $" . number_format($entered_amount, 2) . "\n" .
-                                   "Explicación: " . $request->price_explanation
-                ]);
-            }
-        }
-
         session([
             'report' => $report,
             'card_payment' => ($request->card_payment == null) ? 1 : 2,

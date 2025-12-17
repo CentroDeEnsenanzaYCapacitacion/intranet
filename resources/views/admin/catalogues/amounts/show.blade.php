@@ -37,7 +37,13 @@
                         <tbody>
                             @foreach ($amounts as $amount)
                                 <tr>
-                                    <td class="text-uppercase">{{ $amount->crew->name }}</td>
+                                    <td class="text-uppercase">
+                                        @if($amount->crew_id == 1)
+                                            <span class="badge bg-success">TODOS LOS PLANTELES</span>
+                                        @else
+                                            {{ $amount->crew->name }}
+                                        @endif
+                                    </td>
                                     <td class="text-uppercase">{{ $amount->receiptType->name }}</td>
                                     <td class="text-uppercase">
                                         @isset($amount->course)

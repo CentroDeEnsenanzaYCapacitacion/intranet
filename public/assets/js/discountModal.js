@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                console.log(this.responseText);
                 editModal.hide();
                 window.location.reload();
             }
@@ -59,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function() {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                console.log(this.responseText);
                 deleteModal.hide();
                 window.location.reload();
             }
@@ -67,4 +65,3 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.send("userId=" + encodeURIComponent(userId));
     });
 });
-

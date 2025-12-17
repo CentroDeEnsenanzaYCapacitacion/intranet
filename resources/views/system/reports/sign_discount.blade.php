@@ -1,62 +1,71 @@
 @extends('layout.mainLayout')
-@section('title','Descuento de inscripción')
+@section('title','Inscripción')
 @section('content')
 <div class="card shadow ccont">
     <div class="card-body">
         <div class="row d-flex text-center mt-3">
             <div class="col">
-                <h1>Selecciona un descuento para esta inscripción</h1>
+                <h1>Inscripción de nuevo alumno</h1>
             </div>
         </div>
-        <form id="noDiscountForm" action="{{ route('system.report.receiptorrequest') }}" method="POST">
+        <form id="inscriptionForm" action="{{ route('system.report.receiptorrequest') }}" method="POST">
             @csrf
             <input type="hidden" value="{{ $report_id }}" name="report_id">
             <input type="hidden" value="{{ $report->course->name ?? '' }}" id="courseName">
-            <div class="row d-flex text-center mt-5">
-                <div class="col">
-                    <div class="text-center">
-                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" value="0" class="btn-check" name="discount" id="discount0"  autocomplete="off" checked>
-                            <label class="btn btn-outline-orange" for="discount0">No aplicar descuento</label>
+            <input type="hidden" value="{{ $report->course_id ?? '' }}" id="courseId">
 
-                            <input type="radio" value="10" {{ session('selection') && session('selection') == '10' ? 'checked' : '' }} class="btn-check" name="discount" id="discount10"  autocomplete="off">
-                            <label class="btn btn-outline-orange" for="discount10">10%</label>
+            @php
+                $isBachilleratoExamen = stripos($report->course->name ?? '', 'BACHILLERATO EN UN EXAMEN') !== false;
+            @endphp
 
-                            <input type="radio" value="30" {{ session('selection') && session('selection') == '30' ? 'checked' : '' }} class="btn-check" name="discount" id="discount30"  autocomplete="off">
-                            <label class="btn btn-outline-orange" for="discount30">30%</label>
-
-                            <input type="radio" value="50" {{ session('selection') && session('selection') == '50' ? 'checked' : '' }} class="btn-check" name="discount" id="discount50"  autocomplete="off">
-                            <label class="btn btn-outline-orange" for="discount50">50%</label>
-
-                            <input type="radio" value="100" {{ session('selection') && session('selection') == '100' ? 'checked' : '' }} class="btn-check" name="discount" id="discount100"  autocomplete="off">
-                            <label class="btn btn-outline-orange" for="discount100">100%</label>
+            @if(!$isBachilleratoExamen)
+                <div class="row d-flex text-center mt-5">
+                    <div class="col">
+                        <div class="text-center">
+                            <label for="amount" class="form-label h5">Importe de inscripción</label>
+                            <div class="input-group mb-3 mx-auto" style="max-width: 300px;">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" min="0" class="form-control" id="amount" name="amount" placeholder="0.00" required>
+                            </div>
                         </div>
                     </div>
-                    <span id="discountText">El descuento seleccionado será enviado para su aprobación.</span>
                 </div>
-            </div>
-            <div class="row d-flex text-center mt-3">
-                <div class="col">
-                    <div class="text-center" id="card">
-                        <input class="form-check-input" name="card_payment" type="checkbox" value="card" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Pago con tarjeta
-                        </label>
+
+                <div class="row d-flex text-center mt-3">
+                    <div class="col">
+                        <div class="text-center">
+                            <input class="form-check-input" name="card_payment" type="checkbox" value="card" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Pago con tarjeta
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row d-flex text-center mt-3">
-                <div class="col">
-                    <div class="text-center" id="txtReason" style="display: none;">
-                        <label for="exampleTextarea" class="form-label">Motivo del descuento</label>
-                        <textarea class="form-control text-uppercase" id="reason" name="reason" rows="3"></textarea>
+
+                <div class="row d-flex text-center mt-3" id="explanationContainer" style="display: none;">
+                    <div class="col">
+                        <div class="text-center">
+                            <label for="price_explanation" class="form-label h5 text-danger">El importe es diferente al registrado. Por favor, explica la razón:</label>
+                            <textarea class="form-control mx-auto" style="max-width: 500px;" id="price_explanation" name="price_explanation" rows="3" placeholder="Escribe aquí la razón de la diferencia de precio..."></textarea>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @else
+                <input type="hidden" name="amount" value="0">
+                <div class="row d-flex text-center mt-5">
+                    <div class="col">
+                        <div class="alert alert-info">
+                            <strong>Curso: {{ $report->course->name }}</strong><br>
+                            Este curso no requiere importe de inscripción.
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="row d-flex text-center mt-5">
                 <div class="col">
                     <div class="text-center">
-                        <button onclick="showLoader(true)" id=sign class="btn bg-orange text-white w-25" type="submit">Inscribir</button><br><br>
+                        <button onclick="showLoader(true)" class="btn bg-orange text-white w-25" type="submit">Inscribir</button><br><br>
                         <a class="btn btn-outline-orange text-white w-25" href="{{ route('system.reports.show') }}">Cancelar</a>
                     </div>
                 </div>
@@ -83,6 +92,5 @@
 
 @endsection
 @push('scripts')
-<script src="{{ asset('assets/js/sign.js') }}"></script>
 <script src="{{ asset('assets/js/no_discount_redirection.js') }}"></script>
 @endpush

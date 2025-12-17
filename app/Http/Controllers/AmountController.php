@@ -61,40 +61,15 @@ class AmountController extends Controller
 
     public function generateAmounts()
     {
-        $automatic_types = ReceiptType::where('automatic_amount', true)->get();
-        $no_automatic_types = ReceiptType::where('automatic_amount', false)->get();
         $courses = Course::all();
-        $crews = Crew::all();
         $amounts = Amount::all();
 
         $amounts_to_store = [];
 
         foreach($courses as $course) {
-            if($course->crew->name == "Todos") {
-                foreach($crews as $crew) {
-                    if($crew->id > 1) {
-                        foreach($automatic_types as $type) {
-                            $amount = $this->searchAmount($amounts, $crew->id, $course->id, $type->id);
-                            if(!$amount) {
-                                $this->createAmount($amounts_to_store, $crew->id, $course->id, $type->id);
-                            }
-                        }
-                    }
-                }
-            } else {
-                foreach($automatic_types as $type) {
-                    $amount = $this->searchAmount($amounts, $course->crew_id, $course->id, $type->id);
-                    if(!$amount) {
-                        $this->createAmount($amounts_to_store, $course->crew_id, $course->id, $type->id);
-                    }
-                }
-            }
-        }
-
-        foreach($no_automatic_types as $type) {
-            $amount = $this->searchAmount($amounts, 1, null, $type->id);
+            $amount = $this->searchAmount($amounts, 1, $course->id, 1);
             if(!$amount) {
-                $this->createAmount($amounts_to_store, 1, null, $type->id);
+                $this->createAmount($amounts_to_store, 1, $course->id, 1);
             }
         }
 
