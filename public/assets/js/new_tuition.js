@@ -51,6 +51,7 @@ document.getElementById("earlyDiscountPercentage").addEventListener("input", fun
 
 var selections = [];
 var baseAmountNumeric = 0;
+var tuition_results = { number: 1, isAdvance: false };
 
 function showVoucherInput() {
     var voucher = document.getElementById("voucher");
@@ -270,20 +271,43 @@ function calculateTuitionNumber() {
         return { number: 1, isAdvance: false };
     }
 
+    const tuitionGroups = {};
+
     for (const receipt of student_tuition_receipts) {
-        if (receipt.receipt_attribute_id == 1) {
+        const conceptParts = receipt.concept.split("#");
+        if (conceptParts.length > 1) {
+            const numberPart = conceptParts[1].trim().split(" ")[0];
+            const tuitionNumber = Number(numberPart);
+
+            if (!isNaN(tuitionNumber) && tuitionNumber > 0) {
+                if (!tuitionGroups[tuitionNumber]) {
+                    tuitionGroups[tuitionNumber] = [];
+                }
+                tuitionGroups[tuitionNumber].push(receipt);
+            }
+        }
+    }
+
+    const tuitionNumbers = Object.keys(tuitionGroups).map(Number).sort((a, b) => b - a);
+    const maxTuitionNumber = tuitionNumbers[0] || 0;
+
+    if (maxTuitionNumber > 0) {
+        const lastTuitionReceipts = tuitionGroups[maxTuitionNumber];
+
+        const allAreAdvances = lastTuitionReceipts.every(r => r.receipt_attribute_id == 1);
+
+        if (allAreAdvances) {
             return {
-                number: Number(receipt.concept.split("#")[1].trim()),
+                number: maxTuitionNumber,
                 isAdvance: true,
-            };
-        } else {
-            return {
-                number: Number(receipt.concept.split("#")[1].trim()) + 1,
-                isAdvance: false,
             };
         }
     }
 
+    return {
+        number: maxTuitionNumber + 1,
+        isAdvance: false,
+    };
 }
 
 function retrieveSelectedItems(isAdvance = false) {

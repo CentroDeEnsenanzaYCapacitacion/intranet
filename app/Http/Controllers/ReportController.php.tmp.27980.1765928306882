@@ -127,12 +127,10 @@ class ReportController extends Controller
                 \App\Models\SysRequest::create([
                     'user_id' => Auth::id(),
                     'report_id' => $report->id,
-                    'request_type_id' => 1,
-                    'approved' => true,
-                    'description' => "DIFERENCIA DE PRECIO\n" .
-                                   "Precio catálogo: $" . number_format($catalog_amount, 2) . "\n" .
-                                   "Precio cobrado: $" . number_format($entered_amount, 2) . "\n" .
-                                   "Explicación: " . $request->price_explanation
+                    'request_type_id' => 4, 
+                    'description' => "Diferencia de precio de inscripción\nPrecio catálogo: $" . number_format($catalog_amount, 2) .
+                                   "\nPrecio cobrado: $" . number_format($entered_amount, 2) .
+                                   "\nExplicación: " . $request->price_explanation
                 ]);
             }
         }

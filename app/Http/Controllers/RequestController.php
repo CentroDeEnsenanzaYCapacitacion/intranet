@@ -19,20 +19,23 @@ class RequestController extends Controller
         $user = auth()->user();
 
         if ($user->role_id === 1) {
-            // Admin ve todas las solicitudes
-            $requests = SysRequest::whereNull('approved')->get();
+            $requests = SysRequest::whereNull('approved')
+                ->where('request_type_id', '!=', 1)
+                ->get();
             $old_requests = SysRequest::whereNotNull('approved')
+                ->where('request_type_id', '!=', 1)
                 ->where('updated_at', '>=', now()->subMonth())
                 ->orderBy('updated_at', 'desc')
                 ->get();
         } else {
-            // Otros roles solo ven solicitudes de su plantel
             $requests = SysRequest::whereNull('approved')
+                ->where('request_type_id', '!=', 1)
                 ->whereHas('user', function($query) use ($user) {
                     $query->where('crew_id', $user->crew_id);
                 })
                 ->get();
             $old_requests = SysRequest::whereNotNull('approved')
+                ->where('request_type_id', '!=', 1)
                 ->where('updated_at', '>=', now()->subMonth())
                 ->whereHas('user', function($query) use ($user) {
                     $query->where('crew_id', $user->crew_id);
