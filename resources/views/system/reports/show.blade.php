@@ -50,7 +50,7 @@
                                 <td class="text-uppercase">{{ $report->marketing->name}}</td>
                                 <td class="text-uppercase">{{ $report->crew->name}}</td>
                                 <td class="text-center align-items-center">
-                                    <a href="{{ route('system.reports.signdiscount', ['report_id'=> $report->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
+                                    <a href="{{ route('system.reports.setamount', ['report_id'=> $report->id ] ) }}" class="clean-button"><span class="material-symbols-outlined bg-edit">resume</span></a>
                                 </td>
                             </tr>
                         @endforeach

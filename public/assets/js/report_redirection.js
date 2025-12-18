@@ -8,6 +8,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const explanationTextarea = document.getElementById("price_explanation");
     let catalogAmount = null;
 
+    // Keep the explanation hidden on first load
+    if (explanationContainer) {
+        explanationContainer.classList.add('d-none');
+        explanationContainer.style.display = 'none';
+    }
+    if (explanationTextarea) {
+        explanationTextarea.required = false;
+    }
+
     if (courseId && amountInput) {
         fetch('/system/get-inscription-amount/' + courseId)
             .then(response => response.json())
@@ -15,6 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.amount !== null) {
                     catalogAmount = parseFloat(data.amount);
                 }
+                // Re-evaluate once the catalog amount is known (handles prefilled values)
+                checkPriceDifference();
             })
             .catch(error => {
                 console.error('Error al obtener el monto del catálogo:', error);
@@ -32,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!isNaN(enteredAmount) && Math.abs(enteredAmount - catalogAmount) > 0.01) {
             if (explanationContainer) {
+                explanationContainer.classList.remove('d-none');
                 explanationContainer.style.display = 'block';
                 if (explanationTextarea) {
                     explanationTextarea.required = true;
@@ -39,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } else {
             if (explanationContainer) {
+                explanationContainer.classList.add('d-none');
                 explanationContainer.style.display = 'none';
                 if (explanationTextarea) {
                     explanationTextarea.required = false;
@@ -119,6 +132,13 @@ function submitFormInNewTab(form) {
 function displayError(message) {
     const errorContainer = document.getElementById("error-container");
     const errorList = document.getElementById("error-list");
+    if (!errorContainer || !errorList) return;
+
     errorList.innerHTML = `<li>${message}</li>`;
     errorContainer.style.display = "block";
+
+    const header = document.querySelector(".header-fixed");
+    const offset = header ? header.offsetHeight + 10 : 0;
+    const top = errorContainer.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top, behavior: "smooth" });
 }

@@ -232,6 +232,10 @@ a:hover {
     margin-bottom: 25px;
 }
 
+.ccont-compact {
+    margin-top: 40px !important;
+}
+
 .custom-container {
     max-width: 1500px;
 }
@@ -263,4 +267,8 @@ a:hover {
 #receipt_amount,
 #voucher_input {
     width: 25%;
+}
+
+#error-container {
+    scroll-margin-top: 100px;
 }
