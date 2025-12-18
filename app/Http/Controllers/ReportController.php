@@ -7,6 +7,7 @@ use App\Http\Requests\ReportRequest;
 use App\Models\Course;
 use App\Models\Crew;
 use App\Models\Marketing;
+use App\Models\PriceAdjustment;
 use App\Models\Report;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -16,7 +17,6 @@ class ReportController extends Controller
 {
     public function __construct()
     {
-
         $this->middleware('role:1,4,6');
     }
 
@@ -26,8 +26,8 @@ class ReportController extends Controller
             $crew_reports = Report::where('signed', false)->get();
         } else {
             $crew_reports = Report::where('crew_id', Auth::user()->crew_id)
-                                    ->where('signed', false)
-                                    ->get();
+                ->where('signed', false)
+                ->get();
         }
 
         return view('system.reports.show', compact('crew_reports'));
@@ -35,13 +35,9 @@ class ReportController extends Controller
 
     public static function updateReport($report_id)
     {
-
         $report = Report::find($report_id);
-
         $report->signed = true;
-
         $report->save();
-
     }
 
     public function validateAmount(Request $request)
@@ -76,8 +72,8 @@ class ReportController extends Controller
                 'report_id' => 'required|exists:reports,id',
                 'amount' => 'required|numeric|min:0'
             ], [
-                'amount.required' => 'El importe de inscripción es obligatorio',
-                'amount.numeric' => 'El importe debe ser un número válido',
+                'amount.required' => 'El importe de inscripcion es obligatorio',
+                'amount.numeric' => 'El importe debe ser un numero valido',
                 'amount.min' => 'El importe no puede ser negativo'
             ]);
         } else {
@@ -85,18 +81,18 @@ class ReportController extends Controller
                 'report_id' => 'required|exists:reports,id',
                 'amount' => 'required|numeric|min:0.01'
             ], [
-                'amount.required' => 'El importe de inscripción es obligatorio',
-                'amount.numeric' => 'El importe debe ser un número válido',
+                'amount.required' => 'El importe de inscripcion es obligatorio',
+                'amount.numeric' => 'El importe debe ser un numero valido',
                 'amount.min' => 'El importe debe ser mayor a 0'
             ]);
         }
 
-        $duplicateStudents = Student::where(function($query) use ($report) {
+        $duplicateStudents = Student::where(function ($query) use ($report) {
             $query->where('name', $report->name)
-                  ->where('surnames', $report->surnames);
+                ->where('surnames', $report->surnames);
         })
-        ->orWhere('email', $report->email)
-        ->get();
+            ->orWhere('email', $report->email)
+            ->get();
 
         if ($duplicateStudents->isNotEmpty()) {
             $matches = [];
@@ -120,21 +116,15 @@ class ReportController extends Controller
                 ->where('receipt_type_id', 1)
                 ->first();
 
-            if ($amount_record) {
-                $catalog_amount = $amount_record->amount;
-                $entered_amount = $request->amount;
+            $catalog_amount = $amount_record ? $amount_record->amount : null;
 
-                \App\Models\SysRequest::create([
-                    'user_id' => Auth::id(),
-                    'report_id' => $report->id,
-                    'request_type_id' => 1,
-                    'approved' => true,
-                    'description' => "DIFERENCIA DE PRECIO\n" .
-                                   "Precio catálogo: $" . number_format($catalog_amount, 2) . "\n" .
-                                   "Precio cobrado: $" . number_format($entered_amount, 2) . "\n" .
-                                   "Explicación: " . $request->price_explanation
-                ]);
-            }
+            PriceAdjustment::create([
+                'user_id' => Auth::id(),
+                'report_id' => $report->id,
+                'catalog_amount' => $catalog_amount,
+                'entered_amount' => $request->amount,
+                'price_explanation' => $request->price_explanation
+            ]);
         }
 
         session([
@@ -175,7 +165,6 @@ class ReportController extends Controller
 
     public function newReport()
     {
-
         $courses = Course::all();
         $marketings = Marketing::all();
         $crews = Crew::all();
@@ -184,17 +173,16 @@ class ReportController extends Controller
 
     public function insertReport(ReportRequest $request)
     {
-
-        $duplicates = Report::where(function($query) use ($request) {
+        $duplicates = Report::where(function ($query) use ($request) {
             $query->where('name', $request->name)
-                  ->where('surnames', $request->surnames);
+                ->where('surnames', $request->surnames);
         })
-        ->orWhere('email', $request->email)
-        ->orWhere(function($query) use ($request) {
-            $query->where('phone', $request->phone)
-                  ->orWhere('cel_phone', $request->cel_phone);
-        })
-        ->get();
+            ->orWhere('email', $request->email)
+            ->orWhere(function ($query) use ($request) {
+                $query->where('phone', $request->phone)
+                    ->orWhere('cel_phone', $request->cel_phone);
+            })
+            ->get();
 
         if ($duplicates->isNotEmpty()) {
             $matches = [];
@@ -207,14 +195,16 @@ class ReportController extends Controller
                     $reasons[] = 'email';
                 }
                 if ($dup->phone == $request->phone || $dup->cel_phone == $request->cel_phone) {
-                    $reasons[] = 'teléfono';
+                    $reasons[] = 'telefono';
                 }
                 $matches[] = "Informe #{$dup->id}: {$dup->name} {$dup->surnames} (coincide: " . implode(', ', $reasons) . ")";
             }
 
+            $message = "Se encontraron informes similares:\n" . implode("\n", $matches);
+
             return redirect()->back()
                 ->withInput()
-                ->withErrors(['duplicado' => 'Se encontraron informes similares:<br>' . implode('<br>', $matches)]);
+                ->withErrors(['duplicado' => $message]);
         }
 
         $report = Report::create([
@@ -232,8 +222,8 @@ class ReportController extends Controller
 
         if ($report) {
             return redirect()->route('system.reports.show');
-        } else {
-            return redirect()->route('system.report.new')->with('error', 'error al guardar informe');
         }
+
+        return redirect()->route('system.report.new')->with('error', 'error al guardar informe');
     }
 }
