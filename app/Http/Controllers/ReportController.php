@@ -170,7 +170,7 @@ class ReportController extends Controller
     public function signDiscount($report_id)
     {
         $report = Report::with('course')->findOrFail($report_id);
-        return view('system.reports.sign_discount', compact('report_id', 'report'));
+        return view('system.reports.set_amount', compact('report_id', 'report'));
     }
 
     public function newReport()
