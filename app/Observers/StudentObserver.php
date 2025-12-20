@@ -7,17 +7,39 @@ use App\Models\Amount;
 use App\Models\Student;
 use App\Models\StudentDocument;
 use App\Models\SysRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class StudentObserver
 {
+    public function creating(Student $student): void
+    {
+        // Generate password if not set
+        if (empty($student->password)) {
+            $plainPassword = Str::random(8);
+            $student->password = Hash::make($plainPassword);
+
+            // Store plain password in session temporarily
+            session(['temp_student_password' => $plainPassword]);
+        }
+    }
 
     public function created(Student $student): void
     {
+        // If password was generated, store it in session with student ID
+        if (session()->has('temp_student_password')) {
+            $plainPassword = session('temp_student_password');
+            session(['student_plain_password_' . $student->id => $plainPassword]);
+            session()->forget('temp_student_password');
+        }
+
         $documents = StudentDocument::all();
         foreach ($documents as $document) {
             $student->documents()->attach($document->id);
         }
 
+        /** @var \App\Models\Report|null $report */
         $report = session('report', null);
         $card_payment = session('card_payment', null);
         $inscription_amount = session('inscription_amount', null);
@@ -50,7 +72,7 @@ class StudentObserver
                     $amount = 0;
                 } else {
 
-                    \Log::warning('No se generó recibo de inscripción: monto no encontrado en tabla amounts', [
+                    Log::warning('No se generó recibo de inscripción: monto no encontrado en tabla amounts', [
                         'report_id' => $report->id,
                         'crew_id' => $report->crew_id,
                         'course_id' => $report->course_id,
