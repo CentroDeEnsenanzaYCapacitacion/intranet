@@ -65,7 +65,10 @@ class UserController extends Controller
 
             $roles = Role::where("id", 4)->get();
         } else {
-            $roles = Role::where("name", "!=", "admin")->where("name", "!=", "Director")->get();
+            $roles = Role::where("name", "!=", "admin")
+                ->where("name", "!=", "Director")
+                ->where("name", "!=", "profesor")
+                ->get();
         }
         $crews = Crew::all();
         return view('admin.users.new', compact('roles', 'crews'));
@@ -128,7 +131,16 @@ class UserController extends Controller
     public function editUser($id)
     {
         $user = User::find($id);
-        $roles = Role::all();
+        $currentUser = Auth::user();
+
+        if (in_array($currentUser->role_id, [1, 2])) {
+            $roles = Role::all();
+        } else {
+            $roles = Role::where("name", "!=", "admin")
+                ->where("name", "!=", "Director")
+                ->where("name", "!=", "profesor")
+                ->get();
+        }
         $crews = Crew::all();
 
         return view('admin.users.edit', compact('user', 'roles', 'crews'));

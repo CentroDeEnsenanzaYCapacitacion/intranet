@@ -15,9 +15,9 @@
             </a>
         </div>
         @endif
-        @if (in_array(Auth::user()->role_id, [1]))
+        @if (in_array(Auth::user()->role_id, [1, 7]))
         <div class="col-md-4 d-flex justify-content-center mb-5">
-            <a id="adminUsers" href="{{route('admin.catalogues.menu')}}">
+            <a id="cataloguesMenu" href="{{route('admin.catalogues.menu')}}">
                 <div class="card align-content-center cc">
                     <img class="menu_icon  d-block mx-auto" src="{{asset('assets/img/catalogues.png')}}">
                     <div class="card-body">
@@ -61,10 +61,10 @@
         @endif
     </div>
     <script>
-        document.getElementById('adminUsers').addEventListener('click', function() {
+        document.getElementById('adminUsers')?.addEventListener('click', function() {
             showLoader(true);
         });
-        document.getElementById('cataloguesMenu').addEventListener('click', function() {
+        document.getElementById('cataloguesMenu')?.addEventListener('click', function() {
             showLoader(true);
         });
     </script>
