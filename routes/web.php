@@ -65,6 +65,10 @@ Route::middleware(['auth'])->group(function () {
         return view('system.main');
     })->name('system.main');
 
+    Route::get('/system/grades/menu', function () {
+        return view('system.grades.menu');
+    })->name('system.grades.menu')->middleware('role:1,2,7');
+
     Route::get('/admin/stats_menu', function () {
         return view('admin.stats.menu');
     })->name('admin.stats.menu');

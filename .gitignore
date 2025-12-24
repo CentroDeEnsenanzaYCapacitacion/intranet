@@ -61,3 +61,5 @@ public/uploads/*
 public/index_dev.php
 public/index_prod.php
 public/create-storage-link-fixed.php
+
+CLAUDE.md

@@ -8,7 +8,7 @@ document
     .getElementById("newTuitionForm")
     .addEventListener("submit", function (event) {
         var conceptDiv = document.getElementById("conceptDiv").textContent;
-        var amountDiv = document.getElementById("amountDiv").textContent;
+    var amountDiv = document.getElementById("amountDiv").value;
         document.getElementById("conceptHidden").value = conceptDiv;
         document.getElementById("amountHidden").value = amountDiv;
     });
@@ -104,7 +104,7 @@ function updateAmountModifiers() {
 
     var baseAmount = typeof baseAmountNumeric === 'number' && !isNaN(baseAmountNumeric)
         ? baseAmountNumeric
-        : parseFloat(amountDiv.textContent.replace(/[^0-9.-]+/g, '')) || 0;
+        : parseFloat(amountDiv.value.replace(/[^0-9.-]+/g, '')) || 0;
 
     var finalAmount = baseAmount;
     var conceptSuffix = '';
@@ -122,7 +122,7 @@ function updateAmountModifiers() {
     }
 
     conceptDiv.textContent = baseConcept + conceptSuffix;
-    amountDiv.textContent = finalAmount.toLocaleString("es-MX", {
+    amountDiv.value = finalAmount.toLocaleString("es-MX", {
         style: "currency",
         currency: "MXN",
         minimumFractionDigits: 2,
@@ -136,7 +136,7 @@ function refresh_layout(tuitionNumber, isAdvance) {
     showVoucherInput();
     showColegiaturaOptions();
     document.getElementById("conceptDiv").textContent = concept;
-    document.getElementById("amountDiv").textContent = amount;
+    document.getElementById("amountDiv").value = amount;
 }
 
 function showColegiaturaOptions() {
