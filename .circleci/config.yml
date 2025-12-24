@@ -329,6 +329,23 @@ jobs:
               quit"
 
       - run:
+          name: Set APP_DEPLOY_DATE in .env (PROD)
+          command: |
+            export APP_DEPLOY_DATE="$(TZ=America/Mexico_City date '+%d/%m/%Y')"
+            echo "Setting APP_DEPLOY_DATE=$APP_DEPLOY_DATE"
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; get $intra_ftp_prod_path/.env -o .env.prod.remote; quit"
+            if [ ! -f .env.prod.remote ]; then
+              echo "Remote .env not found at $intra_ftp_prod_path/.env"
+              exit 1
+            fi
+            if grep -q '^APP_DEPLOY_DATE=' .env.prod.remote; then
+              sed -i "s|^APP_DEPLOY_DATE=.*|APP_DEPLOY_DATE=$APP_DEPLOY_DATE|" .env.prod.remote
+            else
+              echo "APP_DEPLOY_DATE=$APP_DEPLOY_DATE" >> .env.prod.remote
+            fi
+            lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; put .env.prod.remote -o $intra_ftp_prod_path/.env; quit"
+
+      - run:
           name: 🔁 Clear Laravel cache (PROD)
           command: |
             if [ -n "$CLEAR_CACHE_PROD_URL" ] && [ -n "$CLEAR_CACHE_TOKEN_PROD" ]; then

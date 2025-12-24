@@ -7,6 +7,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'deploy_date' => env('APP_DEPLOY_DATE'),
+
     'env' => env('APP_ENV', 'production'),
 
     'debug' => (bool) env('APP_DEBUG', false),
