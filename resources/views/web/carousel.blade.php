@@ -22,10 +22,26 @@
         </div>
     @endif
 
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+        <form action="{{ route('web.carousel.add') }}" method="post">
+            @csrf
+            <button type="submit" class="btn-modern btn-secondary" onclick="showLoader(true)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Agregar imagen
+            </button>
+        </form>
+    </div>
+
+    @php($carouselCount = $carousels->count())
+
     <form id="form" class="carousel-form" action="{{ route('web.carousel.post') }}" method="post" enctype="multipart/form-data">
         @csrf
 
-        @foreach($carousels as $index => $carousel)
+        @foreach($carousels as $carousel)
+            @php($carouselId = $carousel->id)
             <div class="modern-card mb-4">
                 <div class="card-header-modern">
                     <div class="header-title">
@@ -34,8 +50,24 @@
                             <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
                             <path d="M21 15L16 10L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        <h2>Imagen {{ $index + 1 }}</h2>
+                        <h2>Imagen {{ $loop->iteration }}</h2>
                     </div>
+                    @if($carouselCount > 1)
+                        <div class="header-actions">
+                            <button type="submit"
+                                    class="action-btn action-delete"
+                                    title="Eliminar imagen"
+                                    aria-label="Eliminar imagen"
+                                    formaction="{{ route('web.carousel.delete', $carouselId) }}"
+                                    formmethod="post"
+                                    onclick="return confirm('Eliminar esta imagen?');">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    @endif
                 </div>
 
                 <div style="padding: 24px;">
@@ -44,7 +76,7 @@
                             <div class="modern-field">
                                 <label>Vista previa</label>
                                 <div class="preview-box">
-                                    <img style="width: 100%; border-radius: 8px;" src="{{ asset('assets/img/carousel/' . ($index + 1) . '.jpg') . '?v=' . $carousel->updated_at->timestamp }}" onerror="replace_image(this);" alt="Imagen {{ $index + 1 }}"/>
+                                    <img style="width: 100%; border-radius: 8px;" src="{{ asset('assets/img/carousel/' . $carouselId . '.jpg') . '?v=' . $carousel->updated_at->timestamp }}" onerror="replace_image(this);" alt="Imagen {{ $loop->iteration }}"/>
                                 </div>
                             </div>
                         </div>
@@ -53,9 +85,9 @@
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <div class="modern-field">
-                                        <label for="img_{{ $index + 1 }}">Nueva imagen</label>
+                                        <label for="img_{{ $carouselId }}">Nueva imagen</label>
                                         <div class="file-input">
-                                            <input class="file-input-native" type="file" accept="image/jpeg, image/png" name="img_{{ $index + 1 }}" id="img_{{ $index + 1 }}">
+                                            <input class="file-input-native" type="file" accept="image/jpeg, image/png" name="img[{{ $carouselId }}]" id="img_{{ $carouselId }}">
                                             <span class="file-input-icon" aria-hidden="true">
                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M12 16V6M12 6L8 10M12 6L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -65,33 +97,33 @@
                                             <span class="file-input-text" data-default="Sin archivos seleccionados">Sin archivos seleccionados</span>
                                         </div>
                                     </div>
-                                    @if($errors->has('img_' . ($index + 1)))
+                                    @if($errors->has('img.' . $carouselId))
                                         <div style="color: #991b1b; font-size: 14px; margin-top: 4px;">
-                                            {{ $errors->first('img_' . ($index + 1)) }}
+                                            {{ $errors->first('img.' . $carouselId) }}
                                         </div>
                                     @endif
                                 </div>
 
                                 <div class="col-md-12 mb-3">
                                     <div class="modern-field">
-                                        <label for="title{{ $index + 1 }}">T&iacute;tulo</label>
-                                        <input class="form-control modern-input" type="text" name="title{{ $index + 1 }}" id="title{{ $index + 1 }}" value="{{ old('title' . ($index + 1), $carousel->title) }}">
+                                        <label for="title{{ $carouselId }}">T&iacute;tulo</label>
+                                        <input class="form-control modern-input" type="text" name="title[{{ $carouselId }}]" id="title{{ $carouselId }}" value="{{ old('title.' . $carouselId, $carousel->title) }}">
                                     </div>
-                                    @if($errors->has('title' . ($index + 1)))
+                                    @if($errors->has('title.' . $carouselId))
                                         <div style="color: #991b1b; font-size: 14px; margin-top: 4px;">
-                                            {{ $errors->first('title' . ($index + 1)) }}
+                                            {{ $errors->first('title.' . $carouselId) }}
                                         </div>
                                     @endif
                                 </div>
 
                                 <div class="col-md-12 mb-3">
                                     <div class="modern-field">
-                                        <label for="description{{ $index + 1 }}">Descripci&oacute;n</label>
-                                        <textarea class="form-control modern-textarea" name="description{{ $index + 1 }}" id="description{{ $index + 1 }}" rows="5">{{ old('description' . ($index + 1), $carousel->description) }}</textarea>
+                                        <label for="description{{ $carouselId }}">Descripci&oacute;n</label>
+                                        <textarea class="form-control modern-textarea" name="description[{{ $carouselId }}]" id="description{{ $carouselId }}" rows="5">{{ old('description.' . $carouselId, $carousel->description) }}</textarea>
                                     </div>
-                                    @if($errors->has('description' . ($index + 1)))
+                                    @if($errors->has('description.' . $carouselId))
                                         <div style="color: #991b1b; font-size: 14px; margin-top: 4px;">
-                                            {{ $errors->first('description' . ($index + 1)) }}
+                                            {{ $errors->first('description.' . $carouselId) }}
                                         </div>
                                     @endif
                                 </div>
@@ -133,4 +165,3 @@
     });
 </script>
 @endpush
-

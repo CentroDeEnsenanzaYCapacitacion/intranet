@@ -16,24 +16,23 @@ class WebCarouselRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'img_1' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', new WebCarouselImageDimensions(940, 413)],
-            'img_2' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', new WebCarouselImageDimensions(940, 413)],
-            'img_3' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', new WebCarouselImageDimensions(940, 413)],
-            'img_4' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', new WebCarouselImageDimensions(940, 413)],
-            'title1' => 'nullable|string|max:255',
-            'title2' => 'nullable|string|max:255',
-            'title3' => 'nullable|string|max:255',
-            'title4' => 'nullable|string|max:255',
-            'description1' => 'nullable|string',
-            'description2' => 'nullable|string',
-            'description3' => 'nullable|string',
-            'description4' => 'nullable|string',
+            'img' => ['nullable', 'array'],
+            'img.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', new WebCarouselImageDimensions(940, 413)],
+            'title' => ['nullable', 'array'],
+            'title.*' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'array'],
+            'description.*' => ['nullable', 'string'],
         ];
     }
 
     public function messages()
     {
         return [
+            'img.*.image' => 'El archivo debe ser una imagen.',
+            'img.*.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif.',
+            'title.*.string' => 'El titulo debe ser una cadena de texto.',
+            'title.*.max' => 'El titulo no debe tener mas de 255 caracteres.',
+            'description.*.string' => 'La descripcion debe ser una cadena de texto.',
             'img_1.image' => 'El archivo debe ser una imagen.',
             'img_1.mimes' => 'La imagen debe ser un archivo de tipo: jpeg, png, jpg, gif.',
             'img_1.dimensions' => 'La imagen debe tener las dimensiones 940x413 píxeles.',
