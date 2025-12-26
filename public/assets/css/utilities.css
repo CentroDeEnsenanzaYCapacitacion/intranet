@@ -1,0 +1,52 @@
+.bg-orange {
+    background-color: #ff6900;
+}
+
+.btn-outline-orange {
+    color: #ff6900 !important;
+    border-color: #ff6900 !important;
+}
+
+.btn-outline-orange:hover {
+    color: #fff !important;
+    background-color: #ff6900 !important;
+    border-color: #ff6900 !important;
+}
+
+.btn-outline-orange:focus,
+.btn-outline-orange:active {
+    color: #fff !important;
+    background-color: #ff6900 !important;
+    border-color: #ff6900 !important;
+}
+
+input[type="radio"]:checked + .btn-outline-orange {
+    color: #fff !important;
+    background-color: #ff6900 !important;
+    border-color: #ff6900 !important;
+}
+
+.form-check-input:checked {
+    background-color: #ff6900;
+    border-color: #ff6900;
+}
+
+.input-group .btn {
+    background-color: #ff6900;
+    color: white;
+    border: none;
+    padding-top: 15px;
+}
+
+.input-group .btn .material-symbols-outlined {
+    font-size: 24px;
+}
+
+#receipt_amount,
+#voucher_input {
+    width: 25%;
+}
+
+#error-container {
+    scroll-margin-top: 100px;
+}

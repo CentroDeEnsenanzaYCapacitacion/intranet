@@ -10,32 +10,60 @@
         <link rel="stylesheet" href="{{ asset('assets/css/calendar-modal.css') }}">
     @endpush
 
-    <div class="card ccont shadow">
-        <div class="card-body">
-            <div class="row d-flex mt-3 text-center">
-                <div class="col mb-3">
-                    <h1>Asignación de horas</h1>
+    <div class="dashboard-welcome">
+        <h1 class="dashboard-title">Asignación de Horas</h1>
+        <p class="dashboard-subtitle">Calendario de asignación de horas para trabajadores</p>
+    </div>
+
+    @if(session('success'))
+        <div id="success" class="alert alert-success" style="background: #d1fae5; border: 1px solid #065f46; color: #065f46; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div id="error" class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if ($userCrewId == 1)
+        <div class="modern-card" style="margin-bottom: 24px;">
+            <div class="card-header-modern">
+                <div class="header-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 21V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V21M19 21H21M19 21H14M5 21H3M5 21H10M10 21V17C10 16.4477 10.4477 16 11 16H13C13.5523 16 14 16.4477 14 17V21M10 21H14M9 8H10M9 12H10M14 8H15M14 12H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h2>Filtro de Plantel</h2>
                 </div>
             </div>
-
-            @if ($userCrewId == 1)
-                <div class="container mb-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="crewSelect" class="form-label">Seleccionar Plantel</label>
-                            <select id="crewSelect" class="form-select">
-                                @foreach ($crews->where('id', '!=', 1) as $crew)
-                                    <option value="{{ $crew->id }}">{{ $crew->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+            <div style="padding: 24px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="crewSelect" style="display: block; font-size: 14px; font-weight: 500; color: #374151; margin-bottom: 8px;">Seleccionar Plantel</label>
+                        <select id="crewSelect" class="form-control" style="height: 48px; border: 2px solid #e5e7eb; border-radius: 12px;">
+                            @foreach ($crews->where('id', '!=', 1) as $crew)
+                                <option value="{{ $crew->id }}">{{ $crew->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-            @endif
-
-            <div class="container">
-                <div id="calendar"></div>
             </div>
+        </div>
+    @endif
+
+    <div class="modern-card">
+        <div class="card-header-modern">
+            <div class="header-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 2V6M8 2V6M3 10H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h2>Calendario</h2>
+            </div>
+        </div>
+        <div style="padding: 24px;">
+            <div id="calendar"></div>
         </div>
     </div>
 

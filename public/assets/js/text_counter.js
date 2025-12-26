@@ -1,9 +1,11 @@
 function textCounter(field, field2, maxlimit) {
     var countfield = document.getElementById(field2);
-    if (field.value.length > maxlimit) {
-        field.value = field.value.substring(0, maxlimit);
+    var currentLength = Array.from(field.value || '').length;
+    if (currentLength > maxlimit) {
+        field.value = Array.from(field.value).slice(0, maxlimit).join('');
+        currentLength = maxlimit;
         return false;
     } else {
-        countfield.value = maxlimit - field.value.length;
+        countfield.value = maxlimit - currentLength;
     }
 }

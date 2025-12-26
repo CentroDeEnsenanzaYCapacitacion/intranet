@@ -1,0 +1,350 @@
+.btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 127, 23, 0.3);
+    color: white;
+}
+
+.modern-input,
+.modern-textarea {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #1a1a1a;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modern-input {
+    height: 48px;
+    padding: 0 16px;
+    background: #ffffff;
+}
+
+.modern-textarea {
+    padding: 12px 16px;
+    resize: vertical;
+}
+
+.modern-input:focus,
+.modern-textarea:focus {
+    border-color: #F57F17;
+    box-shadow: 0 0 0 3px rgba(245, 127, 23, 0.15);
+}
+
+.modern-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modern-field label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+}
+
+.carousel-form .preview-box {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px;
+    background: #f9fafb;
+}
+
+.file-input {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: 48px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.file-input:focus-within {
+    border-color: #F57F17;
+    box-shadow: 0 0 0 3px rgba(245, 127, 23, 0.15);
+}
+
+.file-input-native {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    min-width: 44px;
+    background: #F57F17;
+    color: #ffffff;
+}
+
+.file-input-text {
+    flex: 1;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    padding: 0 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    line-height: 1.4;
+    width: 180px;
+}
+
+.badge-primary {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.badge-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-gray {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-edit {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.action-edit:hover {
+    background: #1e40af;
+    color: white;
+}
+
+.action-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.action-delete:hover {
+    background: #991b1b;
+    color: white;
+}
+
+.action-approve {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.action-approve:hover {
+    background: #065f46;
+    color: white;
+}
+
+.table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.action-success:hover {
+    background: #065f46;
+    color: white;
+}
+
+.badge-warning {
+    background: #ffc107;
+    color: #1a1a1a;
+}
+
+.badge-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.badge-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    position: fixed;
+    background: white;
+    width: 300px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    transform: translate(0, 0);
+}
+
+.modal-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clean-button {
+    border: none;
+    background-color: white;
+}
+
+#loader-container {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(241, 230, 216, 0.85);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+}
+
+#loader-container.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.app-loader-spinner {
+    width: 125px;
+    height: 125px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    animation: app-loader-pulse 1.2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+.app-loader-spinner img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    opacity: 0.7;
+}
+
+@keyframes app-loader-pulse {
+    0% {
+        transform: scale(0.92);
+        opacity: 0.8;
+    }
+    70% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.92);
+        opacity: 0.85;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-loader-spinner {
+        animation: none;
+    }
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 12px;
+    display: none;
+}
+
+#success {
+    transition: opacity 0.5s ease-out;
+}

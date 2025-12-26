@@ -11,6 +11,10 @@ class Student extends Model
 
     protected $guarded = [];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function setSabbatineAttribute($value)
     {
         $this->attributes['sabbatine'] = filter_var($value, FILTER_VALIDATE_BOOLEAN);

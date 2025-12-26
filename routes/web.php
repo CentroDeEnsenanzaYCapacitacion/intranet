@@ -65,6 +65,10 @@ Route::middleware(['auth'])->group(function () {
         return view('system.main');
     })->name('system.main');
 
+    Route::get('/system/grades/menu', function () {
+        return view('system.grades.menu');
+    })->name('system.grades.menu')->middleware('role:1,2,7');
+
     Route::get('/admin/stats_menu', function () {
         return view('admin.stats.menu');
     })->name('admin.stats.menu');
@@ -82,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
     require 'admin_catalogues_courses.php';
     require 'admin_catalogues_amounts.php';
     require 'admin_catalogues_perceptions.php';
+    require 'admin_catalogues_questions.php';
     require 'admin_requests.php';
     require 'system_reports.php';
     require 'system_students.php';

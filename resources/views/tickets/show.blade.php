@@ -2,31 +2,42 @@
 @section('title','Tickets de servicio')
 
 @section('content')
-<div class="card shadow ccont">
-    <div class="card-body">
-        <div class="row d-flex text-center mt-3">
-            <div class="col">
-                <h1>Tickets abiertos</h1>
-            </div>
-        </div>
+    <div class="dashboard-welcome">
+        <h1 class="dashboard-title">Tickets abiertos</h1>
+        <p class="dashboard-subtitle">Gestiona tus solicitudes de servicio</p>
+    </div>
 
-        <div class="text-end mt-3">
-            <a href="{{ route('tickets.form') }}" class="btn btn-success">
-                + Nuevo ticket
+    <div class="modern-card">
+        <div class="card-header-modern">
+            <div class="header-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 8L21 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M5 8V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V8" stroke="currentColor" stroke-width="2"/>
+                    <path d="M5 8V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V8" stroke="currentColor" stroke-width="2"/>
+                    <path d="M9 12H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M9 16H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <h2>Listado de tickets</h2>
+            </div>
+            <a href="{{ route('tickets.form') }}" class="btn-modern btn-primary" onclick="showLoader(true)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Nuevo ticket
             </a>
         </div>
 
-        <div class="table-responsive mt-4">
-            <table class="table table-hover align-middle text-center">
-                <thead class="table-light">
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
                     <tr>
-                        <th>#</th>
+                        <th class="text-center">#</th>
                         <th>Título</th>
                         <th>Categoría</th>
                         <th>Plantel</th>
-                        <th>Prioridad</th>
-                        <th>Estado</th>
-                        <th>Fecha</th>
+                        <th class="text-center">Prioridad</th>
+                        <th class="text-center">Estado</th>
+                        <th class="text-center">Fecha</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,10 +60,8 @@
                                 default => 'bg-light text-dark',
                             };
                         @endphp
-                        <tr
-                            style="cursor: pointer;"
-                            onclick="window.location='{{ route('tickets.detail', $ticket->id) }}'">
-                            <td>{{ $ticket->id }}</td>
+                        <tr style="cursor: pointer;" onclick="window.location='{{ route('tickets.detail', $ticket->id) }}'">
+                            <td class="text-center">{{ $ticket->id }}</td>
                             <td>{{ $ticket->title }}</td>
                             <td>{{ $ticket->category?->name ?? 'Sin categoría' }}</td>
                             <td>
@@ -62,17 +71,17 @@
                                     {{ $ticket->user?->crew?->name ?? 'Sin plantel' }}
                                 @endif
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <span class="badge {{ $priorityClass }}">
                                     {{ ucfirst($ticket->priority) }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <span class="badge {{ $statusClass }}">
                                     {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
                                 </span>
                             </td>
-                            <td>{{ $ticket->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="text-center">{{ $ticket->created_at->format('d/m/Y H:i') }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -83,5 +92,5 @@
             </table>
         </div>
     </div>
-</div>
 @endsection
+
