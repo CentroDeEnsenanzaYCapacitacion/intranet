@@ -2,22 +2,8 @@
     background-color: #ff6900;
 }
 
-.text-white {
-    color: white;
-}
-
-.text-orange {
-    color: #ff6900;
-}
-
 .btn-outline-orange {
     color: #ff6900 !important;
-    border-color: #ff6900 !important;
-}
-
-.btn-outline-orange-selected {
-    color: #fff !important;
-    background-color: #ff6900 !important;
     border-color: #ff6900 !important;
 }
 
@@ -38,22 +24,6 @@ input[type="radio"]:checked + .btn-outline-orange {
     color: #fff !important;
     background-color: #ff6900 !important;
     border-color: #ff6900 !important;
-}
-
-.bg-edit {
-    color: darkblue !important;
-}
-
-.bg-done {
-    color: green !important;
-}
-
-.bg-red {
-    color: red;
-}
-
-.bg-inactive {
-    color: gray !important;
 }
 
 .form-check-input:checked {

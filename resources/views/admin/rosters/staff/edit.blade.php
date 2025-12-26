@@ -1,12 +1,29 @@
 @extends('layout.mainLayout')
 @section('title','Editar Empleado')
 @section('content')
+    <div class="dashboard-welcome">
+        <h1 class="dashboard-title">Editar Empleado</h1>
+        <p class="dashboard-subtitle">Actualización de datos del personal</p>
+    </div>
 
-<div class="card shadow ccont">
-    <div class="card-body">
-        <div class="row d-flex text-center mt-3">
-            <div class="col mb-3">
-                <h1>Editar empleado</h1>
+    @if ($errors->any())
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="modern-card">
+        <div class="card-header-modern">
+            <div class="header-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h2>Datos del Empleado</h2>
             </div>
         </div>
 
@@ -14,98 +31,124 @@
             @csrf
             @method('PUT')
 
-            <div class="row mb-3">
-                <div class="col">
-                    <label class="form-label">Nombre *</label>
-                    <input type="text" name="name" class="form-control" value="{{ old('name', $staff->name) }}" readonly>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Nombre *</label>
+                        <input type="text" name="name" class="modern-input" value="{{ old('name', $staff->name) }}" readonly>
+                    </div>
                 </div>
-                <div class="col">
-                    <label class="form-label">Apellidos</label>
-                    <input type="text" name="surnames" class="form-control" value="{{ old('surnames', $staff->surnames) }}" readonly>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Dirección</label>
-                <input type="text" name="Address" class="form-control" value="{{ old('Address', $staff->Address) }}">
-            </div>
-
-            <div class="row mb-3">
-                <div class="col">
-                    <label class="form-label">Colonia</label>
-                    <input type="text" name="colony" class="form-control" value="{{ old('colony', $staff->colony) }}">
-                </div>
-                <div class="col">
-                    <label class="form-label">Municipio</label>
-                    <input type="text" name="municipalty" class="form-control" value="{{ old('municipalty', $staff->municipalty) }}">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Apellidos</label>
+                        <input type="text" name="surnames" class="modern-input" value="{{ old('surnames', $staff->surnames) }}" readonly>
+                    </div>
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col">
-                    <label class="form-label">Teléfono</label>
-                    <input type="text" name="phone" class="form-control" value="{{ old('phone', $staff->phone) }}">
+            <div class="modern-field">
+                <label>Dirección</label>
+                <input type="text" name="Address" class="modern-input" value="{{ old('Address', $staff->Address) }}">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Colonia</label>
+                        <input type="text" name="colony" class="modern-input" value="{{ old('colony', $staff->colony) }}">
+                    </div>
                 </div>
-                <div class="col">
-                    <label class="form-label">Celular</label>
-                    <input type="text" name="cel" class="form-control" value="{{ old('cel', $staff->cel) }}">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Municipio</label>
+                        <input type="text" name="municipalty" class="modern-input" value="{{ old('municipalty', $staff->municipalty) }}">
+                    </div>
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">RFC</label>
-                <input type="text" name="rfc" class="form-control" value="{{ old('rfc', $staff->rfc) }}">
-            </div>
-
-            <div class="row mb-3">
-                <div class="col">
-                    <label class="form-label">Departamento</label>
-                    <input type="text" name="department" class="form-control" value="{{ old('department', $staff->department) }}">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Teléfono</label>
+                        <input type="text" name="phone" class="modern-input" value="{{ old('phone', $staff->phone) }}">
+                    </div>
                 </div>
-                <div class="col">
-                    <label class="form-label">Puesto</label>
-                    <input type="text" name="position" class="form-control" value="{{ old('position', $staff->position) }}">
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col">
-                    <label class="form-label">Correo personal</label>
-                    <input type="email" name="personal_mail" class="form-control" value="{{ old('personal_mail', $staff->personal_mail) }}">
-                </div>
-                <div class="col">
-                    <label class="form-label">Correo CEC</label>
-                    <input type="email" name="cec_mail" class="form-control" value="{{ old('cec_mail', $staff->cec_mail) }}" readonly>
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Celular</label>
+                        <input type="text" name="cel" class="modern-input" value="{{ old('cel', $staff->cel) }}">
+                    </div>
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col">
-                    <label for="cost" class="form-label">Costo *</label>
-                    <input type="number" name="cost" class="form-control" step="0.01" min="0" value="{{ old('cost', $staff->cost) }}" required>
+            <div class="modern-field">
+                <label>RFC</label>
+                <input type="text" name="rfc" class="modern-input" value="{{ old('rfc', $staff->rfc) }}">
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Departamento</label>
+                        <input type="text" name="department" class="modern-input" value="{{ old('department', $staff->department) }}">
+                    </div>
                 </div>
-                <div class="col">
-                    <label for="cost_type" class="form-label">Tipo de costo *</label>
-                    <select name="cost_type" class="form-control" required>
-                        <option value="day" {{ old('cost_type', $staff->isRoster ? 'day' : 'hour') === 'day' ? 'selected' : '' }}>Por día</option>
-                        <option value="hour" {{ old('cost_type', $staff->isRoster ? 'day' : 'hour') === 'hour' ? 'selected' : '' }}>Por hora</option>
-                    </select>
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Puesto</label>
+                        <input type="text" name="position" class="modern-input" value="{{ old('position', $staff->position) }}">
+                    </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn bg-orange text-white">Actualizar empleado</button>
-            <a href="{{ route('admin.staff.show') }}" class="btn btn-secondary ms-2">Cancelar</a>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Correo personal</label>
+                        <input type="email" name="personal_mail" class="modern-input" value="{{ old('personal_mail', $staff->personal_mail) }}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label>Correo CEC</label>
+                        <input type="email" name="cec_mail" class="modern-input" value="{{ old('cec_mail', $staff->cec_mail) }}" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label for="cost">Costo *</label>
+                        <input type="number" name="cost" class="modern-input" step="0.01" min="0" value="{{ old('cost', $staff->cost) }}" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="modern-field">
+                        <label for="cost_type">Tipo de costo *</label>
+                        <select name="cost_type" class="modern-input" required>
+                            <option value="day" {{ old('cost_type', $staff->isRoster ? 'day' : 'hour') === 'day' ? 'selected' : '' }}>Por día</option>
+                            <option value="hour" {{ old('cost_type', $staff->isRoster ? 'day' : 'hour') === 'hour' ? 'selected' : '' }}>Por hora</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button type="submit" class="btn-modern btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 2.58579C3.96086 2.21071 4.46957 2 5 2H16L21 7V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M17 21V13H7V21M7 3V7H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Actualizar empleado
+                </button>
+                <a href="{{ route('admin.staff.show') }}" class="btn-modern btn-secondary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Cancelar
+                </a>
+            </div>
         </form>
     </div>
-</div>
-@if ($errors->any())
-    <div class="alert alert-danger mt-3">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
 @endsection

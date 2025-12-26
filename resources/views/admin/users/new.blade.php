@@ -7,13 +7,13 @@
     </div>
 
     @if (session('error'))
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             {{ session('error') }}
         </div>
     @endif
 
     @if ($errors->any())
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             <ul style="margin: 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{!! nl2br(e($error)) !!}</li>
@@ -25,7 +25,7 @@
     <form action="{{ route('admin.users.insert') }}" method="POST" onsubmit="showLoader(true)">
         @csrf
 
-        <div class="modern-card">
+        <div class="modern-card" style="margin-bottom: 24px;">
             <div class="card-header-modern">
                 <div class="header-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +128,7 @@
             </div>
         </div>
 
-        <div class="modern-card">
+        <div class="modern-card" style="margin-bottom: 24px;">
             <div class="card-header-modern">
                 <div class="header-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

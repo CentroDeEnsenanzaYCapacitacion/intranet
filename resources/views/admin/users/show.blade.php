@@ -95,7 +95,7 @@
         </div>
     </div>
 
-    <div class="modern-card mt-5">
+    <div class="modern-card" style="margin-bottom: 24px;">
         <div class="card-header-modern">
             <div class="header-title">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

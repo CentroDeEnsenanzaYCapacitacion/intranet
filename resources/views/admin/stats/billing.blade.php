@@ -23,71 +23,81 @@
             <form method="GET" action="{{ route('admin.stats.billing') }}" id="filtersForm">
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Plantel</label>
-                        @if (Auth::user()->role_id == 1)
-                            <select name="plantel" class="form-control">
-                                @foreach ($crews as $crew)
-                                    <option value="{{ $crew->id }}" {{ request('plantel') == $crew->id ? 'selected' : '' }}>
-                                        {{ $crew->name }}
+                        <div class="modern-field">
+                            <label>Plantel</label>
+                            @if (Auth::user()->role_id == 1)
+                                <select name="plantel" class="modern-input">
+                                    @foreach ($crews as $crew)
+                                        <option value="{{ $crew->id }}" {{ request('plantel') == $crew->id ? 'selected' : '' }}>
+                                            {{ $crew->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <div class="modern-input" style="background: #f3f4f6; cursor: not-allowed;">
+                                    {{ Auth::user()->crew->name }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="modern-field">
+                            <label>Fecha</label>
+                            <select name="fecha" id="fecha" class="modern-input" onchange="mostrarInputFecha()">
+                                <option value="historico" {{ request('fecha') == 'historico' ? 'selected' : '' }}>Histórico</option>
+                                <option value="hoy" {{ request('fecha') == 'hoy' ? 'selected' : '' }}>Hoy</option>
+                                <option value="semana" {{ request('fecha') == 'semana' ? 'selected' : '' }}>Última semana</option>
+                                <option value="mes" {{ request('fecha') == 'mes' ? 'selected' : '' }}>Último mes</option>
+                                <option value="personalizado" {{ request('fecha') == 'personalizado' ? 'selected' : '' }}>Personalizado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="modern-field">
+                            <label>Tipo Recibo</label>
+                            <select name="tipo_recibo" class="modern-input">
+                                <option value="">Todos</option>
+                                @foreach ($receiptTypes as $type)
+                                    <option value="{{ $type->id }}" {{ request('tipo_recibo') == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
                                     </option>
                                 @endforeach
                             </select>
-                        @else
-                            <div class="form-control bg-light">
-                                {{ Auth::user()->crew->name }}
-                            </div>
-                        @endif
+                        </div>
                     </div>
 
                     <div class="col-md-3 mb-3">
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Fecha</label>
-                        <select name="fecha" id="fecha" class="form-control" onchange="mostrarInputFecha()">
-                            <option value="historico" {{ request('fecha') == 'historico' ? 'selected' : '' }}>Histórico</option>
-                            <option value="hoy" {{ request('fecha') == 'hoy' ? 'selected' : '' }}>Hoy</option>
-                            <option value="semana" {{ request('fecha') == 'semana' ? 'selected' : '' }}>Última semana</option>
-                            <option value="mes" {{ request('fecha') == 'mes' ? 'selected' : '' }}>Último mes</option>
-                            <option value="personalizado" {{ request('fecha') == 'personalizado' ? 'selected' : '' }}>Personalizado</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Tipo Recibo</label>
-                        <select name="tipo_recibo" class="form-control">
-                            <option value="">Todos</option>
-                            @foreach ($receiptTypes as $type)
-                                <option value="{{ $type->id }}" {{ request('tipo_recibo') == $type->id ? 'selected' : '' }}>
-                                    {{ $type->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Tipo Pago</label>
-                        <select name="tipo_pago" class="form-control">
-                            <option value="">Todos</option>
-                            @foreach ($paymentTypes as $type)
-                                <option value="{{ $type->id }}" {{ request('tipo_pago') == $type->id ? 'selected' : '' }}>
-                                    {{ $type->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="modern-field">
+                            <label>Tipo Pago</label>
+                            <select name="tipo_pago" class="modern-input">
+                                <option value="">Todos</option>
+                                @foreach ($paymentTypes as $type)
+                                    <option value="{{ $type->id }}" {{ request('tipo_pago') == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <div class="col-md-12 mb-3" id="filtroFechaPersonalizado" style="display: none;">
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Rango de Fechas</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="date" name="fecha_inicio" class="form-control" value="{{ request('fecha_inicio') }}" placeholder="Fecha inicio">
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" value="{{ request('fecha_fin') }}" placeholder="Fecha fin">
-                                    <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('fecha_fin').value = ''" title="Limpiar fecha">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </button>
+                        <div class="modern-field">
+                            <label>Rango de Fechas</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="date" name="fecha_inicio" class="modern-input" value="{{ request('fecha_inicio') }}" placeholder="Fecha inicio">
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="display: flex; gap: 8px;">
+                                        <input type="date" name="fecha_fin" id="fecha_fin" class="modern-input" value="{{ request('fecha_fin') }}" placeholder="Fecha fin" style="flex: 1;">
+                                        <button type="button" class="btn-modern btn-secondary" onclick="document.getElementById('fecha_fin').value = ''" title="Limpiar fecha" style="padding: 0 16px;">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +116,7 @@
         </div>
     </div>
 
-    <div class="modern-card" style="margin-top: 24px;">
+    <div class="modern-card" style="margin-bottom: 24px;">
         <div class="card-header-modern">
             <div class="header-title">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -175,7 +185,7 @@
         </div>
     </div>
 
-    <div class="modern-card" style="margin-top: 24px;">
+    <div class="modern-card" style="margin-bottom: 24px;">
         <div class="card-header-modern">
             <div class="header-title">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -227,7 +237,7 @@
         </div>
     </div>
 
-    <div class="modern-card" style="margin-top: 24px; background: linear-gradient(135deg, {{ $diferenciaTotal >= 0 ? '#d1fae5' : '#fee2e2' }} 0%, {{ $diferenciaTotal >= 0 ? '#ecfdf5' : '#fef2f2' }} 100%); border: 2px solid {{ $diferenciaTotal >= 0 ? '#065f46' : '#991b1b' }};">
+    <div class="modern-card" style="background: linear-gradient(135deg, {{ $diferenciaTotal >= 0 ? '#d1fae5' : '#fee2e2' }} 0%, {{ $diferenciaTotal >= 0 ? '#ecfdf5' : '#fef2f2' }} 100%); border: 2px solid {{ $diferenciaTotal >= 0 ? '#065f46' : '#991b1b' }};">
         <div style="padding: 24px; text-align: center;">
             <div style="font-size: 16px; color: {{ $diferenciaTotal >= 0 ? '#065f46' : '#991b1b' }}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">En Caja</div>
             <div style="font-size: 48px; font-weight: 700; color: {{ $diferenciaTotal >= 0 ? '#065f46' : '#991b1b' }};">${{ number_format($diferenciaTotal, 2) }}</div>

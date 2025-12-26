@@ -7,7 +7,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             <ul style="margin: 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{!! nl2br(e($error)) !!}</li>
@@ -18,15 +18,12 @@
 
     <form action="{{ route('admin.catalogues.questions.insert') }}" method="post" id="questionForm" onsubmit="showLoader(true)">
         @csrf
-        <div class="modern-card">
+        <div class="modern-card" style="margin-bottom: 24px;">
             <div class="card-header-modern">
                 <div class="header-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 19.5V5C4 3.89543 4.89543 3 6 3H18C19.1046 3 20 3.89543 20 5V19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M4 19.5C4 20.8807 5.11929 22 6.5 22H17.5C18.8807 22 20 20.8807 20 19.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M8 7H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8 11H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M8 15H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8.228 9C8.65027 7.64509 9.48473 6.46523 10.5998 5.63985C11.7149 4.81448 13.0509 4.38794 14.4142 4.42231C15.7775 4.45667 17.0901 4.94997 18.1611 5.82609C19.2321 6.70222 20.0048 7.91217 20.36 9.27797C20.7153 10.6438 20.6338 12.0899 20.1281 13.403C19.6225 14.7161 18.7201 15.8271 17.5563 16.583C16.3926 17.3388 15.0269 17.7001 13.6512 17.6148C12.2754 17.5294 10.9622 16.9018 9.913 15.823L9 21L3 15L8.228 13.973C7.71972 12.5065 7.74669 10.9032 8.30445 9.4548" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 10H16V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <h2>Datos de la pregunta</h2>
                 </div>
@@ -78,18 +75,18 @@
             </div>
         </div>
 
-        <div class="modern-card">
+        <div class="modern-card" style="margin-bottom: 24px;">
             <div class="card-header-modern">
                 <div class="header-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 6H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M4 18H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M9 12L11 14L15 10M21 12C21 13.1819 20.7672 14.3522 20.3149 15.4442C19.8626 16.5361 19.1997 17.5282 18.364 18.364C17.5282 19.1997 16.5361 19.8626 15.4442 20.3149C14.3522 20.7672 13.1819 21 12 21C10.8181 21 9.64778 20.7672 8.55585 20.3149C7.46392 19.8626 6.47177 19.1997 5.63604 18.364C4.80031 17.5282 4.13738 16.5361 3.68508 15.4442C3.23279 14.3522 3 13.1819 3 12C3 9.61305 3.94821 7.32387 5.63604 5.63604C7.32387 3.94821 9.61305 3 12 3C14.3869 3 16.6761 3.94821 18.364 5.63604C20.0518 7.32387 21 9.61305 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <h2>Opciones de respuesta</h2>
                 </div>
                 <button type="button" class="btn-modern btn-primary" id="addOption">
-                    <span class="material-symbols-outlined" style="font-size: 20px; margin-right: 6px;">add</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
                     Agregar opci&oacute;n
                 </button>
             </div>

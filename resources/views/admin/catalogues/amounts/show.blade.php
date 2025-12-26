@@ -7,7 +7,7 @@
     </div>
 
     @if (session('success'))
-        <div id="success" class="alert alert-success">
+        <div id="success" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left: 4px solid #10b981; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             {{ session('success') }}
         </div>
     @endif

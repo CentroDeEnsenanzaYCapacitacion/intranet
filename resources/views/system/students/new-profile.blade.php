@@ -19,7 +19,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             <ul style="margin: 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -28,13 +28,15 @@
         </div>
     @endif
 
-    <div class="modern-card" style="background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%); border: 2px solid #991b1b; margin-bottom: 24px;">
-        <div style="padding: 20px; text-align: center;">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #991b1b; margin-bottom: 12px;">
+    <div style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: #991b1b; flex-shrink: 0;">
                 <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <div style="font-size: 16px; font-weight: 600; color: #991b1b; margin-bottom: 4px;">Estudiante Nuevo</div>
-            <div style="font-size: 14px; color: #991b1b;">Por favor completa todos los campos requeridos para activar el perfil</div>
+            <div>
+                <div style="font-size: 16px; font-weight: 600; color: #991b1b; margin-bottom: 4px;">Estudiante Nuevo</div>
+                <div style="font-size: 14px; color: #991b1b;">Por favor completa todos los campos requeridos para activar el perfil</div>
+            </div>
         </div>
     </div>
 
@@ -105,7 +107,7 @@
 
                         <div style="margin-bottom: 16px;">
                             <label for="payment_periodicity_id" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">PERIODICIDAD DE PAGO</label>
-                            <select class="form-control text-uppercase" name="payment_periodicity_id" id="payment_periodicity_id">
+                            <select class="modern-input text-uppercase" name="payment_periodicity_id" id="payment_periodicity_id">
                                 @foreach ($payment_periodicities as $payment_periodicity)
                                     <option value="{{ $payment_periodicity->id }}" {{ old('payment_periodicity_id') == $payment_periodicity->id ? 'selected' : '' }}>
                                         {{ $payment_periodicity->name }}
@@ -116,7 +118,7 @@
 
                         <div style="margin-bottom: 16px;">
                             <label for="schedule_id" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">HORARIO</label>
-                            <select class="form-control text-uppercase" name="schedule_id" id="schedule_id">
+                            <select class="modern-input text-uppercase" name="schedule_id" id="schedule_id">
                                 @foreach ($schedules as $schedule)
                                     <option value="{{ $schedule->id }}" {{ old('schedule_id') == $schedule->id ? 'selected' : '' }}>
                                         {{ $schedule->name }}
@@ -138,7 +140,7 @@
 
                         <div style="margin-bottom: 16px;">
                             <label for="modality_id" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">TIPO</label>
-                            <select class="form-control text-uppercase" name="modality_id" id="modality_id">
+                            <select class="modern-input text-uppercase" name="modality_id" id="modality_id">
                                 @foreach ($modalities as $modality)
                                     <option value="{{ $modality->id }}" {{ old('modality_id') == $modality->id ? 'selected' : '' }}>
                                         {{ $modality->name }}
@@ -149,7 +151,7 @@
 
                         <div style="margin-bottom: 16px;">
                             <label for="start" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">INICIO</label>
-                            <input placeholder="Selecciona fecha..." type="text" id="datePicker" name="start" class="form-control" value="{{ old('start', $savedData['start'] ?? '') }}">
+                            <input placeholder="Selecciona fecha..." type="text" id="datePicker" name="start" class="modern-input" value="{{ old('start', $savedData['start'] ?? '') }}">
                         </div>
 
                         <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border: 2px solid #F57F17; border-radius: 12px; padding: 16px;">
@@ -185,8 +187,10 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="birthdate" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">FECHA DE NACIMIENTO *</label>
-                                <input placeholder="Selecciona fecha..." type="text" id="datePicker" name="birthdate" class="form-control" value="{{ old('birthdate', $savedData['birthdate'] ?? '') }}">
+                                <div class="modern-field">
+                                    <label for="birthdate">FECHA DE NACIMIENTO *</label>
+                                    <input placeholder="Selecciona fecha..." type="text" id="datePicker" name="birthdate" class="modern-input" value="{{ old('birthdate', $savedData['birthdate'] ?? '') }}">
+                                </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
@@ -203,43 +207,59 @@
                             </div>
 
                             <div class="col-md-12 mb-3">
-                                <label for="curp" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">CURP</label>
-                                <input class="form-control text-uppercase" name="curp" type="text" value="{{ old('curp', $savedData['curp'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="curp">CURP</label>
+                                    <input class="modern-input text-uppercase" name="curp" type="text" value="{{ old('curp', $savedData['curp'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-9 mb-3">
-                                <label for="address" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">DIRECCIÓN</label>
-                                <input class="form-control text-uppercase" type="text" name="address" value="{{ old('address', $savedData['address'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="address">DIRECCIÓN</label>
+                                    <input class="modern-input text-uppercase" type="text" name="address" value="{{ old('address', $savedData['address'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-3 mb-3">
-                                <label for="pc" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">C.P.</label>
-                                <input class="form-control text-uppercase" type="text" name="pc" value="{{ old('pc', $savedData['pc'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="pc">C.P.</label>
+                                    <input class="modern-input text-uppercase" type="text" name="pc" value="{{ old('pc', $savedData['pc'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="colony" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">COLONIA</label>
-                                <input class="form-control text-uppercase" type="text" name="colony" value="{{ old('colony', $savedData['colony'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="colony">COLONIA</label>
+                                    <input class="modern-input text-uppercase" type="text" name="colony" value="{{ old('colony', $savedData['colony'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="municipality" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">MUNICIPIO</label>
-                                <input class="form-control text-uppercase" type="text" name="municipality" value="{{ old('municipality', $savedData['municipality'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="municipality">MUNICIPIO</label>
+                                    <input class="modern-input text-uppercase" type="text" name="municipality" value="{{ old('municipality', $savedData['municipality'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">TELÉFONO</label>
-                                <input class="form-control text-uppercase" type="text" name="phone" value="{{ old('phone', $savedData['phone'] ?? ($student->phone ?? '')) }}" />
+                                <div class="modern-field">
+                                    <label for="phone">TELÉFONO</label>
+                                    <input class="modern-input text-uppercase" type="text" name="phone" value="{{ old('phone', $savedData['phone'] ?? ($student->phone ?? '')) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="cel_phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">CELULAR</label>
-                                <input class="form-control text-uppercase" type="text" name="cel_phone" value="{{ old('cel_phone', $savedData['cel_phone'] ?? ($student->cel_phone ?? '')) }}" />
+                                <div class="modern-field">
+                                    <label for="cel_phone">CELULAR</label>
+                                    <input class="modern-input text-uppercase" type="text" name="cel_phone" value="{{ old('cel_phone', $savedData['cel_phone'] ?? ($student->cel_phone ?? '')) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="email" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">EMAIL</label>
-                                <input class="form-control" type="text" name="email" value="{{ old('email', $savedData['email'] ?? $student->email) }}" />
+                                <div class="modern-field">
+                                    <label for="email">EMAIL</label>
+                                    <input class="modern-input" type="text" name="email" value="{{ old('email', $savedData['email'] ?? $student->email) }}" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -258,28 +278,38 @@
                     <div style="padding: 24px;">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="tutor_name" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">NOMBRE</label>
-                                <input class="form-control text-uppercase" type="text" name="tutor_name" value="{{ old('tutor_name', $savedData['tutor_name'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_name">NOMBRE</label>
+                                    <input class="modern-input text-uppercase" type="text" name="tutor_name" value="{{ old('tutor_name', $savedData['tutor_name'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="tutor_surnames" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">APELLIDOS</label>
-                                <input class="form-control text-uppercase" type="text" name="tutor_surnames" value="{{ old('tutor_surnames', $savedData['tutor_surnames'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_surnames">APELLIDOS</label>
+                                    <input class="modern-input text-uppercase" type="text" name="tutor_surnames" value="{{ old('tutor_surnames', $savedData['tutor_surnames'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="tutor_phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">TELÉFONO</label>
-                                <input class="form-control text-uppercase" type="text" name="tutor_phone" value="{{ old('tutor_phone', $savedData['tutor_phone'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_phone">TELÉFONO</label>
+                                    <input class="modern-input text-uppercase" type="text" name="tutor_phone" value="{{ old('tutor_phone', $savedData['tutor_phone'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="tutor_cel_phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">CELULAR</label>
-                                <input class="form-control text-uppercase" type="text" name="tutor_cel_phone" value="{{ old('tutor_cel_phone', $savedData['tutor_cel_phone'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_cel_phone">CELULAR</label>
+                                    <input class="modern-input text-uppercase" type="text" name="tutor_cel_phone" value="{{ old('tutor_cel_phone', $savedData['tutor_cel_phone'] ?? '') }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="relationship" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">PARENTESCO</label>
-                                <input class="form-control text-uppercase" type="text" name="relationship" value="{{ old('relationship', $savedData['relationship'] ?? '') }}" />
+                                <div class="modern-field">
+                                    <label for="relationship">PARENTESCO</label>
+                                    <input class="modern-input text-uppercase" type="text" name="relationship" value="{{ old('relationship', $savedData['relationship'] ?? '') }}" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -389,9 +419,9 @@
                             </div>
                         @endif
 
-                        <div>
-                            <label for="observation" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 8px;">NUEVA OBSERVACIÓN</label>
-                            <textarea class="form-control text-uppercase" name="observation" id="observation" rows="3" placeholder="Escribe una nueva observación..."></textarea>
+                        <div class="modern-field">
+                            <label for="observation">NUEVA OBSERVACIÓN</label>
+                            <textarea class="modern-textarea text-uppercase" name="observation" id="observation" rows="3" placeholder="Escribe una nueva observación..."></textarea>
                         </div>
                     </div>
                 </div>

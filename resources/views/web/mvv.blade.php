@@ -7,7 +7,7 @@
     </div>
 
     @if (session('success'))
-        <div id="success" class="alert alert-success" style="margin-bottom: 24px;">
+        <div id="success" class="alert alert-success" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left: 4px solid #10b981; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             {{ session('success') }}
         </div>
     @endif
@@ -32,16 +32,23 @@
                     </div>
                 </div>
                 <div style="padding: 24px;">
-                    <textarea oninput="textCounter(this, 'counter{{ $index + 1 }}', 355);" id="description{{ $index + 1 }}" maxlength="355" class="form-control" name="description{{ $index + 1 }}" rows="5" cols="25">{{ old('description' . ($index + 1), $item->description) }}</textarea>
+                    <div class="modern-field">
+                        <textarea oninput="textCounter(this, 'counter{{ $index + 1 }}', 355);" id="description{{ $index + 1 }}" maxlength="355" class="form-control modern-textarea" name="description{{ $index + 1 }}" rows="5" cols="25">{{ old('description' . ($index + 1), $item->description) }}</textarea>
+                    </div>
                     @error('description' . ($index + 1))
-                        <div class="alert alert-danger" style="margin-top: 10px;">{{ $message }}</div>
+                        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-top: 10px;">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
         @endforeach
 
         <div style="display: flex; justify-content: center;">
-            <button class="btn-modern btn-primary" type="submit">Guardar datos</button>
+            <button class="btn-modern btn-primary" type="submit">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Guardar datos
+            </button>
         </div>
     </form>
 @endsection

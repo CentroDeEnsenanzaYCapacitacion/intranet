@@ -7,7 +7,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             <ul class="mb-0" style="padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -17,12 +17,12 @@
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             {{ session('error') }}
         </div>
     @endif
 
-    <div class="alert alert-danger" style="display: none; background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;" id="error-container">
+    <div class="alert alert-danger" style="display: none; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;" id="error-container">
         <ul id="error-list" class="mb-0" style="padding-left: 20px;"></ul>
     </div>
 
@@ -51,10 +51,12 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div style="text-align: center; max-width: 400px; margin: 0 auto;">
-                                <label for="amount" style="display: block; margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #374151;">Importe de Inscripción</label>
-                                <div class="input-group" style="margin-bottom: 24px;">
-                                    <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="amount" name="amount" placeholder="0.00" required style="font-size: 18px; font-weight: 600; text-align: center;">
+                                <div class="modern-field">
+                                    <label for="amount" style="display: block; margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #374151; text-align: center;">Importe de Inscripción</label>
+                                    <div class="input-group" style="margin-bottom: 24px;">
+                                        <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
+                                        <input type="number" step="0.01" min="0" class="modern-input" id="amount" name="amount" placeholder="0.00" required style="font-size: 18px; font-weight: 600; text-align: center; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                    </div>
                                 </div>
 
                                 <div class="form-check" style="display: flex; align-items: center; justify-content: center; padding: 12px 20px; background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer;">
@@ -69,14 +71,16 @@
 
                     <div class="row d-none" id="explanationContainer" style="margin-top: 24px;">
                         <div class="col-md-12">
-                            <div style="text-align: center; max-width: 600px; margin: 0 auto; padding: 20px; background: #fee2e2; border: 1px solid #991b1b; border-radius: 12px;">
-                                <label for="price_explanation" style="display: block; margin-bottom: 12px; font-size: 14px; font-weight: 600; color: #991b1b;">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
-                                        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    El importe es diferente al registrado. Por favor, explica la razón:
-                                </label>
-                                <textarea class="form-control" id="price_explanation" name="price_explanation" rows="3" placeholder="Escribe aquí la razón de la diferencia de precio..." style="text-align: center;"></textarea>
+                            <div style="text-align: center; max-width: 600px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px;">
+                                <div class="modern-field">
+                                    <label for="price_explanation" style="display: block; margin-bottom: 12px; font-size: 14px; font-weight: 600; color: #991b1b; text-align: center;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                                            <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        El importe es diferente al registrado. Por favor, explica la razón:
+                                    </label>
+                                    <textarea class="modern-textarea" id="price_explanation" name="price_explanation" rows="3" placeholder="Escribe aquí la razón de la diferencia de precio..." style="text-align: center;"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>

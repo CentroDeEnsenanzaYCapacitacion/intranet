@@ -19,7 +19,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             <ul style="margin: 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -29,13 +29,13 @@
     @endif
 
     @if (session('success'))
-        <div id="success" class="alert alert-success" style="background: #d1fae5; border: 1px solid #065f46; color: #065f46; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div id="success" class="alert alert-success" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left: 4px solid #10b981; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             {{ session('success') }}
         </div>
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             {{ session('error') }}
         </div>
     @endif
@@ -104,7 +104,7 @@
 
                         <div style="margin-bottom: 16px;">
                             <label for="schedule_id" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">HORARIO</label>
-                            <select class="form-control text-uppercase" name="schedule_id" id="schedule_id">
+                            <select class="modern-input text-uppercase" name="schedule_id" id="schedule_id">
                                 @foreach ($schedules as $schedule)
                                     <option value="{{ $schedule->id }}" {{ old('schedule_id', $student->schedule_id) == $schedule->id ? 'selected' : '' }}>
                                         {{ $schedule->name }}
@@ -126,7 +126,7 @@
 
                         <div style="margin-bottom: 16px;">
                             <label for="modality_id" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">TIPO</label>
-                            <select class="form-control text-uppercase" name="modality_id" id="modality_id">
+                            <select class="modern-input text-uppercase" name="modality_id" id="modality_id">
                                 @foreach ($modalities as $modality)
                                     <option value="{{ $modality->id }}" {{ old('modality_id', $student->modality_id) == $modality->id ? 'selected' : '' }}>
                                         {{ $modality->name }}
@@ -193,38 +193,52 @@
                             </div>
 
                             <div class="col-md-9 mb-3">
-                                <label for="address" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">DIRECCIÓN</label>
-                                <input class="form-control text-uppercase" name="address" type="text" value="{{ old('address', $student->address) }}" />
+                                <div class="modern-field">
+                                    <label for="address">DIRECCIÓN</label>
+                                    <input class="modern-input text-uppercase" name="address" type="text" value="{{ old('address', $student->address) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-3 mb-3">
-                                <label for="pc" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">C.P.</label>
-                                <input class="form-control text-uppercase" name="pc" type="text" value="{{ old('pc', $student->PC) }}" />
+                                <div class="modern-field">
+                                    <label for="pc">C.P.</label>
+                                    <input class="modern-input text-uppercase" name="pc" type="text" value="{{ old('pc', $student->PC) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="colony" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">COLONIA</label>
-                                <input class="form-control text-uppercase" name="colony" type="text" value="{{ old('colony', $student->colony) }}" />
+                                <div class="modern-field">
+                                    <label for="colony">COLONIA</label>
+                                    <input class="modern-input text-uppercase" name="colony" type="text" value="{{ old('colony', $student->colony) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="municipality" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">MUNICIPIO</label>
-                                <input class="form-control text-uppercase" name="municipality" type="text" value="{{ old('municipality', $student->municipality) }}" />
+                                <div class="modern-field">
+                                    <label for="municipality">MUNICIPIO</label>
+                                    <input class="modern-input text-uppercase" name="municipality" type="text" value="{{ old('municipality', $student->municipality) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">TELÉFONO</label>
-                                <input class="form-control text-uppercase" name="phone" type="text" value="{{ old('phone', $student->phone) }}" />
+                                <div class="modern-field">
+                                    <label for="phone">TELÉFONO</label>
+                                    <input class="modern-input text-uppercase" name="phone" type="text" value="{{ old('phone', $student->phone) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="cel_phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">CELULAR</label>
-                                <input class="form-control text-uppercase" name="cel_phone" type="text" value="{{ old('cel_phone', $student->cel_phone) }}" />
+                                <div class="modern-field">
+                                    <label for="cel_phone">CELULAR</label>
+                                    <input class="modern-input text-uppercase" name="cel_phone" type="text" value="{{ old('cel_phone', $student->cel_phone) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="email" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">EMAIL</label>
-                                <input class="form-control" name="email" type="text" value="{{ old('email', $student->email) }}" />
+                                <div class="modern-field">
+                                    <label for="email">EMAIL</label>
+                                    <input class="modern-input" name="email" type="text" value="{{ old('email', $student->email) }}" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -243,28 +257,38 @@
                     <div style="padding: 24px;">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="tutor_name" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">NOMBRE</label>
-                                <input class="form-control text-uppercase" name="tutor_name" type="text" value="{{ old('tutor_name', $student->tutor->tutor_name) }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_name">NOMBRE</label>
+                                    <input class="modern-input text-uppercase" name="tutor_name" type="text" value="{{ old('tutor_name', $student->tutor->tutor_name) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label for="tutor_surnames" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">APELLIDOS</label>
-                                <input class="form-control text-uppercase" name="tutor_surnames" type="text" value="{{ old('tutor_surnames', $student->tutor->tutor_surnames) }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_surnames">APELLIDOS</label>
+                                    <input class="modern-input text-uppercase" name="tutor_surnames" type="text" value="{{ old('tutor_surnames', $student->tutor->tutor_surnames) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="tutor_phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">TELÉFONO</label>
-                                <input class="form-control text-uppercase" name="tutor_phone" type="text" value="{{ old('tutor_phone', $student->tutor->tutor_phone) }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_phone">TELÉFONO</label>
+                                    <input class="modern-input text-uppercase" name="tutor_phone" type="text" value="{{ old('tutor_phone', $student->tutor->tutor_phone) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="tutor_cel_phone" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">CELULAR</label>
-                                <input class="form-control text-uppercase" name="tutor_cel_phone" type="text" value="{{ old('tutor_cel_phone', $student->tutor->tutor_cel_phone) }}" />
+                                <div class="modern-field">
+                                    <label for="tutor_cel_phone">CELULAR</label>
+                                    <input class="modern-input text-uppercase" name="tutor_cel_phone" type="text" value="{{ old('tutor_cel_phone', $student->tutor->tutor_cel_phone) }}" />
+                                </div>
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label for="relationship" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">PARENTESCO</label>
-                                <input class="form-control text-uppercase" name="relationship" type="text" value="{{ old('tutor_relationship', $student->tutor->relationship) }}" />
+                                <div class="modern-field">
+                                    <label for="relationship">PARENTESCO</label>
+                                    <input class="modern-input text-uppercase" name="relationship" type="text" value="{{ old('tutor_relationship', $student->tutor->relationship) }}" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -374,9 +398,9 @@
                             </div>
                         @endif
 
-                        <div>
-                            <label for="observation" style="display: block; font-size: 12px; font-weight: 600; color: #6b7280; margin-bottom: 8px;">NUEVA OBSERVACIÓN</label>
-                            <textarea class="form-control text-uppercase" name="observation" id="observation" rows="3" placeholder="Escribe una nueva observación..."></textarea>
+                        <div class="modern-field">
+                            <label for="observation">NUEVA OBSERVACIÓN</label>
+                            <textarea class="modern-textarea text-uppercase" name="observation" id="observation" rows="3" placeholder="Escribe una nueva observación..."></textarea>
                         </div>
                     </div>
                 </div>

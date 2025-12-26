@@ -1,7 +1,7 @@
 @extends('layout.mainLayout')
 @section('title', 'Sistema de gestión')
 @section('content')
-    <div class="dashboard-welcome">
+    <div style="margin-bottom: 32px;">
         <h1 class="dashboard-title">Sistema de Gestión Escolar</h1>
         <p class="dashboard-subtitle">Administra estudiantes, calificaciones y más</p>
     </div>

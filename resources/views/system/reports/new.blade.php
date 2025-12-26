@@ -7,7 +7,7 @@
     </div>
 
     @if ($errors->any())
-        <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+        <div class="alert alert-danger" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #ef4444; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
             <ul style="margin: 0; padding-left: 20px;">
                 @foreach ($errors->all() as $error)
                     <li>{!! nl2br(e($error)) !!}</li>
@@ -31,32 +31,42 @@
             <div style="padding: 24px;">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="name" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Nombre(s)</label>
-                        <input type="text" class="form-control text-uppercase" id="name" placeholder="Nombre(s)" name="name" value="{{ old('name') }}" required>
-                        <span class="error-message" id="name-error"></span>
+                        <div class="modern-field">
+                            <label for="name">Nombre(s)</label>
+                            <input type="text" class="modern-input text-uppercase" id="name" placeholder="Nombre(s)" name="name" value="{{ old('name') }}" required>
+                            <span class="error-message" id="name-error"></span>
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="surnames" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Apellidos</label>
-                        <input type="text" class="form-control text-uppercase" id="surnames" placeholder="Apellidos" name="surnames" value="{{ old('surnames') }}" required>
-                        <span class="error-message" id="surname-error"></span>
+                        <div class="modern-field">
+                            <label for="surnames">Apellidos</label>
+                            <input type="text" class="modern-input text-uppercase" id="surnames" placeholder="Apellidos" name="surnames" value="{{ old('surnames') }}" required>
+                            <span class="error-message" id="surname-error"></span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="email" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" placeholder="correo@ejemplo.com" name="email" value="{{ old('email') }}" required>
-                        <span class="error-message" id="mail-error"></span>
+                        <div class="modern-field">
+                            <label for="email">Correo Electrónico</label>
+                            <input type="email" class="modern-input" id="email" placeholder="correo@ejemplo.com" name="email" value="{{ old('email') }}" required>
+                            <span class="error-message" id="mail-error"></span>
+                        </div>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="phone" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Teléfono</label>
-                        <input type="text" class="form-control" id="phone" placeholder="Teléfono" name="phone" value="{{ old('phone') }}">
-                        <span class="error-message" id="phone-error"></span>
+                        <div class="modern-field">
+                            <label for="phone">Teléfono</label>
+                            <input type="text" class="modern-input" id="phone" placeholder="Teléfono" name="phone" value="{{ old('phone') }}">
+                            <span class="error-message" id="phone-error"></span>
+                        </div>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="cel_phone" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Celular</label>
-                        <input type="text" class="form-control" id="cel_phone" placeholder="Celular" name="cel_phone" value="{{ old('cel_phone') }}" required>
-                        <span class="error-message" id="cel-phone-error"></span>
+                        <div class="modern-field">
+                            <label for="cel_phone">Celular</label>
+                            <input type="text" class="modern-input" id="cel_phone" placeholder="Celular" name="cel_phone" value="{{ old('cel_phone') }}" required>
+                            <span class="error-message" id="cel-phone-error"></span>
+                        </div>
                     </div>
                 </div>
 
@@ -82,7 +92,7 @@
             </div>
         </div>
 
-        <div class="modern-card" style="margin-top: 24px;">
+        <div class="modern-card" style="margin-bottom: 24px;">
             <div class="card-header-modern">
                 <div class="header-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -95,33 +105,39 @@
             <div style="padding: 24px;">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="course_id" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Área de Interés</label>
-                        <select class="form-control text-uppercase" name="course_id" id="course_id" required>
-                            @foreach($courses as $course)
-                                <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>{{ $course->name }}</option>
-                            @endforeach
-                        </select>
+                        <div class="modern-field">
+                            <label for="course_id">Área de Interés</label>
+                            <select class="modern-input text-uppercase" name="course_id" id="course_id" required>
+                                @foreach($courses as $course)
+                                    <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>{{ $course->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="crew_id" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">Plantel de Interés</label>
-                        <select class="form-control text-uppercase" name="crew_id" id="crew_id" required>
-                            @foreach($crews as $crew)
-                                @if($crew->id > 1)
-                                    <option value="{{ $crew->id }}" {{ old('crew_id') == $crew->id ? 'selected' : '' }}>{{ $crew->name }}</option>
-                                @endif
-                            @endforeach
-                        </select>
+                        <div class="modern-field">
+                            <label for="crew_id">Plantel de Interés</label>
+                            <select class="modern-input text-uppercase" name="crew_id" id="crew_id" required>
+                                @foreach($crews as $crew)
+                                    @if($crew->id > 1)
+                                        <option value="{{ $crew->id }}" {{ old('crew_id') == $crew->id ? 'selected' : '' }}>{{ $crew->name }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <label for="marketing_id" style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #374151;">¿Cómo Conoció CEC?</label>
-                        <select class="form-control text-uppercase" name="marketing_id" id="marketing_id" required>
-                            @foreach($marketings as $marketing)
-                                <option value="{{ $marketing->id }}" {{ old('marketing_id') == $marketing->id ? 'selected' : '' }}>{{ $marketing->name }}</option>
-                            @endforeach
-                        </select>
+                        <div class="modern-field">
+                            <label for="marketing_id">¿Cómo Conoció CEC?</label>
+                            <select class="modern-input text-uppercase" name="marketing_id" id="marketing_id" required>
+                                @foreach($marketings as $marketing)
+                                    <option value="{{ $marketing->id }}" {{ old('marketing_id') == $marketing->id ? 'selected' : '' }}>{{ $marketing->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
