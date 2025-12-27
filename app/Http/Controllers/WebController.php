@@ -24,8 +24,58 @@ class WebController extends Controller
 
     public function webCarousel()
     {
-        $carousels = WebCarousel::all();
+        $carousels = WebCarousel::orderBy('id')->get();
         return view('web.carousel', compact('carousels'));
+    }
+
+    public function webCarouselAdd()
+    {
+        WebCarousel::create([
+            'title' => null,
+            'description' => null,
+        ]);
+
+        return redirect()->route('web.carousel')->with('success', 'Nueva imagen agregada.');
+    }
+
+    public function webCarouselDelete(WebCarousel $carousel)
+    {
+        if (WebCarousel::count() <= 1) {
+            return redirect()->back()->withErrors(['carousel' => 'Debe quedar al menos una imagen.']);
+        }
+
+        $carouselId = $carousel->id;
+
+        $intranetPath = public_path('assets/img/carousel/');
+
+        $webPath = null;
+        $basePath = base_path();
+
+        if (app()->environment('production')) {
+
+            $webPath = dirname($basePath) . '/public_html/intranet/assets/img/carousel/';
+        } elseif (app()->environment('development')) {
+
+            $webPath = dirname($basePath) . '/public_html/intranet_dev/assets/img/carousel/';
+        }
+
+        $filename = $carouselId . '.jpg';
+        $intranetFile = $intranetPath . $filename;
+
+        if (file_exists($intranetFile)) {
+            unlink($intranetFile);
+        }
+
+        if ($webPath) {
+            $webFile = $webPath . $filename;
+            if (file_exists($webFile)) {
+                unlink($webFile);
+            }
+        }
+
+        $carousel->delete();
+
+        return redirect()->route('web.carousel')->with('success', 'Imagen eliminada.');
     }
 
     public function webMvvPost(WebMvvRequest $request)
@@ -87,37 +137,21 @@ class WebController extends Controller
 
         $destinationPath = $intranetPath;
 
-        $images = [
-            $request->file('img_1'),
-            $request->file('img_2'),
-            $request->file('img_3'),
-            $request->file('img_4')
-        ];
+        $images = $request->file('img', []);
+        $titles = $request->input('title', []);
+        $descriptions = $request->input('description', []);
 
-        $titles = [
-            $request->input('title1'),
-            $request->input('title2'),
-            $request->input('title3'),
-            $request->input('title4')
-        ];
+        $carousels = WebCarousel::orderBy('id')->get();
 
-        $descriptions = [
-            $request->input('description1'),
-            $request->input('description2'),
-            $request->input('description3'),
-            $request->input('description4')
-        ];
+        foreach ($carousels as $carousel) {
+            $carouselId = $carousel->id;
+            $carousel->title = $titles[$carouselId] ?? $carousel->title;
+            $carousel->description = $descriptions[$carouselId] ?? $carousel->description;
 
-        foreach ($images as $key => $image) {
-            $data = [
-                'title' => $titles[$key],
-                'description' => $descriptions[$key],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+            $image = $images[$carouselId] ?? null;
 
             if ($image) {
-                $filename = ($key + 1) . '.jpg';
+                $filename = $carouselId . '.jpg';
 
                 $image->move($destinationPath, $filename);
 
@@ -133,12 +167,11 @@ class WebController extends Controller
                         ]);
                     }
                 }
+
+                $carousel->updated_at = now();
             }
 
-            WebCarousel::updateOrCreate(
-                ['id' => $key + 1],
-                $data
-            );
+            $carousel->save();
         }
 
         return redirect()->back()->with('success', 'Datos guardados exitosamente');

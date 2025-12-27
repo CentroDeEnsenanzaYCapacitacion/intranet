@@ -144,6 +144,7 @@ jobs:
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path \
               --verbose \
+              --delete \
               --exclude-glob public/** \
               --exclude-glob vendor/** \
               --exclude-glob .git/** \
@@ -156,6 +157,11 @@ jobs:
               --exclude-glob .env.example \
               --exclude-glob composer.lock \
               --exclude-glob storage/logs/** \
+              --exclude-glob storage/app/** \
+              --exclude-glob storage/framework/cache/** \
+              --exclude-glob storage/framework/sessions/** \
+              --exclude-glob storage/framework/views/** \
+              --exclude-glob public/uploads/** \
               --exclude-glob config/local.php; \
               quit"
 
@@ -177,6 +183,7 @@ jobs:
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_dev_assets_path \
               --verbose \
+              --delete \
               --exclude-glob img/carousel/**; \
               quit"
 
@@ -292,6 +299,7 @@ jobs:
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path \
               --verbose \
+              --delete \
               --exclude-glob public/** \
               --exclude-glob vendor/** \
               --exclude-glob .git/** \
@@ -304,6 +312,11 @@ jobs:
               --exclude-glob .env.example \
               --exclude-glob composer.lock \
               --exclude-glob storage/logs/** \
+              --exclude-glob storage/app/** \
+              --exclude-glob storage/framework/cache/** \
+              --exclude-glob storage/framework/sessions/** \
+              --exclude-glob storage/framework/views/** \
+              --exclude-glob public/uploads/** \
               --exclude-glob config/local.php; \
               quit"
 
@@ -325,6 +338,7 @@ jobs:
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_prod_assets_path \
               --verbose \
+              --delete \
               --exclude-glob img/carousel/**; \
               quit"
 

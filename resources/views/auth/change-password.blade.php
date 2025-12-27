@@ -120,22 +120,5 @@
 @endsection
 
 @push('scripts')
-<script>
-    document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
-        const password = document.getElementById('password').value;
-        const confirmation = document.getElementById('password_confirmation').value;
-
-        if (password !== confirmation) {
-            e.preventDefault();
-            alert('Las contrase\u00f1as no coinciden.');
-            return false;
-        }
-
-        if (password.length < 8) {
-            e.preventDefault();
-            alert('La contrase\u00f1a debe tener al menos 8 caracteres.');
-            return false;
-        }
-    });
-</script>
+<script src="{{ asset('assets/js/password_validation.js') }}"></script>
 @endpush
