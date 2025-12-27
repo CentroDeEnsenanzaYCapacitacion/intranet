@@ -62,5 +62,7 @@ public/index_dev.php
 public/index_prod.php
 public/create-storage-link-fixed.php
 public/.htaccess
+.php-cs-fixer.dist.php
+.php-cs-fixer.cache
 
 CLAUDE.md
