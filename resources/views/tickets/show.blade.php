@@ -81,7 +81,7 @@
                                     {{ ucfirst(str_replace('_', ' ', $ticket->status)) }}
                                 </span>
                             </td>
-                            <td class="text-center">{{ $ticket->created_at->format('d/m/Y H:i') }}</td>
+                            <td class="text-center">{{ $ticket->created_at->format('d/m/Y') }}</td>
                         </tr>
                     @empty
                         <tr>

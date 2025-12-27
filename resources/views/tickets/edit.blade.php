@@ -88,7 +88,7 @@
 
             <div class="col-md-3 mb-3">
                 <label style="display: block; font-weight: 600; color: #374151; margin-bottom: 8px;">Fecha de creación</label>
-                <p style="color: #6b7280; margin: 0;">{{ $ticket->created_at->format('d/m/Y H:i') }}</p>
+                <p style="color: #6b7280; margin: 0;">{{ $ticket->created_at->format('d/m/Y') }}</p>
             </div>
         </div>
 
