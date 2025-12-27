@@ -92,7 +92,7 @@
                                 <div class="col-md-6">
                                     <div style="display: flex; gap: 8px;">
                                         <input type="date" name="fecha_fin" id="fecha_fin" class="modern-input" value="{{ request('fecha_fin') }}" placeholder="Fecha fin" style="flex: 1;">
-                                        <button type="button" class="btn-modern btn-secondary" onclick="document.getElementById('fecha_fin').value = ''" title="Limpiar fecha" style="padding: 0 16px;">
+                                        <button type="button" class="btn-modern btn-primary" onclick="document.getElementById('fecha_fin').value = ''" title="Limpiar fecha" style="padding: 0 16px;">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             </svg>

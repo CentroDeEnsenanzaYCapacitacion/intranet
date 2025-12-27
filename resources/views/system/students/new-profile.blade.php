@@ -458,7 +458,7 @@
                 </div>
 
                 <div class="mt-4 text-end">
-                    <button type="button" class="btn btn-secondary me-2" onclick="closeModal('documentModal')">Cancelar</button>
+                    <button type="button" class="btn bg-orange text-white me-2" onclick="closeModal('documentModal')">Cancelar</button>
                     <button type="submit" class="btn bg-orange text-white">Subir documento</button>
                 </div>
             </form>

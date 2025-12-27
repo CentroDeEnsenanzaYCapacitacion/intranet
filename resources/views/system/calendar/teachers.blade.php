@@ -129,7 +129,7 @@
                 <div class="mt-4 text-end">
                     <div id="assignError" class="alert alert-danger d-none mt-2"></div>
 
-                    <button type="button" class="btn btn-secondary me-2" onclick="closeModal('assignModal')">Cancelar</button>
+                    <button type="button" class="btn bg-orange text-white me-2" onclick="closeModal('assignModal')">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Asignar</button>
                 </div>
             </form>
