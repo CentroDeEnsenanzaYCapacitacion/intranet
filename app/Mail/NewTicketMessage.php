@@ -43,4 +43,11 @@ class NewTicketMessage extends Mailable
     {
         return [];
     }
+
+    public function build()
+    {
+        return $this->withSwiftMessage(function ($message) {
+            $message->getHeaders()->addTextHeader('Content-Type', 'text/html; charset=UTF-8');
+        });
+    }
 }
