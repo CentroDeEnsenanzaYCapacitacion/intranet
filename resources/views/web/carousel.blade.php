@@ -25,7 +25,7 @@
     <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
         <form action="{{ route('web.carousel.add') }}" method="post">
             @csrf
-            <button type="submit" class="btn-modern btn-secondary" onclick="showLoader(true)">
+            <button type="submit" class="btn-modern btn-primary" onclick="showLoader(true)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -148,20 +148,6 @@
 @endsection
 
 @push('scripts')
-<script>
-    document.querySelectorAll('.file-input-native').forEach((input) => {
-        const wrapper = input.closest('.file-input');
-        const text = wrapper?.querySelector('.file-input-text');
-        if (!text) {
-            return;
-        }
-        const defaultText = text.dataset.default || text.textContent;
-        const updateText = () => {
-            const name = input.files && input.files.length ? input.files[0].name : defaultText;
-            text.textContent = name;
-        };
-        input.addEventListener('change', updateText);
-        updateText();
-    });
-</script>
+<script src="{{ asset('assets/js/file_input.js') }}"></script>
+<script src="{{ asset('assets/js/carousel_validation.js') }}"></script>
 @endpush
