@@ -435,7 +435,10 @@
                 </div>
                 <div class="mb-3">
                     <label for="new_tuition" class="form-label"><b>Nueva colegiatura:</b></label>
-                    <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" required>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: #F57F17; color: white; font-weight: 600; border: none;">$</span>
+                        <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" required>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="reason" class="form-label"><b>Motivo del cambio:</b></label>
