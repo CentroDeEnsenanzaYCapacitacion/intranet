@@ -162,6 +162,19 @@ class TicketController extends Controller
 
     public function getImage($filename)
     {
+        $user = Auth::user();
+        $ticketImage = TicketImage::where('path', $filename)->first();
+
+        if (!$ticketImage) {
+            abort(404);
+        }
+
+        $ticket = $ticketImage->ticket;
+
+        if ($user->role_id != 1 && $ticket->user_id != $user->id) {
+            abort(403, 'No tienes permiso para acceder a este recurso.');
+        }
+
         $path = 'tickets/' . $filename;
 
         if (!Storage::exists($path)) {
@@ -176,6 +189,19 @@ class TicketController extends Controller
 
     public function getAttachment($filename)
     {
+        $user = Auth::user();
+        $ticketImage = TicketImage::where('path', $filename)->first();
+
+        if (!$ticketImage) {
+            abort(404);
+        }
+
+        $ticket = $ticketImage->ticket;
+
+        if ($user->role_id != 1 && $ticket->user_id != $user->id) {
+            abort(403, 'No tienes permiso para acceder a este recurso.');
+        }
+
         $path = 'tickets/' . $filename;
 
         if (!Storage::exists($path)) {

@@ -18,13 +18,20 @@ class ChangePasswordController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'password' => 'required|min:8|confirmed|different:current_password',
+            'password' => [
+                'required',
+                'min:8',
+                'confirmed',
+                'different:current_password',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
+            ],
         ], [
             'current_password.required' => 'La contraseña actual es requerida.',
             'password.required' => 'La nueva contraseña es requerida.',
             'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
             'password.different' => 'La nueva contraseña debe ser diferente a la actual.',
+            'password.regex' => 'La contraseña debe incluir mayúsculas, minúsculas, números y símbolos (@$!%*?&).',
         ]);
 
         $user = Auth::user();

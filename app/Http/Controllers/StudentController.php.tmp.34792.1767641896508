@@ -161,17 +161,7 @@ class StudentController extends Controller
 
     public function profile($student_id)
     {
-        $user = Auth::user();
         $student = Student::find($student_id);
-
-        if (!$student) {
-            abort(404);
-        }
-
-        if ($user->role_id != 1 && $user->crew_id != $student->crew_id) {
-            abort(403, 'No tienes permiso para acceder a este recurso.');
-        }
-
         $schedules = Schedule::all();
         $payment_periodicities = PaymentPeriodicity::all();
         $modalities = Modality::all();

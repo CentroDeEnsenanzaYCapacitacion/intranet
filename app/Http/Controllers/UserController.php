@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use App\Mail\NewUser;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Crew;
@@ -97,8 +96,6 @@ class UserController extends Controller
         }
         $username = $this->getUniqueUsername(explode(' ', trim($request->name))[0]);
 
-        $password = Str::random(12);
-
         $user = User::create([
             'name' => $request->name,
             'surnames' => $request->surnames,
@@ -108,14 +105,22 @@ class UserController extends Controller
             'phone' => $request->phone,
             'cel_phone' => $request->cel_phone,
             'genre' => $request->genre,
-            'password' => Hash::make($password),
+            'password' => Hash::make(Str::random(32)),
             'username' => $username
+        ]);
+
+        $token = Str::random(64);
+        \App\Models\UserInvitation::create([
+            'user_id' => $user->id,
+            'token' => $token,
+            'expires_at' => now()->addDays(7),
+            'used' => false,
         ]);
 
         $user_mail = $request->email;
 
         try {
-            Mail::to($user_mail)->send(new NewUser($user, $password));
+            Mail::to($user_mail)->send(new \App\Mail\UserInvitation($user, $token));
             $success = true;
         } catch (Exception $e) {
             $success = false;
@@ -133,13 +138,19 @@ class UserController extends Controller
         $user = User::find($id);
         $currentUser = Auth::user();
 
-        if (in_array($currentUser->role_id, [1, 2])) {
+        if (!$user) {
+            abort(404);
+        }
+
+        if ($currentUser->role_id == 1) {
+            $roles = Role::all();
+        } elseif ($currentUser->role_id == 2) {
+            if ($user->crew_id != $currentUser->crew_id) {
+                abort(403, 'No tienes permiso para editar este usuario.');
+            }
             $roles = Role::all();
         } else {
-            $roles = Role::where("name", "!=", "admin")
-                ->where("name", "!=", "Director")
-                ->where("name", "!=", "profesor")
-                ->get();
+            abort(403, 'No tienes permiso para editar usuarios.');
         }
         $crews = Crew::all();
 
@@ -149,6 +160,20 @@ class UserController extends Controller
     public function updateUser(UserRequest $request, $id)
     {
         $user = User::find($id);
+        $currentUser = Auth::user();
+
+        if (!$user) {
+            abort(404);
+        }
+
+        if ($currentUser->role_id == 2 && $user->crew_id != $currentUser->crew_id) {
+            abort(403, 'No tienes permiso para editar este usuario.');
+        }
+
+        if ($currentUser->role_id != 1 && $currentUser->role_id != 2) {
+            abort(403, 'No tienes permiso para editar usuarios.');
+        }
+
         $wasUpdated = $user ->update([
             'name' => $request->name,
             'surnames' => $request->surnames,
@@ -172,6 +197,20 @@ class UserController extends Controller
     public function blockUser($id)
     {
         $user = User::find($id);
+        $currentUser = Auth::user();
+
+        if (!$user) {
+            abort(404);
+        }
+
+        if ($currentUser->role_id == 2 && $user->crew_id != $currentUser->crew_id) {
+            abort(403, 'No tienes permiso para bloquear este usuario.');
+        }
+
+        if ($currentUser->role_id != 1 && $currentUser->role_id != 2) {
+            abort(403, 'No tienes permiso para bloquear usuarios.');
+        }
+
         $user->update([
             'is_active' => false
         ]);
@@ -182,6 +221,20 @@ class UserController extends Controller
     public function activateUser($id)
     {
         $user = User::find($id);
+        $currentUser = Auth::user();
+
+        if (!$user) {
+            abort(404);
+        }
+
+        if ($currentUser->role_id == 2 && $user->crew_id != $currentUser->crew_id) {
+            abort(403, 'No tienes permiso para activar este usuario.');
+        }
+
+        if ($currentUser->role_id != 1 && $currentUser->role_id != 2) {
+            abort(403, 'No tienes permiso para activar usuarios.');
+        }
+
         $user->update([
             'is_active' => true
         ]);

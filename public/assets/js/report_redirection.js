@@ -105,16 +105,16 @@ function submitFormInNewTab(form) {
         const priceExplanationValue = priceExplanationTextarea ? priceExplanationTextarea.value : "";
 
         const formHtml = `
-            <form action="${form.action}" method="post">
-                <input type="hidden" name="_token" value="${
+            <form action="${escapeAttributes(form.action)}" method="post">
+                <input type="hidden" name="_token" value="${escapeAttributes(
                     document.querySelector('input[name="_token"]').value
-                }">
-                <input type="hidden" name="report_id" value="${
+                )}">
+                <input type="hidden" name="report_id" value="${escapeAttributes(
                     document.querySelector('input[name="report_id"]').value
-                }">
-                <input type="hidden" name="amount" value="${amountValue}">
-                <input type="hidden" name="card_payment" value="${cardPaymentValue}">
-                <input type="hidden" name="price_explanation" value="${priceExplanationValue}">
+                )}">
+                <input type="hidden" name="amount" value="${escapeAttributes(amountValue)}">
+                <input type="hidden" name="card_payment" value="${escapeAttributes(cardPaymentValue)}">
+                <input type="hidden" name="price_explanation" value="${escapeAttributes(priceExplanationValue)}">
             </form>
         `;
         newTab.document.body.innerHTML = formHtml;
@@ -134,7 +134,10 @@ function displayError(message) {
     const errorList = document.getElementById("error-list");
     if (!errorContainer || !errorList) return;
 
-    errorList.innerHTML = `<li>${message}</li>`;
+    const li = document.createElement('li');
+    li.textContent = message;
+    errorList.innerHTML = '';
+    errorList.appendChild(li);
     errorContainer.style.display = "block";
 
     const header = document.querySelector(".header-fixed");

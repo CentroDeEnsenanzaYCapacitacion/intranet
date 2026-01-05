@@ -8,32 +8,34 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\User;
 
-class NewUser extends Mailable
+class UserInvitation extends Mailable
 {
-    use Queueable;
-    use SerializesModels;
+    use Queueable, SerializesModels;
 
     public $user;
-    public $password;
+    public $token;
+    public $invitationUrl;
 
-    public function __construct($user, $password)
+    public function __construct(User $user, string $token)
     {
         $this->user = $user;
-        $this->password = $password;
+        $this->token = $token;
+        $this->invitationUrl = url("/set-password?token={$token}");
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: mb_encode_mimeheader('Bienvenid@ a CEC!!', 'UTF-8'),
+            subject: 'Invitación a establecer tu contraseña',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'mails.newUser',
+            view: 'mails.userInvitation',
         );
     }
 

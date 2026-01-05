@@ -136,9 +136,12 @@
                         </div>
 
                         <div style="background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%); border: 2px solid #065f46; border-radius: 12px; padding: 16px; text-align: center;">
-                            <label style="display: block; font-size: 12px; font-weight: 600; color: #065f46; margin-bottom: 4px;">COLEGIATURA</label>
-                            <div style="font-size: 28px; font-weight: 700; color: #065f46;">${{ number_format($student->tuition ?? 0, 2) }}</div>
-                            <button type="button" class="btn-modern" style="margin-top: 12px; background: white; color: #065f46; border: 1px solid #065f46; padding: 8px 16px; font-size: 13px;" onclick="openModal('tuitionChangeModal')">
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #065f46; margin-bottom: 8px;">COLEGIATURA</label>
+                            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                                <span style="font-size: 24px; font-weight: 700; color: #065f46; margin-right: 4px;">$</span>
+                                <span style="font-size: 28px; font-weight: 700; color: #065f46;">{{ number_format($student->tuition ?? 0, 2) }}</span>
+                            </div>
+                            <button type="button" class="btn-modern" style="background: white; color: #065f46; border: 1px solid #065f46; padding: 8px 16px; font-size: 13px;" onclick="openModal('tuitionChangeModal')">
                                 Solicitar cambio
                             </button>
                         </div>
@@ -432,7 +435,10 @@
                 </div>
                 <div class="mb-3">
                     <label for="new_tuition" class="form-label"><b>Nueva colegiatura:</b></label>
-                    <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" required>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
+                        <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" required style="font-size: 16px; font-weight: 600;">
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="reason" class="form-label"><b>Motivo del cambio:</b></label>
