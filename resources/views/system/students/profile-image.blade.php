@@ -50,12 +50,12 @@
                         <label for="image">SELECCIONA LA IMAGEN</label>
                         <div class="file-input">
                             <input class="file-input-native" type="file" name="image" id="image" accept="image/*">
-                            <label for="image" class="file-input-label">
+                            <div class="file-input-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 2.58579 20.4142C2.21071 20.0391 2 19.5304 2 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                <span id="fileName">Seleccionar archivo</span>
-                            </label>
+                            </div>
+                            <span class="file-input-text" id="fileName">Seleccionar archivo</span>
                         </div>
                     </div>
 
