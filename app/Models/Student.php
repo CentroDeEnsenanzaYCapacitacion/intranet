@@ -9,7 +9,38 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'surnames',
+        'email',
+        'phone',
+        'cel_phone',
+        'address',
+        'pc',
+        'colony',
+        'municipality',
+        'birthdate',
+        'birthplace',
+        'curp',
+        'rfc',
+        'nss',
+        'sex',
+        'marital_status',
+        'nationality',
+        'grade',
+        'schedule_id',
+        'payment_periodicity_id',
+        'modality_id',
+        'sabbatine',
+        'profile_pic',
+        'first_time',
+    ];
+
+    protected $guarded = [
+        'crew_id',
+        'tuition',
+        'password',
+    ];
 
     protected $hidden = [
         'password',

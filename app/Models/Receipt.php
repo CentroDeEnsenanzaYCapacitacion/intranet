@@ -9,7 +9,21 @@ class Receipt extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'crew_id',
+        'user_id',
+        'student_id',
+        'concept',
+        'amount',
+        'receipt_type_id',
+        'attr_id',
+        'receipt_amount',
+        'card_payment',
+        'voucher',
+        'bill',
+        'folio',
+        'status',
+    ];
 
     public function crew()
     {

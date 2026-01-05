@@ -118,5 +118,6 @@
     </form>
 @endsection
 @push('scripts')
+    <script src="{{ asset('assets/js/xss-protection.js') }}"></script>
     <script src="{{ asset('assets/js/report_redirection.js') }}"></script>
 @endpush

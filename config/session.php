@@ -10,7 +10,7 @@ return [
 
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', true),
 
-    'encrypt' => false,
+    'encrypt' => true,
 
     'files' => storage_path('framework/sessions'),
 

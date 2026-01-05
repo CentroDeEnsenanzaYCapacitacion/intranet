@@ -37,11 +37,21 @@ document.addEventListener("DOMContentLoaded", function () {
         eventContent: function (arg) {
             const props = arg.event.extendedProps;
             const container = document.createElement("div");
-            container.innerHTML = `
-                <strong>${props.staff_name}</strong><br>
-                <span>${props.subject_name}</span><br>
-                <small>${props.start_time.slice(0, 5)} - ${props.end_time.slice(0, 5)}</small>
-            `;
+
+            const strong = document.createElement("strong");
+            strong.textContent = props.staff_name;
+            container.appendChild(strong);
+            container.appendChild(document.createElement("br"));
+
+            const span = document.createElement("span");
+            span.textContent = props.subject_name;
+            container.appendChild(span);
+            container.appendChild(document.createElement("br"));
+
+            const small = document.createElement("small");
+            small.textContent = `${props.start_time.slice(0, 5)} - ${props.end_time.slice(0, 5)}`;
+            container.appendChild(small);
+
             return { domNodes: [container] };
         },
 
