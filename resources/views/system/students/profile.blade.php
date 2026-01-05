@@ -136,9 +136,12 @@
                         </div>
 
                         <div style="background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%); border: 2px solid #065f46; border-radius: 12px; padding: 16px; text-align: center;">
-                            <label style="display: block; font-size: 12px; font-weight: 600; color: #065f46; margin-bottom: 4px;">COLEGIATURA</label>
-                            <div style="font-size: 28px; font-weight: 700; color: #065f46;">${{ number_format($student->tuition ?? 0, 2) }}</div>
-                            <button type="button" class="btn-modern" style="margin-top: 12px; background: white; color: #065f46; border: 1px solid #065f46; padding: 8px 16px; font-size: 13px;" onclick="openModal('tuitionChangeModal')">
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #065f46; margin-bottom: 8px;">COLEGIATURA</label>
+                            <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+                                <span style="font-size: 24px; font-weight: 700; color: #065f46; margin-right: 4px;">$</span>
+                                <span style="font-size: 28px; font-weight: 700; color: #065f46;">{{ number_format($student->tuition ?? 0, 2) }}</span>
+                            </div>
+                            <button type="button" class="btn-modern" style="background: white; color: #065f46; border: 1px solid #065f46; padding: 8px 16px; font-size: 13px;" onclick="openModal('tuitionChangeModal')">
                                 Solicitar cambio
                             </button>
                         </div>
