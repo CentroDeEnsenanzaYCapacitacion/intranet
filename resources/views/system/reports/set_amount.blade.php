@@ -55,7 +55,7 @@
                                     <label for="amount" style="display: block; margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #374151; text-align: center;">Importe de Inscripción</label>
                                     <div class="input-group" style="margin-bottom: 24px;">
                                         <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
-                                        <input type="number" step="0.01" min="0" class="modern-input" id="amount" name="amount" placeholder="0.00" required style="font-size: 18px; font-weight: 600; text-align: center; border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                        <input type="number" step="0.01" min="0" class="form-control" id="amount" name="amount" placeholder="0.00" required style="font-size: 18px; font-weight: 600; text-align: center;">
                                     </div>
                                 </div>
 

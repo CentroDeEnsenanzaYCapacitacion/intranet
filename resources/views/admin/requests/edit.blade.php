@@ -43,7 +43,10 @@
                     @csrf
                     <div class="modern-field">
                         <label for="new_tuition"><b>Nueva colegiatura:</b></label>
-                        <input type="number" class="modern-input" id="new_tuition" name="new_tuition" step="0.01" min="0.01" value="{{ $newTuition }}" required>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
+                            <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" value="{{ $newTuition }}" required style="font-size: 16px; font-weight: 600;">
+                        </div>
                     </div>
 
                     <div class="modern-field">

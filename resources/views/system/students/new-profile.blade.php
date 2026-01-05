@@ -157,8 +157,8 @@
                         <div style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border: 2px solid #F57F17; border-radius: 12px; padding: 16px;">
                             <label for="tuition" style="display: block; font-size: 12px; font-weight: 600; color: #F57F17; margin-bottom: 4px; text-align: center;">COLEGIATURA *</label>
                             <div class="input-group">
-                                <span class="input-group-text" style="background: #F57F17; color: white; font-weight: 600; border: none;">$</span>
-                                <input class="form-control" type="number" step="0.01" min="0.01" name="tuition" value="{{ old('tuition', $savedData['tuition'] ?? '') }}" placeholder="0.00" required style="font-weight: 600; text-align: center;">
+                                <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
+                                <input class="form-control" type="number" step="0.01" min="0.01" name="tuition" value="{{ old('tuition', $savedData['tuition'] ?? '') }}" placeholder="0.00" required style="font-size: 16px; font-weight: 600; text-align: center;">
                             </div>
                             @if ($errors->has('tuition'))
                                 <div style="color: #991b1b; font-size: 12px; margin-top: 4px; text-align: center;">{{ $errors->first('tuition') }}</div>

@@ -197,7 +197,7 @@
                                         <input type="hidden" name="period" value="{{ request('period', '8-22') }}">
                                         <input type="hidden" name="crew_id" value="{{ $crewId }}">
 
-                                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: stretch;">
                                             <select name="definition_id" class="form-control" style="flex: 1; min-width: 200px;">
                                                 @foreach ($adjustmentDefinitions as $definition)
                                                     <option value="{{ $definition->id }}">
@@ -206,7 +206,10 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <input type="number" name="amount" class="form-control" step="0.01" placeholder="Importe" required style="flex: 1; min-width: 150px;">
+                                            <div class="input-group" style="flex: 1; min-width: 150px;">
+                                                <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 16px;">$</span>
+                                                <input type="number" name="amount" class="form-control" step="0.01" placeholder="Importe" required style="font-size: 14px; font-weight: 600;">
+                                            </div>
                                             <button type="submit" class="btn-modern btn-primary" style="padding: 10px 24px;">Agregar</button>
                                         </div>
                                     </form>

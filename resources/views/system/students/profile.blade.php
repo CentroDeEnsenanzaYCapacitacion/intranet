@@ -436,8 +436,8 @@
                 <div class="mb-3">
                     <label for="new_tuition" class="form-label"><b>Nueva colegiatura:</b></label>
                     <div class="input-group">
-                        <span class="input-group-text" style="background: #F57F17; color: white; font-weight: 600; border: none;">$</span>
-                        <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" required>
+                        <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
+                        <input type="number" class="form-control" id="new_tuition" name="new_tuition" step="0.01" min="0.01" required style="font-size: 16px; font-weight: 600;">
                     </div>
                 </div>
                 <div class="mb-3">
