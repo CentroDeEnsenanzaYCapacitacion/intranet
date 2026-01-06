@@ -12,10 +12,10 @@
                 <table cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); overflow: hidden;">
 
                     <tr>
-                        <td style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); padding: 50px 40px; text-align: center;">
+                        <td style="background-color: #F57F17; background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); padding: 50px 40px; text-align: center;">
                             <table cellspacing="0" cellpadding="0" border="0" width="80" align="center" style="margin-bottom: 24px;">
                                 <tr>
-                                    <td style="background: rgba(255, 255, 255, 0.2); width: 80px; height: 80px; border-radius: 50%; text-align: center; vertical-align: middle;">
+                                    <td style="background-color: rgba(255, 255, 255, 0.2); width: 80px; height: 80px; border-radius: 50%; text-align: center; vertical-align: middle;">
                                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle;">
                                             <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#ffffff" stroke-width="2"/>
                                             <path d="M12 8V12L15 15" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
@@ -24,7 +24,7 @@
                                 </tr>
                             </table>
                             <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Restablecer contraseña</h1>
-                            <p style="margin: 12px 0 0; color: rgba(255, 255, 255, 0.9); font-size: 15px;">Solicitud de cambio de contraseña</p>
+                            <p style="margin: 12px 0 0; color: #ffffff; opacity: 0.9; font-size: 15px;">Solicitud de cambio de contraseña</p>
                         </td>
                     </tr>
 
@@ -36,7 +36,7 @@
                             <table cellspacing="0" cellpadding="0" border="0" width="100%">
                                 <tr>
                                     <td align="center" style="padding: 40px 0;">
-                                        <a href="{{ $resetUrl }}" style="display: inline-block; background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 10px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(245, 127, 23, 0.3);">Restablecer mi contraseña</a>
+                                        <a href="{{ $resetUrl }}" style="display: inline-block; background-color: #F57F17; background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 10px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(245, 127, 23, 0.3);">Restablecer mi contraseña</a>
                                     </td>
                                 </tr>
                             </table>
