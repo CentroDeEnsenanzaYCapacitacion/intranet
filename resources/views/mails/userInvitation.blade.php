@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light">
     <title>Invitación a IntraCEC</title>
+    <style type="text/css">
+        :root {
+            color-scheme: light only;
+            supported-color-schemes: light;
+        }
+    </style>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; background-color: #f3f4f6;">
     <table cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f3f4f6;">
