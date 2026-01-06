@@ -38,7 +38,6 @@
                         <th>Rol</th>
                         <th>Plantel</th>
                         <th>Último acceso</th>
-                        <th>Estado Invitación</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -60,17 +59,6 @@
                                     <span class="text-muted">{{ $user->last_login->format('d/m/Y H:i') }}</span>
                                 @else
                                     <span class="badge badge-gray">Sin acceso</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($user->invitation && $user->invitation->used)
-                                    <span class="badge badge-success">Aceptada</span>
-                                @elseif ($user->invitation && $user->invitation->isValid())
-                                    <span class="badge badge-warning">Pendiente</span>
-                                @elseif ($user->invitation && !$user->invitation->isValid())
-                                    <span class="badge badge-danger">Caducada</span>
-                                @else
-                                    <span class="badge badge-gray">N/A</span>
                                 @endif
                             </td>
                             <td>
@@ -145,7 +133,6 @@
                         <th>Género</th>
                         <th>Rol</th>
                         <th>Plantel</th>
-                        <th>Estado Invitación</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -162,9 +149,6 @@
                                 <span class="badge badge-gray">{{ $user->role->name }}</span>
                             </td>
                             <td>{{ $user->crew->name }}</td>
-                            <td>
-                                <span class="badge badge-secondary">Bloqueado</span>
-                            </td>
                             <td>
                                 <div class="action-buttons">
                                     <a href="{{ route('admin.users.activate', ['id' => $user->id]) }}"
