@@ -9,3 +9,4 @@
     Route::put('/admin/user/update/{id}', [UserController::class,'updateUser'])->name('admin.users.update');
     Route::delete('/admin/user/block/{id}', [UserController::class,'blockUser'])->name('admin.users.block');
     Route::get('/admin/user/activate/{id}', [UserController::class,'activateUser'])->name('admin.users.activate');
+    Route::post('/admin/user/resend-invitation/{id}', [UserController::class,'resendInvitation'])->name('admin.users.resend-invitation');

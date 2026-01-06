@@ -224,6 +224,16 @@
     color: white;
 }
 
+.action-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.action-warning:hover {
+    background: #f59e0b;
+    color: white;
+}
+
 .badge-warning {
     background: #ffc107;
     color: #1a1a1a;

@@ -73,4 +73,9 @@ class User extends Authenticatable
         return $this->hasMany(TicketMessage::class);
     }
 
+    public function invitation()
+    {
+        return $this->hasOne(UserInvitation::class)->latestOfMany();
+    }
+
 }
