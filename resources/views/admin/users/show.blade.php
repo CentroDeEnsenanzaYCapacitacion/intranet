@@ -72,6 +72,21 @@
                                             <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </a>
+                                    @if ($user->invitation && !$user->invitation->used)
+                                        <form method="POST" action="{{ route('admin.users.resend-invitation', ['id' => $user->id]) }}"
+                                              id="resend-invitation-{{ $user->id }}" class="d-inline">
+                                            @csrf
+                                            <button type="submit"
+                                                    class="action-btn action-warning"
+                                                    onclick="showLoader(true)"
+                                                    title="Reenviar invitación">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C9.5 21 7.25 20 5.5 18.25" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                                    <path d="M3 17L3 12L8 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @endif
                                     <form method="POST" action="{{ route('admin.users.block', ['id' => $user->id]) }}"
                                           id="delete-user-{{ $user->id }}" class="d-inline">
                                         @csrf

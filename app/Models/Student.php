@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\StudentExamWindow;
 
 class Student extends Model
 {
@@ -89,6 +90,11 @@ class Student extends Model
     public function course()
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function eubExamWindow()
+    {
+        return $this->hasOne(StudentExamWindow::class)->where('exam_key', 'eub');
     }
 
     public function documents()

@@ -118,6 +118,10 @@ class PasswordResetController extends Controller
         $user->password = Hash::make(trim($request->password));
         $user->save();
 
+        \App\Models\UserInvitation::where('user_id', $user->id)
+            ->where('used', false)
+            ->update(['used' => true]);
+
         PasswordReset::where('email', $request->email)->delete();
 
         return redirect()->route('login')->with('success', 'Tu contraseña ha sido restablecida exitosamente.');

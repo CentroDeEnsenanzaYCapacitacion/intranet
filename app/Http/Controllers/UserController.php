@@ -25,27 +25,27 @@ class UserController extends Controller
         $currentUser = Auth::user();
 
         if ($currentUser->role_id == 1) {
-            $users = User::where('is_active', true)->where('id', '!=', 1)->get();
-            $blocked_users = User::where('is_active', false)->where('id', '!=', 1)->get();
+            $users = User::with('invitation')->where('is_active', true)->where('id', '!=', 1)->get();
+            $blocked_users = User::with('invitation')->where('is_active', false)->where('id', '!=', 1)->get();
         }
 
         elseif ($currentUser->role_id == 6) {
-            $users = User::where('is_active', true)
+            $users = User::with('invitation')->where('is_active', true)
                 ->whereIn('role_id', [4, 6])
                 ->where('id', '!=', 1)
                 ->get();
-            $blocked_users = User::where('is_active', false)
+            $blocked_users = User::with('invitation')->where('is_active', false)
                 ->whereIn('role_id', [4, 6])
                 ->where('id', '!=', 1)
                 ->get();
         }
 
         else {
-            $users = User::where('is_active', true)
+            $users = User::with('invitation')->where('is_active', true)
                 ->where('crew_id', $currentUser->crew_id)
                 ->where('id', '!=', 1)
                 ->get();
-            $blocked_users = User::where('is_active', false)
+            $blocked_users = User::with('invitation')->where('is_active', false)
                 ->where('crew_id', $currentUser->crew_id)
                 ->where('id', '!=', 1)
                 ->get();
@@ -211,6 +211,10 @@ class UserController extends Controller
             abort(403, 'No tienes permiso para bloquear usuarios.');
         }
 
+        \App\Models\UserInvitation::where('user_id', $user->id)
+            ->where('used', false)
+            ->delete();
+
         $user->update([
             'is_active' => false
         ]);
@@ -239,6 +243,62 @@ class UserController extends Controller
             'is_active' => true
         ]);
 
+        $hasAcceptedInvitation = \App\Models\UserInvitation::where('user_id', $user->id)
+            ->where('used', true)
+            ->exists();
+
+        if (!$hasAcceptedInvitation) {
+            $token = Str::random(64);
+            \App\Models\UserInvitation::create([
+                'user_id' => $user->id,
+                'token' => $token,
+                'expires_at' => now()->addDays(7),
+                'used' => false,
+            ]);
+
+            try {
+                Mail::to($user->email)->send(new \App\Mail\UserInvitation($user, $token));
+            } catch (Exception) {
+            }
+        }
+
         return redirect()->route('admin.users.show');
+    }
+
+    public function resendInvitation($id)
+    {
+        $user = User::find($id);
+        $currentUser = Auth::user();
+
+        if (!$user) {
+            abort(404);
+        }
+
+        if ($currentUser->role_id == 2 && $user->crew_id != $currentUser->crew_id) {
+            abort(403, 'No tienes permiso para reenviar invitaciones de este usuario.');
+        }
+
+        if ($currentUser->role_id != 1 && $currentUser->role_id != 2 && $currentUser->role_id != 6) {
+            abort(403, 'No tienes permiso para reenviar invitaciones.');
+        }
+
+        \App\Models\UserInvitation::where('user_id', $user->id)
+            ->where('used', false)
+            ->delete();
+
+        $token = Str::random(64);
+        \App\Models\UserInvitation::create([
+            'user_id' => $user->id,
+            'token' => $token,
+            'expires_at' => now()->addDays(7),
+            'used' => false,
+        ]);
+
+        try {
+            Mail::to($user->email)->send(new \App\Mail\UserInvitation($user, $token));
+            return redirect()->route('admin.users.show')->with('success', 'Invitación reenviada exitosamente');
+        } catch (Exception) {
+            return redirect()->route('admin.users.show')->with('error', 'Error al enviar el correo de invitación');
+        }
     }
 }

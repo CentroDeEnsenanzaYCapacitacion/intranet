@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function reports()
     {
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Report::class, 'responsible_id');
     }
 
     public function receipts()
@@ -71,6 +71,11 @@ class User extends Authenticatable
     public function ticketMessages()
     {
         return $this->hasMany(TicketMessage::class);
+    }
+
+    public function invitation()
+    {
+        return $this->hasOne(UserInvitation::class)->latestOfMany();
     }
 
 }

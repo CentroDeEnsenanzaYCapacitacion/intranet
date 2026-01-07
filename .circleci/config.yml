@@ -162,7 +162,9 @@ jobs:
               --exclude-glob storage/framework/sessions/** \
               --exclude-glob storage/framework/views/** \
               --exclude-glob public/uploads/** \
-              --exclude-glob config/local.php; \
+              --exclude-glob config/local.php \
+              --exclude-glob CLAUDE.md \
+              --exclude-glob AGENTS.md; \
               quit"
 
       - run:
@@ -317,7 +319,9 @@ jobs:
               --exclude-glob storage/framework/sessions/** \
               --exclude-glob storage/framework/views/** \
               --exclude-glob public/uploads/** \
-              --exclude-glob config/local.php; \
+              --exclude-glob config/local.php \
+              --exclude-glob CLAUDE.md \
+              --exclude-glob AGENTS.md; \
               quit"
 
       - run:
