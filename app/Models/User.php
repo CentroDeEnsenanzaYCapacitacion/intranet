@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function reports()
     {
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Report::class, 'responsible_id');
     }
 
     public function receipts()

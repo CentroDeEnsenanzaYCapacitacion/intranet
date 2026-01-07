@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\SetPasswordController;
+use App\Http\Controllers\SystemCalendarController;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/logout', [LoginController::class,'logout'])->name('logout');
@@ -68,6 +69,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/system/main', function () {
         return view('system.main');
     })->name('system.main');
+    Route::get('/system/calendars/menu', function () {
+        return view('system.calendar.menu');
+    })->name('system.calendars.menu')->middleware('role:1,2');
+
+    Route::get('/system/calendars/eub', [SystemCalendarController::class, 'eub'])
+        ->name('system.calendars.eub');
+    Route::post('/system/calendars/eub/{student_id}', [SystemCalendarController::class, 'updateEub'])
+        ->name('system.calendars.eub.update');
+
 
     Route::get('/system/grades/menu', function () {
         return view('system.grades.menu');
