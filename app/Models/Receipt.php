@@ -16,6 +16,7 @@ class Receipt extends Model
         'concept',
         'amount',
         'receipt_type_id',
+        'payment_type_id',
         'attr_id',
         'receipt_amount',
         'card_payment',
@@ -23,6 +24,8 @@ class Receipt extends Model
         'bill',
         'folio',
         'status',
+        'report_id',
+        'receipt_attribute_id',
     ];
 
     public function crew()

@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const explanationTextarea = document.getElementById("price_explanation");
     let catalogAmount = null;
 
-    // Keep the explanation hidden on first load
     if (explanationContainer) {
         explanationContainer.classList.add('d-none');
         explanationContainer.style.display = 'none';
@@ -24,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.amount !== null) {
                     catalogAmount = parseFloat(data.amount);
                 }
-                // Re-evaluate once the catalog amount is known (handles prefilled values)
                 checkPriceDifference();
             })
             .catch(error => {
@@ -86,48 +84,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         showLoader(true);
-        submitFormInNewTab(form);
-    });
-});
-
-function submitFormInNewTab(form) {
-    const currentRedirectUrl = "/system/reports";
-    const newTab = window.open("", "_blank");
-
-    if (newTab) {
-        const amountInput = document.querySelector('input[name="amount"]');
-        const amountValue = amountInput ? amountInput.value : "0";
-
-        const cardPaymentCheckbox = document.querySelector('input[name="card_payment"][type="checkbox"]');
-        const cardPaymentValue = cardPaymentCheckbox && cardPaymentCheckbox.checked ? "card" : "";
-
-        const priceExplanationTextarea = document.getElementById('price_explanation');
-        const priceExplanationValue = priceExplanationTextarea ? priceExplanationTextarea.value : "";
-
-        const formHtml = `
-            <form action="${escapeAttributes(form.action)}" method="post">
-                <input type="hidden" name="_token" value="${escapeAttributes(
-                    document.querySelector('input[name="_token"]').value
-                )}">
-                <input type="hidden" name="report_id" value="${escapeAttributes(
-                    document.querySelector('input[name="report_id"]').value
-                )}">
-                <input type="hidden" name="amount" value="${escapeAttributes(amountValue)}">
-                <input type="hidden" name="card_payment" value="${escapeAttributes(cardPaymentValue)}">
-                <input type="hidden" name="price_explanation" value="${escapeAttributes(priceExplanationValue)}">
-            </form>
-        `;
-        newTab.document.body.innerHTML = formHtml;
-        newTab.document.forms[0].submit();
+        form.target = "_blank";
+        form.submit();
 
         setTimeout(function () {
-            window.location.href = currentRedirectUrl;
-        }, 3000);
-    } else {
-        alert("Por favor, permite las ventanas emergentes para este sitio.");
-        showLoader(false);
-    }
-}
+            window.location.href = "/system/reports";
+        }, 2000);
+    });
+});
 
 function displayError(message) {
     const errorContainer = document.getElementById("error-container");

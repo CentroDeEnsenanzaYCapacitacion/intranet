@@ -11,6 +11,9 @@ class Student extends Model
     use HasFactory;
 
     protected $fillable = [
+        'crew_id',
+        'course_id',
+        'genre',
         'name',
         'surnames',
         'email',
@@ -38,7 +41,6 @@ class Student extends Model
     ];
 
     protected $guarded = [
-        'crew_id',
         'tuition',
         'password',
     ];

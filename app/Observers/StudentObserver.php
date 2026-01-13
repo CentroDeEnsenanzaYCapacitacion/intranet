@@ -41,8 +41,14 @@ class StudentObserver
 
         /** @var \App\Models\Report|null $report */
         $report = session('report', null);
-        $card_payment = session('card_payment', null);
+        $card_payment = session('card_payment', 1);
         $inscription_amount = session('inscription_amount', null);
+
+        Log::info('StudentObserver - card_payment value', [
+            'card_payment' => $card_payment,
+            'session_value' => session('card_payment'),
+            'student_id' => $student->id
+        ]);
 
         session()->forget('report');
         session()->forget('card_payment');
@@ -50,6 +56,10 @@ class StudentObserver
 
         if ($report == null) {
             return;
+        }
+
+        if ($card_payment === null || !in_array($card_payment, [1, 2])) {
+            $card_payment = 1;
         }
 
         $receipt_type_id = 1;
