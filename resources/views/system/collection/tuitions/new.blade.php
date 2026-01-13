@@ -1,5 +1,5 @@
 @extends('layout.mainLayout')
-@section('title', 'Emisi&oacute;n de recibo')
+@section('title', 'Emisión de recibo')
 @section('content')
     <div class="dashboard-welcome">
         <h1 class="dashboard-title">Emisi&oacute;n de recibo</h1>
