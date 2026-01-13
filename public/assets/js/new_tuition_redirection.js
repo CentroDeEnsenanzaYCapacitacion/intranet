@@ -27,6 +27,15 @@ function handleAmounts() {
 function submitFormInNewTab(form) {
     result = handleAmounts();
     if (result == null) {
+        const cardCheckbox = document.querySelector('input[name="card_payment"]');
+        const voucherInput = document.querySelector('input[name="voucher"]');
+
+        if (cardCheckbox && cardCheckbox.checked && (!voucherInput || !voucherInput.value.trim())) {
+            showLoader(false);
+            window.location.href = `/system/collection/paybills/receiptError?error=${encodeURIComponent('El campo de voucher es obligatorio cuando se selecciona pago con tarjeta')}`;
+            return;
+        }
+
         const currentRedirectUrl =
             "/system/collection/" +
             document.querySelector('input[name="student_id"]').value +
