@@ -44,12 +44,6 @@ class StudentObserver
         $card_payment = session('card_payment', 1);
         $inscription_amount = session('inscription_amount', null);
 
-        Log::info('StudentObserver - card_payment value', [
-            'card_payment' => $card_payment,
-            'session_value' => session('card_payment'),
-            'student_id' => $student->id
-        ]);
-
         session()->forget('report');
         session()->forget('card_payment');
         session()->forget('inscription_amount');
