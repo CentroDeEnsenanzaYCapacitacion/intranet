@@ -89,20 +89,8 @@ class StudentObserver
             }
         }
 
-        $sys_request = SysRequest::where('report_id', $report->id)->first();
-
-        if ($sys_request && $sys_request->approved) {
-            $discount = strstr($sys_request->description, "%", true);
-            $final_amount = $amount - (($discount * $amount) / 100);
-        } else {
-            $final_amount = $amount;
-        }
-
-        if ($discount == null) {
-            $concept = 'Inscripción '.$report->course->name;
-        } else {
-            $concept = 'Inscripción '.$report->course->name.' con descuento del '.$discount.'%';
-        }
+        $final_amount = $amount;
+        $concept = 'Inscripción '.$report->course->name;
 
         $receipt = Utils::generateReceipt(
             $student->crew_id,
