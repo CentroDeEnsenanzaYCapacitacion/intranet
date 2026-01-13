@@ -29,34 +29,34 @@
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Apellidos</th>
                         <th>Email</th>
-                        <th>Teléfono</th>
-                        <th>Celular</th>
-                        <th>Género</th>
-                        <th>Rol</th>
-                        <th>Plantel</th>
-                        <th>Último acceso</th>
+                        <th class="text-center">Teléfono</th>
+                        <th class="text-center">Celular</th>
+                        <th class="text-center">Género</th>
+                        <th class="text-center">Rol</th>
+                        <th class="text-center">Plantel</th>
+                        <th class="text-center" style="width: 120px;">Último acceso</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td class="text-uppercase font-medium">{{ $user->name }}</td>
-                            <td class="text-uppercase">{{ $user->surnames }}</td>
+                            <td class="text-uppercase font-medium text-center">{{ $user->name }}</td>
+                            <td class="text-uppercase text-center">{{ $user->surnames }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->phone }}</td>
-                            <td>{{ $user->cel_phone }}</td>
-                            <td class="text-uppercase">{{ $user->genre }}</td>
-                            <td>
+                            <td class="text-center">{{ $user->phone }}</td>
+                            <td class="text-center">{{ $user->cel_phone }}</td>
+                            <td class="text-uppercase text-center">{{ $user->genre }}</td>
+                            <td class="text-center">
                                 <span class="badge badge-primary">{{ $user->role->name }}</span>
                             </td>
-                            <td>{{ $user->crew->name }}</td>
-                            <td>
+                            <td class="text-center">{{ $user->crew->name }}</td>
+                            <td class="text-center">
                                 @if ($user->last_login)
-                                    <span class="text-muted">{{ $user->last_login->format('d/m/Y H:i') }}</span>
+                                    <span class="text-muted" style="font-size: 13px;">{{ $user->last_login->format('d/m/Y H:i') }}</span>
                                 @else
                                     <span class="badge badge-gray">Sin acceso</span>
                                 @endif
@@ -125,30 +125,30 @@
             <table class="modern-table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Apellidos</th>
                         <th>Email</th>
-                        <th>Teléfono</th>
-                        <th>Celular</th>
-                        <th>Género</th>
-                        <th>Rol</th>
-                        <th>Plantel</th>
+                        <th class="text-center">Teléfono</th>
+                        <th class="text-center">Celular</th>
+                        <th class="text-center">Género</th>
+                        <th class="text-center">Rol</th>
+                        <th class="text-center">Plantel</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($blocked_users as $user)
                         <tr>
-                            <td class="text-uppercase font-medium">{{ $user->name }}</td>
-                            <td class="text-uppercase">{{ $user->surnames }}</td>
+                            <td class="text-uppercase font-medium text-center">{{ $user->name }}</td>
+                            <td class="text-uppercase text-center">{{ $user->surnames }}</td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->phone }}</td>
-                            <td>{{ $user->cel_phone }}</td>
-                            <td class="text-uppercase">{{ $user->genre }}</td>
-                            <td>
+                            <td class="text-center">{{ $user->phone }}</td>
+                            <td class="text-center">{{ $user->cel_phone }}</td>
+                            <td class="text-uppercase text-center">{{ $user->genre }}</td>
+                            <td class="text-center">
                                 <span class="badge badge-gray">{{ $user->role->name }}</span>
                             </td>
-                            <td>{{ $user->crew->name }}</td>
+                            <td class="text-center">{{ $user->crew->name }}</td>
                             <td>
                                 <div class="action-buttons">
                                     <a href="{{ route('admin.users.activate', ['id' => $user->id]) }}"
