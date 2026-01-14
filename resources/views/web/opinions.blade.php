@@ -132,7 +132,7 @@
                                         <label for="rating{{ $opinionId }}">Valoracion en estrellas *</label>
                                             <select class="form-control modern-input" name="rating[{{ $opinionId }}]" id="rating{{ $opinionId }}" required>
                                                 @foreach($ratingOptions as $ratingOption)
-                                                    <option value="{{ $ratingOption }}" @if((string) old('rating.' . $opinionId, $opinion->rating) === (string) $ratingOption) selected @endif>
+                                                    <option value="{{ $ratingOption }}" @if((float) old('rating.' . $opinionId, $opinion->rating) == (float) $ratingOption) selected @endif>
                                                         {{ $ratingOption }}
                                                     </option>
                                                 @endforeach
