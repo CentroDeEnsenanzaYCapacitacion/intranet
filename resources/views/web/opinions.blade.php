@@ -147,9 +147,15 @@
 
                                 <div class="col-md-12 mb-2">
                                     <div class="modern-field">
-                                        <label for="description{{ $opinionId }}">Descripcion *</label>
-                                        <textarea class="form-control modern-textarea" name="description[{{ $opinionId }}]" id="description{{ $opinionId }}" rows="4" maxlength="250" required>{{ old('description.' . $opinionId, $opinion->description) }}</textarea>
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <label for="description{{ $opinionId }}">Descripcion *</label>
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <span style="font-size: 12px; color: #6b7280;">Caracteres restantes:</span>
+                                                <input style="border: none; background-color: transparent; width: 48px;" disabled maxlength="3" size="3" id="counter{{ $opinionId }}" value="{{ 250 - Str::length(old('description.' . $opinionId, $opinion->description)) }}">
+                                            </div>
                                         </div>
+                                        <textarea class="form-control modern-textarea" name="description[{{ $opinionId }}]" id="description{{ $opinionId }}" rows="4" maxlength="250" data-counter-target="counter{{ $opinionId }}" data-counter-max="250" required>{{ old('description.' . $opinionId, $opinion->description) }}</textarea>
+                                    </div>
                                         @if($errors->has('description.' . $opinionId))
                                             <div style="color: #991b1b; font-size: 14px; margin-top: 4px;">
                                                 {{ $errors->first('description.' . $opinionId) }}
@@ -178,4 +184,5 @@
 
 @push('scripts')
 <script src="{{ asset('assets/js/file_input.js') }}"></script>
+<script src="{{ asset('assets/js/opinions_counter.js') }}"></script>
 @endpush
