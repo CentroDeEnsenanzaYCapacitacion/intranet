@@ -49,6 +49,20 @@ class WebController extends Controller
             $path = $filename ? public_path('assets/img/opinions/' . $filename) : null;
             $hasImage = $path && file_exists($path);
 
+            if (!$hasImage) {
+                foreach (['jpg', 'jpeg', 'png'] as $candidate) {
+                    $candidateFilename = $opinion->id . '.' . $candidate;
+                    $candidatePath = public_path('assets/img/opinions/' . $candidateFilename);
+                    if (file_exists($candidatePath)) {
+                        $extension = $candidate;
+                        $filename = $candidateFilename;
+                        $path = $candidatePath;
+                        $hasImage = true;
+                        break;
+                    }
+                }
+            }
+
             $opinion->has_image = $hasImage;
             $opinion->image_url = $hasImage
                 ? asset('assets/img/opinions/' . $filename) . '?v=' . $opinion->updated_at->timestamp
