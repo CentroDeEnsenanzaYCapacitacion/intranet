@@ -18,6 +18,10 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\StudentWelcome;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
@@ -206,6 +210,7 @@ class StudentController extends Controller
         }
 
         $student = Student::find($request->student_id);
+        $wasFirstTime = $student->first_time;
         $student->pc = $request->pc;
         $student->colony = $request->colony;
         $student->municipality = $request->municipality;
@@ -244,6 +249,25 @@ class StudentController extends Controller
         }
 
         $student->save();
+
+        if ($request->operation == "new" && $wasFirstTime) {
+            $generation = $student->generation;
+            $plainPassword = session('student_plain_password_' . $student->id);
+
+            if ($this->shouldSendStudentWelcome($generation)) {
+                if (!$plainPassword) {
+                    $plainPassword = Str::random(8);
+                    $student->password = Hash::make($plainPassword);
+                    $student->save();
+                }
+
+                if (!empty($student->email)) {
+                    Mail::to($student->email)->send(new StudentWelcome($student, $plainPassword));
+                }
+            }
+
+            session()->forget('student_plain_password_' . $student->id);
+        }
 
         if ($request->has('observation') && !empty($request->observation)) {
             Observation::create([
@@ -384,5 +408,20 @@ class StudentController extends Controller
         finfo_close($finfo);
 
         return response($file, 200)->header('Content-Type', $type);
+    }
+
+    private function shouldSendStudentWelcome(?string $generation): bool
+    {
+        if (!$generation) {
+            return false;
+        }
+
+        if (!preg_match('/^([FMAN])-([0-9]{2})$/', strtoupper($generation), $matches)) {
+            return false;
+        }
+
+        $year = (int) $matches[2];
+
+        return $year >= 26;
     }
 }
