@@ -26,7 +26,7 @@ class WebOpinionRequest extends FormRequest
             'rating' => ['required', 'array'],
             'rating.*' => ['required', 'numeric', 'min:0', 'max:5', Rule::in($ratingValues)],
             'description' => ['required', 'array'],
-            'description.*' => ['required', 'string'],
+            'description.*' => ['required', 'string', 'max:250'],
         ];
     }
 
@@ -41,6 +41,7 @@ class WebOpinionRequest extends FormRequest
             'rating.*.required' => 'La valoracion es obligatoria.',
             'rating.*.in' => 'La valoracion debe ser de 0 a 5 en pasos de 0.5.',
             'description.*.required' => 'La descripcion es obligatoria.',
+            'description.*.max' => 'La descripcion no debe exceder los 250 caracteres.',
         ];
     }
 }

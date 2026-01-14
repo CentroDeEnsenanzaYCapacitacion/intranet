@@ -148,7 +148,7 @@
                                 <div class="col-md-12 mb-2">
                                     <div class="modern-field">
                                         <label for="description{{ $opinionId }}">Descripcion *</label>
-                                        <textarea class="form-control modern-textarea" name="description[{{ $opinionId }}]" id="description{{ $opinionId }}" rows="4" required>{{ old('description.' . $opinionId, $opinion->description) }}</textarea>
+                                        <textarea class="form-control modern-textarea" name="description[{{ $opinionId }}]" id="description{{ $opinionId }}" rows="4" maxlength="250" required>{{ old('description.' . $opinionId, $opinion->description) }}</textarea>
                                         </div>
                                         @if($errors->has('description.' . $opinionId))
                                             <div style="color: #991b1b; font-size: 14px; margin-top: 4px;">
