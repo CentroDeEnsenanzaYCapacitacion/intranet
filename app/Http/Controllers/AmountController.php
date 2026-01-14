@@ -67,7 +67,7 @@ class AmountController extends Controller
 
     public function generateAmounts()
     {
-        $courses = Course::all();
+        $courses = Course::where('is_active', true)->get();
         $amounts = Amount::all();
 
         $amounts_to_store = [];
