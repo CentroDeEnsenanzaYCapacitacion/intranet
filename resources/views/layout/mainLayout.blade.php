@@ -11,8 +11,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="{{asset('assets/img/IC.png')}}" type="image/png">
     <link rel="icon" href="{{asset('assets/img/IC.png')}}" media="(prefers-color-scheme: light)">
-    <link rel="icon" href="{{asset('assets/img/IC-white.png')}}" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="{{asset('assets/img/IC-White.png')}}" media="(prefers-color-scheme: dark)">
     <title>@yield('title')</title>
     @stack('styles')
 </head>
