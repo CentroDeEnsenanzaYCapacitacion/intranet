@@ -9,7 +9,7 @@ jobs:
       - checkout
 
       - run:
-          name: 🔎 Detect dependency changes (DEV)
+          name: Detect dependency changes DEV
           command: |
             if git rev-parse HEAD^ >/dev/null 2>&1; then
               CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
@@ -28,7 +28,7 @@ jobs:
             fi
 
       - run:
-          name: 🧩 Install PHP dependencies (composer, DEV)
+          name: Install PHP dependencies DEV
           command: |
             echo "Running composer install (DEV)"
             composer install \
@@ -41,9 +41,11 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
+            - .composer_changed
+            - vendor
+            - composer.json
+            - composer.lock
 
-  # ⭐ NUEVO JOB PARA STAGING ⭐
   build-staging:
     docker:
       - image: cimg/php:8.2
@@ -52,7 +54,7 @@ jobs:
       - checkout
 
       - run:
-          name: 🔎 Detect dependency changes (STAGING)
+          name: Detect dependency changes STAGING
           command: |
             if git rev-parse HEAD^ >/dev/null 2>&1; then
               CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
@@ -71,7 +73,7 @@ jobs:
             fi
 
       - run:
-          name: 🧩 Install PHP dependencies (composer, STAGING)
+          name: Install PHP dependencies STAGING
           command: |
             echo "Running composer install (STAGING)"
             composer install \
@@ -84,19 +86,23 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
-
+            - .composer_changed
+            - vendor
+            - composer.json
+            - composer.lock
 
   deploy-development:
     docker:
       - image: cimg/php:8.2
 
     steps:
+      - checkout
+
       - attach_workspace:
           at: .
 
       - run:
-          name: ♻️ Restore COMPOSER_CHANGED flag (DEV)
+          name: Restore COMPOSER_CHANGED DEV
           command: |
             if [ -f .composer_changed ]; then
               export COMPOSER_CHANGED="$(cat .composer_changed)"
@@ -108,7 +114,7 @@ jobs:
             echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
 
       - run:
-          name: 🗄️ Run migrations (DEV)
+          name: Run migrations DEV
           command: |
             echo "Running migrations against DEV DB"
             export DB_HOST="$DB_HOST_DEV"
@@ -120,27 +126,27 @@ jobs:
             php artisan migrate --force --no-interaction
 
       - run:
-          name: 📂 List root directory
+          name: List root directory
           command: ls -la
 
       - run:
-          name: 📂 List public directory
+          name: List public directory
           command: |
             ls -la public || echo "public directory does not exist"
 
       - run:
-          name: 📂 List public/assets directory
+          name: List public/assets directory
           command: |
             ls -la public/assets || echo "public/assets directory does not exist"
 
       - run:
-          name: 🛠️ Install lftp
+          name: Install lftp
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (DEV, excluding public/, vendor and others)
+          name: Sync files DEV excluding public vendor and others
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_dev_path \
               --verbose \
@@ -168,7 +174,7 @@ jobs:
               quit"
 
       - run:
-          name: 📦 Sync vendor (DEV)
+          name: Sync vendor DEV
           command: |
             source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
@@ -181,7 +187,7 @@ jobs:
             fi
 
       - run:
-          name: 📁 Update assets (DEV)
+          name: Update assets DEV
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_dev_assets_path \
               --verbose \
@@ -190,7 +196,7 @@ jobs:
               quit"
 
       - run:
-          name: 🔁 Clear Laravel cache (DEV)
+          name: Clear Laravel cache DEV
           command: |
             if [ -n "$CLEAR_CACHE_DEV_URL" ] && [ -n "$CLEAR_CACHE_TOKEN_DEV" ]; then
               echo "Calling DEV cache clear endpoint..."
@@ -198,7 +204,6 @@ jobs:
             else
               echo "CLEAR_CACHE_DEV_URL or CLEAR_CACHE_TOKEN_DEV not set, skipping cache clear (DEV)"
             fi
-
 
   build-production:
     docker:
@@ -208,7 +213,7 @@ jobs:
       - checkout
 
       - run:
-          name: 🔎 Detect dependency changes (PROD)
+          name: Detect dependency changes PROD
           command: |
             if git rev-parse HEAD^ >/dev/null 2>&1; then
               CHANGED_FILES="$(git diff --name-only HEAD^ HEAD)"
@@ -227,7 +232,7 @@ jobs:
             fi
 
       - run:
-          name: 🧩 Install PHP dependencies (composer, PROD)
+          name: Install PHP dependencies PROD
           command: |
             echo "Running composer install (PROD)"
             composer install \
@@ -241,19 +246,23 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
-
+            - .composer_changed
+            - vendor
+            - composer.json
+            - composer.lock
 
   deploy-production:
     docker:
       - image: cimg/php:8.2
 
     steps:
+      - checkout
+
       - attach_workspace:
           at: .
 
       - run:
-          name: ♻️ Restore COMPOSER_CHANGED flag (PROD)
+          name: Restore COMPOSER_CHANGED PROD
           command: |
             if [ -f .composer_changed ]; then
               export COMPOSER_CHANGED="$(cat .composer_changed)"
@@ -265,7 +274,7 @@ jobs:
             echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
 
       - run:
-          name: 🗄️ Run migrations (PROD)
+          name: Run migrations PROD
           command: |
             echo "Running migrations against PROD DB"
             export DB_HOST="$DB_HOST_PROD"
@@ -277,27 +286,27 @@ jobs:
             php artisan migrate --force --no-interaction
 
       - run:
-          name: 📂 List root directory
+          name: List root directory
           command: ls -la
 
       - run:
-          name: 📂 List public directory
+          name: List public directory
           command: |
             ls -la public || echo "public directory does not exist"
 
       - run:
-          name: 📂 List public/assets directory
+          name: List public/assets directory
           command: |
             ls -la public/assets || echo "public/assets directory does not exist"
 
       - run:
-          name: 🛠️ Install lftp
+          name: Install lftp
           command: |
             sudo apt-get update
             sudo apt-get install -y lftp
 
       - run:
-          name: 📂 Sync files (PROD, excluding public/, vendor and others)
+          name: Sync files PROD excluding public vendor and others
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R . $intra_ftp_prod_path \
               --verbose \
@@ -325,7 +334,7 @@ jobs:
               quit"
 
       - run:
-          name: 📦 Sync vendor (PROD)
+          name: Sync vendor PROD
           command: |
             source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
@@ -338,7 +347,7 @@ jobs:
             fi
 
       - run:
-          name: 📁 Update assets (PROD)
+          name: Update assets PROD
           command: |
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R $local_dir $intra_ftp_prod_assets_path \
               --verbose \
@@ -347,7 +356,7 @@ jobs:
               quit"
 
       - run:
-          name: Set APP_DEPLOY_DATE in .env (PROD)
+          name: Set APP_DEPLOY_DATE in env PROD
           command: |
             export APP_DEPLOY_DATE="$(TZ=America/Mexico_City date '+%d/%m/%Y')"
             echo "Setting APP_DEPLOY_DATE=$APP_DEPLOY_DATE"
@@ -364,7 +373,7 @@ jobs:
             lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; put .env.prod.remote -o $intra_ftp_prod_path/.env; quit"
 
       - run:
-          name: 🔁 Clear Laravel cache (PROD)
+          name: Clear Laravel cache PROD
           command: |
             if [ -n "$CLEAR_CACHE_PROD_URL" ] && [ -n "$CLEAR_CACHE_TOKEN_PROD" ]; then
               echo "Calling PROD cache clear endpoint..."
@@ -373,12 +382,9 @@ jobs:
               echo "CLEAR_CACHE_PROD_URL or CLEAR_CACHE_TOKEN_PROD not set, skipping cache clear (PROD)"
             fi
 
-
-
 workflows:
   deploy-on-branches:
     jobs:
-      # DEV → build + deploy
       - build-development:
           filters:
             branches:
@@ -391,13 +397,11 @@ workflows:
             branches:
               only: development
 
-      # STAGING → SOLO build-staging
       - build-staging:
           filters:
             branches:
               only: staging
 
-      # PROD → build + deploy
       - build-production:
           filters:
             branches:
