@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/login.css') }}">
+    <link rel="icon" href="{{ asset('assets/img/IC.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('assets/img/IC.png') }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" href="{{ asset('assets/img/IC-White.png') }}" media="(prefers-color-scheme: dark)">
     <script>
         window.onload = function() {
             var isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(navigator.userAgent);

@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>@yield('title')</title>
+        <link rel="icon" href="{{ asset('assets/img/IC.png') }}" type="image/png">
+        <link rel="icon" href="{{ asset('assets/img/IC.png') }}" media="(prefers-color-scheme: light)">
+        <link rel="icon" href="{{ asset('assets/img/IC-White.png') }}" media="(prefers-color-scheme: dark)">
 
         <style>
             html, body {
