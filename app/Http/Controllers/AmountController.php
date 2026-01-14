@@ -20,7 +20,12 @@ class AmountController extends Controller
 
     public function getAmounts()
     {
-        $amounts = Amount::with(['crew', 'course', 'receiptType'])->get();
+        $amounts = Amount::with(['crew', 'course', 'receiptType'])
+            ->whereHas('course', function ($query) {
+                $query->where('is_active', true);
+            })
+            ->orWhereNull('course_id')
+            ->get();
         $role = $usuario = Auth::user()->role_id;
         return view('admin.catalogues.amounts.show', compact('amounts','role'));
     }
