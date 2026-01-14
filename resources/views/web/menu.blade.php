@@ -47,6 +47,25 @@
                     </svg>
                 </div>
             </a>
+
+            <a id='opinions' href="{{route('web.opinions')}}" class="dashboard-card">
+                <div class="card-icon" style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 15C21 16.6569 19.6569 18 18 18H8L3 21V6C3 4.34315 4.34315 3 6 3H18C19.6569 3 21 4.34315 21 6V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 9H16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M8 13H14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Opiniones</h3>
+                    <p class="card-description">Publica opiniones de alumnos egresados</p>
+                </div>
+                <div class="card-arrow">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </a>
         @endif
     </div>
 @endsection

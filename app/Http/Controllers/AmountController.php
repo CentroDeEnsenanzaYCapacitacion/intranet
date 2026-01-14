@@ -20,7 +20,13 @@ class AmountController extends Controller
 
     public function getAmounts()
     {
-        $amounts = Amount::with(['crew', 'course', 'receiptType'])->get();
+        $amounts = Amount::with(['crew', 'course', 'receiptType'])
+            ->where(function ($query) {
+                $query->whereHas('course', function ($q) {
+                    $q->where('is_active', true);
+                })->orWhereNull('course_id');
+            })
+            ->get();
         $role = $usuario = Auth::user()->role_id;
         return view('admin.catalogues.amounts.show', compact('amounts','role'));
     }
@@ -61,7 +67,7 @@ class AmountController extends Controller
 
     public function generateAmounts()
     {
-        $courses = Course::all();
+        $courses = Course::where('is_active', true)->get();
         $amounts = Amount::all();
 
         $amounts_to_store = [];
@@ -83,10 +89,9 @@ class AmountController extends Controller
 
         if(!empty($amountsArray)) {
             Amount::insert($amountsArray);
-            $amounts = Amount::all();
         }
 
-        return view('admin.catalogues.amounts.show', compact('amounts'));
+        return redirect()->route('admin.catalogues.amounts.show');
     }
 
     public function cleanAmounts()

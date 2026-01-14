@@ -4,6 +4,7 @@ node_modules/
 public/hot
 public/storage
 public/assets/img/qr.png
+public/assets/img/opinions/*
 storage/*.key
 vendor/
 clear_cache_dev.php
