@@ -89,10 +89,9 @@ class AmountController extends Controller
 
         if(!empty($amountsArray)) {
             Amount::insert($amountsArray);
-            $amounts = Amount::all();
         }
 
-        return view('admin.catalogues.amounts.show', compact('amounts'));
+        return redirect()->route('admin.catalogues.amounts.show');
     }
 
     public function cleanAmounts()
