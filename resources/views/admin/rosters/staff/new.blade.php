@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.staff.store') }}" method="POST">
+        <form action="{{ route('admin.staff.store') }}" method="POST" class="staff-form">
             @csrf
 
             @if ($userCrewId == 1)

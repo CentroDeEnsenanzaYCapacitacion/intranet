@@ -64,6 +64,17 @@
     margin: 0;
 }
 
+.staff-form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.staff-form .row {
+    row-gap: 16px;
+}
+
 .carousel-form .preview-box {
     border: 2px solid #e5e7eb;
     border-radius: 12px;
