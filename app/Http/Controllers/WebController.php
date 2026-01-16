@@ -251,7 +251,7 @@ class WebController extends Controller
         $carousels = WebCarousel::orderBy('id')->get();
 
         foreach ($carousels as $carousel) {
-            $carouselId = $carousel->id;
+            $carouselId = (string) $carousel->id;
             $carousel->title = $titles[$carouselId] ?? $carousel->title;
             $carousel->description = $descriptions[$carouselId] ?? $carousel->description;
 
