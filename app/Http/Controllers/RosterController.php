@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Staff;
 use App\Models\Crew;
+use App\Models\Department;
 use App\Models\HourAssignment;
+use App\Models\StaffDepartmentCost;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\StaffRequest;
@@ -30,7 +32,8 @@ class RosterController extends Controller
         if (auth()->user()->crew_id == 1) {
             $crews = Crew::where('id', '!=', 1)->get();
         }
-        return view('admin.rosters.staff.new', compact('crews'));
+        $departments = Department::where('is_active', true)->get();
+        return view('admin.rosters.staff.new', compact('crews', 'departments'));
     }
 
     public function storeAdjustment(Request $request)
@@ -83,8 +86,6 @@ class RosterController extends Controller
         $staff->position = $data['position'] ?? null;
         $staff->personal_mail = $data['personal_mail'] ?? null;
         $staff->requiresMail = $request->has('requiresMail');
-        $staff->cost = $data['cost'];
-        $staff->isRoster = $data['cost_type'] === 'day';
         $staff->isActive = true;
 
         $staff->crew_id = auth()->user()->crew_id == 1
@@ -92,6 +93,19 @@ class RosterController extends Controller
             : auth()->user()->crew_id;
 
         $staff->save();
+
+        if ($request->has('departments')) {
+            foreach ($request->input('departments') as $deptData) {
+                if (!empty($deptData['department_id']) && isset($deptData['cost'])) {
+                    StaffDepartmentCost::create([
+                        'staff_id' => $staff->id,
+                        'department_id' => $deptData['department_id'],
+                        'cost' => $deptData['cost'],
+                        'is_roster' => ($deptData['cost_type'] ?? 'hour') === 'day',
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.staff.show')->with('success', 'Empleado creado exitosamente.');
     }
@@ -107,8 +121,9 @@ class RosterController extends Controller
 
     public function edit($id)
     {
-        $staff = Staff::findOrFail($id);
-        return view('admin.rosters.staff.edit', compact('staff'));
+        $staff = Staff::with('departmentCosts')->findOrFail($id);
+        $departments = Department::where('is_active', true)->get();
+        return view('admin.rosters.staff.edit', compact('staff', 'departments'));
     }
 
     public function editSchedule()
@@ -122,11 +137,24 @@ class RosterController extends Controller
 
         $data = $request->validated();
 
-        $staff->update([
-            ...collect($data)->except(['name', 'surnames', 'cost_type'])->toArray(),
-            'cost' => $data['cost'],
-            'isRoster' => ($data['cost_type'] ?? 'day') === 'day',
-        ]);
+        $staff->update(
+            collect($data)->except(['name', 'surnames', 'departments'])->toArray()
+        );
+
+        $staff->departmentCosts()->delete();
+
+        if ($request->has('departments')) {
+            foreach ($request->input('departments') as $deptData) {
+                if (!empty($deptData['department_id']) && isset($deptData['cost'])) {
+                    StaffDepartmentCost::create([
+                        'staff_id' => $staff->id,
+                        'department_id' => $deptData['department_id'],
+                        'cost' => $deptData['cost'],
+                        'is_roster' => ($deptData['cost_type'] ?? 'hour') === 'day',
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.staff.show')->with('success', 'Empleado actualizado correctamente.');
     }

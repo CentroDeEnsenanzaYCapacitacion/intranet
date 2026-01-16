@@ -31,4 +31,15 @@ class Staff extends Model
         return $this->hasMany(StaffAdjustment::class);
     }
 
+    public function departmentCosts()
+    {
+        return $this->hasMany(StaffDepartmentCost::class);
+    }
+
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class, 'staff_department_costs')
+            ->withPivot('cost', 'is_roster')
+            ->withTimestamps();
+    }
 }

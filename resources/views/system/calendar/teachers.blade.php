@@ -80,18 +80,22 @@
                     <select id="staffSelect" class="form-select" required>
                         <option value="" disabled selected>Selecciona un trabajador</option>
                         @foreach ($staff as $person)
-                            <option value="{{ $person->id }}">{{ $person->name }} {{ $person->surnames }}</option>
+                            <option value="{{ $person->id }}" data-departments="{{ $person->departmentCosts->pluck('department_id')->toJson() }}">{{ $person->name }} {{ $person->surnames }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="mb-3">
+                    <label for="departmentSelect" class="form-label">Departamento</label>
+                    <select id="departmentSelect" class="form-select" required disabled>
+                        <option value="" disabled selected>Primero selecciona un trabajador</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
                     <label for="subjectSelect" class="form-label">Materia</label>
-                    <select id="subjectSelect" class="form-select" required>
-                        <option value="" disabled selected>Selecciona una materia</option>
-                        @foreach ($subjects as $subject)
-                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                        @endforeach
+                    <select id="subjectSelect" class="form-select" required disabled>
+                        <option value="" disabled selected>Primero selecciona un departamento</option>
                     </select>
                 </div>
 
@@ -150,8 +154,15 @@
                     <select id="editStaffSelect" class="form-select" required>
                         <option value="" disabled selected>Selecciona un trabajador</option>
                         @foreach ($staff as $person)
-                            <option value="{{ $person->id }}">{{ $person->name }} {{ $person->surnames }}</option>
+                            <option value="{{ $person->id }}" data-departments="{{ $person->departmentCosts->pluck('department_id')->toJson() }}">{{ $person->name }} {{ $person->surnames }}</option>
                         @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="editDepartmentSelect" class="form-label">Departamento</label>
+                    <select id="editDepartmentSelect" class="form-select" required>
+                        <option value="" disabled selected>Selecciona un departamento</option>
                     </select>
                 </div>
 
@@ -159,9 +170,6 @@
                     <label for="editSubjectSelect" class="form-label">Materia</label>
                     <select id="editSubjectSelect" class="form-select" required>
                         <option value="" disabled selected>Selecciona una materia</option>
-                        @foreach ($subjects as $subject)
-                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
-                        @endforeach
                     </select>
                 </div>
 
@@ -210,6 +218,10 @@
 
     <script>
         const userCrewId = @json(auth()->user()->crew_id);
+        const calendarConfig = {
+            departments: @json($departments),
+            subjectsByDepartment: @json($subjectsByDepartment)
+        };
     </script>
 
     <script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\HourAssignment;
 use App\Models\Staff;
 use App\Models\Subject;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Models\Crew;
 
@@ -39,17 +40,28 @@ class CalendarController extends Controller
         });
 
         $staff = Staff::where('isActive', true)
-            ->where('isRoster', false)
+            ->with('departmentCosts.department')
             ->orderBy('name')
             ->get();
 
-        $subjects = Subject::where('is_active', true)->orderBy('name')->get();
+        $departments = Department::where('is_active', true)
+            ->with(['courses.subjects' => function ($q) {
+                $q->where('is_active', true);
+            }])
+            ->orderBy('name')
+            ->get();
 
-        $crews    = Crew::orderBy('name')->get();
+        $subjectsByDepartment = [];
+        foreach ($departments as $dept) {
+            $subjects = $dept->courses->flatMap->subjects->unique('id')->values();
+            $subjectsByDepartment[$dept->id] = $subjects;
+        }
+
+        $crews = Crew::orderBy('name')->get();
 
         return view(
             'system.calendar.teachers',
-            compact('staff', 'subjects', 'crews')
+            compact('staff', 'departments', 'subjectsByDepartment', 'crews')
         );
     }
 
@@ -59,7 +71,7 @@ class CalendarController extends Controller
         $start = $request->input('start');
         $end = $request->input('end');
 
-        $query = HourAssignment::with(['staff', 'subject']);
+        $query = HourAssignment::with(['staff', 'subject', 'department']);
 
         if ($crewId) {
             $query->where('crew_id', $crewId);
@@ -80,8 +92,10 @@ class CalendarController extends Controller
                 'extendedProps' => [
                     'staff_id' => $assignment->staff_id,
                     'subject_id' => $assignment->subject_id,
+                    'department_id' => $assignment->department_id,
                     'staff_name' => $assignment->staff->name . ' ' . $assignment->staff->surnames,
                     'subject_name' => $assignment->subject->name,
+                    'department_name' => $assignment->department?->name,
                     'hours' => $assignment->hours,
                     'start_time' => $assignment->start_time,
                     'end_time' => $assignment->end_time
@@ -96,6 +110,7 @@ class CalendarController extends Controller
     {
         $data = $request->validate([
             'staff_id' => 'required|exists:staff,id',
+            'department_id' => 'required|exists:departments,id',
             'subject_id' => 'required|exists:subjects,id',
             'date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
@@ -138,6 +153,7 @@ class CalendarController extends Controller
 
         $data = $request->validate([
             'subject_id' => 'sometimes|exists:subjects,id',
+            'department_id' => 'sometimes|exists:departments,id',
             'staff_id' => 'sometimes|exists:staff,id',
             'start_time' => 'sometimes|date_format:H:i',
             'end_time' => 'sometimes|date_format:H:i|after:start_time',
