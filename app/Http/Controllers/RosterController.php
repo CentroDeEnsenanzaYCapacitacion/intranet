@@ -187,7 +187,7 @@ class RosterController extends Controller
             $crewsToShow = Crew::where('id', $userCrewId)->get();
         }
 
-        $hourAssignments = HourAssignment::with('staff')
+        $hourAssignments = HourAssignment::with(['staff', 'staff.departmentCosts', 'department'])
             ->whereBetween('date', [$startDate, $endDate])
             ->get();
 
@@ -202,6 +202,8 @@ class RosterController extends Controller
         $totalCostByCrew = [];
         $totalCostByStaff = [];
         $totalCost = 0.0;
+
+        $allDepartmentCosts = StaffDepartmentCost::all()->groupBy('staff_id');
 
         foreach ($crewsToShow as $crew) {
 
@@ -220,9 +222,11 @@ class RosterController extends Controller
                     return $staff;
                 });
 
+            $rosterStaffIds = StaffDepartmentCost::where('is_roster', true)->pluck('staff_id')->unique();
             $rosterStaff = Staff::where('crew_id', $crew->id)
                 ->where('isActive', true)
-                ->where('isRoster', true)
+                ->whereIn('id', $rosterStaffIds)
+                ->with('departmentCosts')
                 ->get()
                 ->map(function ($staff) use ($year, $month, $period, $crew) {
                     $staff->filtered_adjustments = $staff->adjustments()
@@ -257,19 +261,30 @@ class RosterController extends Controller
             $totalHoursByCrew[$crew->id] = (float) number_format($crewHours, 1, '.', '');
 
             foreach ($mergedStaff as $staff) {
-                $hours = $hourAssignments
+                $staffAssignments = $hourAssignments
                     ->where('crew_id', $crew->id)
-                    ->where('staff_id', $staff->id)
-                    ->sum('hours');
+                    ->where('staff_id', $staff->id);
 
+                $hours = $staffAssignments->sum('hours');
                 $totalHoursByStaff[$staff->id] = (float) number_format($hours, 2, '.', '');
 
+                $staffDeptCosts = $allDepartmentCosts->get($staff->id, collect());
+
                 $staffCost = 0.0;
-                if ($staff->isRoster) {
-                    $staffCost = $staff->cost * $periodDays;
-                } else {
-                    $staffCost = $staff->cost * $hours;
+                $rosterCost = 0.0;
+
+                foreach ($staffDeptCosts->where('is_roster', true) as $deptCost) {
+                    $rosterCost += $deptCost->cost * $periodDays;
                 }
+
+                foreach ($staffAssignments as $assignment) {
+                    $deptCost = $staffDeptCosts->firstWhere('department_id', $assignment->department_id);
+                    if ($deptCost && !$deptCost->is_roster) {
+                        $staffCost += $deptCost->cost * $assignment->hours;
+                    }
+                }
+
+                $staffCost += $rosterCost;
 
                 if (!isset($totalCostByCrew[$crew->id])) {
                     $totalCostByCrew[$crew->id] = 0;
@@ -287,9 +302,7 @@ class RosterController extends Controller
 
         foreach ($staffGrouped as $crewId => $staffList) {
             foreach ($staffList as $staff) {
-                $baseCost = $staff->isRoster
-                    ? $staff->cost * $periodDays
-                    : $assignments->where('crew_id', $crewId)->where('staff_id', $staff->id)->sum('hours') * $staff->cost;
+                $baseCost = $totalCostByStaff[$staff->id] ?? 0;
 
                 $adjustments = $staff->filtered_adjustments ?? collect();
 
@@ -305,6 +318,7 @@ class RosterController extends Controller
         }
 
         $adjustmentDefinitions = \App\Models\AdjustmentDefinition::all();
+        $departments = Department::where('is_active', true)->get()->keyBy('id');
 
         return view('admin.rosters.rosters.panel', compact(
             'allCrews',
@@ -319,7 +333,9 @@ class RosterController extends Controller
             'totalCostByStaff',
             'totalCost',
             'adjustmentDefinitions',
-            'adjustedTotalCost'
+            'adjustedTotalCost',
+            'departments',
+            'allDepartmentCosts'
         ));
     }
 }

@@ -72,7 +72,7 @@
             <span class="custom-modal-close" onclick="closeModal('assignModal')">&times;</span>
 
             <h5>Asignar horas</h5>
-            <form id="assignForm">
+            <form id="assignForm" data-no-loader="true">
                 @csrf
 
                 <div class="mb-3">
@@ -145,7 +145,7 @@
             <span class="custom-modal-close" onclick="closeModal('editModal')">&times;</span>
 
             <h5>Editar asignación</h5>
-            <form id="editForm">
+            <form id="editForm" data-no-loader="true">
                 @csrf
                 <input type="hidden" id="editAssignmentId">
 
