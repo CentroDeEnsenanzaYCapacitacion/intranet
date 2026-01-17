@@ -120,27 +120,20 @@
 
             <div style="padding: 24px;">
                 <ul style="list-style: none; padding: 0; margin: 0;">
-                    @foreach ($staffList->sortByDesc('isRoster') as $staff)
+                    @foreach ($staffList->sortByDesc(fn($s) => $allDepartmentCosts->get($s->id, collect())->contains('is_roster', true)) as $staff)
                         @php
                             $collapseId = 'adjustments-' . $crewId . '-' . $staff->id;
+                            $staffDeptCosts = $allDepartmentCosts->get($staff->id, collect());
+                            $hasRoster = $staffDeptCosts->contains('is_roster', true);
 
                             $hoursForThisCrew = $assignments
                                 ->where('crew_id', $crewId)
                                 ->where('staff_id', $staff->id)
                                 ->sum('hours');
 
-                            $baseCost = $staff->isRoster
-                                ? $staff->cost * $periodDays
-                                : $staff->cost * $hoursForThisCrew;
+                            $baseCost = $totalCostByStaff[$staff->id] ?? 0;
 
-                            $adjustmentsForCrew = $staff
-                                ->adjustments()
-                                ->where('year', request('year', now()->year))
-                                ->where('month', request('month', now()->month))
-                                ->where('period', request('period', '8-22'))
-                                ->where('crew_id', $crewId)
-                                ->with('adjustmentDefinition')
-                                ->get();
+                            $adjustmentsForCrew = $staff->filtered_adjustments ?? collect();
 
                             $adjSum = 0;
                             foreach ($adjustmentsForCrew as $adj) {
@@ -148,6 +141,11 @@
                             }
 
                             $totalWithAdjustments = $baseCost + $adjSum;
+
+                            $staffAssignmentsByDept = $assignments
+                                ->where('crew_id', $crewId)
+                                ->where('staff_id', $staff->id)
+                                ->groupBy('department_id');
                         @endphp
 
                         <li style="padding: 16px; margin-bottom: 8px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
@@ -155,14 +153,36 @@
                                 <div style="flex: 1; min-width: 200px;">
                                     <span style="font-weight: 600; color: #1a1a1a; font-size: 14px;">{{ $staff->name }} {{ $staff->surnames }}</span>
                                     <div style="margin-top: 4px; font-size: 13px; color: #6b7280;">
-                                        @if ($staff->isRoster)
+                                        @if ($hasRoster)
                                             <span class="badge badge-primary" style="font-size: 10px; padding: 4px 10px;">PLANILLA</span>
                                             <span>{{ $periodDays }} días</span>
-                                        @else
+                                        @endif
+                                        @if ($hoursForThisCrew > 0)
                                             <span class="badge badge-gray" style="font-size: 10px; padding: 4px 10px;">POR HORAS</span>
                                             <span>{{ number_format($hoursForThisCrew, 2) }} horas</span>
                                         @endif
                                     </div>
+                                    @if ($staffDeptCosts->count() > 0)
+                                        <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                                            @foreach ($staffDeptCosts as $deptCost)
+                                                @php
+                                                    $dept = $departments->get($deptCost->department_id);
+                                                    $deptAssignments = $staffAssignmentsByDept->get($deptCost->department_id, collect());
+                                                    $deptHours = $deptAssignments->sum('hours');
+                                                @endphp
+                                                @if ($dept && ($deptCost->is_roster || $deptHours > 0))
+                                                    <div style="display: inline-block; background: #e5e7eb; padding: 2px 8px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px;">
+                                                        {{ $dept->name }}:
+                                                        @if ($deptCost->is_roster)
+                                                            ${{ number_format($deptCost->cost, 2) }}/día
+                                                        @else
+                                                            {{ number_format($deptHours, 1) }}h × ${{ number_format($deptCost->cost, 2) }}
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <div style="display: flex; align-items: center; gap: 16px;">

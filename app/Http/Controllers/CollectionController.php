@@ -124,6 +124,16 @@ class CollectionController extends Controller
     public function getStudentTuitions($student_id)
     {
         $student = Student::find($student_id);
+
+        if (!$student) {
+            abort(404);
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $student->crew_id) {
+            abort(403);
+        }
+
         $payments = Receipt::where('student_id', $student_id)->get();
 
         if (!isset($student->generation) || !isset($student->modality->name) || !isset($student->schedule->name)) {
@@ -146,6 +156,16 @@ class CollectionController extends Controller
     public function newTuition($student_id)
     {
         $student = Student::find($student_id);
+
+        if (!$student) {
+            abort(404);
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $student->crew_id) {
+            abort(403);
+        }
+
         $student_tuition_receipts = Receipt::where('student_id', $student_id)->where('receipt_type_id', 2)->orderBy('id', 'desc')->get();
         $receipt_types = ReceiptType::all();
         $course = $student->course->name;
@@ -163,6 +183,11 @@ class CollectionController extends Controller
     public function reprintReceipt($receipt_id)
     {
         $receipt = Receipt::findOrFail($receipt_id);
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $receipt->crew_id) {
+            abort(403);
+        }
 
         Utils::generateQR(Hash::make($receipt->id));
         PdfController::generateReceipt($receipt);

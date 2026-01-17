@@ -39,12 +39,12 @@
                             <td class="text-uppercase">{{ $request->requestType->name}}</td>
                             <td>
                                 @if($request->student_id)
-                                    <a href="{{ route('system.student.profile', ['student_id' => $request->student_id]) }}" onclick="showLoader(true)" style="color: #0369a1; text-decoration: none; font-weight: 500;">
+                                    <a href="{{ route('system.student.profile', ['student_id' => $request->student_id]) }}" onclick="showLoader(true)" class="text-uppercase" style="color: #0369a1; text-decoration: none; font-weight: 500;">
                                         {{ $request->student->surnames }}, {{ $request->student->name }}
                                     </a>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Matrícula: {{ $request->student->crew->name[0] }}/{{ $request->student->id }}</div>
                                 @elseif($request->report_id)
-                                    {{ $request->report->surnames }}, {{ $request->report->name }}
+                                    <span class="text-uppercase">{{ $request->report->surnames }}, {{ $request->report->name }}</span>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Informe #{{ $request->report_id }}</div>
                                 @else
                                     -
@@ -124,12 +124,12 @@
                             <td class="text-uppercase">{{ $old_request->requestType->name}}</td>
                             <td>
                                 @if($old_request->student_id)
-                                    <a href="{{ route('system.student.profile', ['student_id' => $old_request->student_id]) }}" onclick="showLoader(true)" style="color: #0369a1; text-decoration: none; font-weight: 500;">
+                                    <a href="{{ route('system.student.profile', ['student_id' => $old_request->student_id]) }}" onclick="showLoader(true)" class="text-uppercase" style="color: #0369a1; text-decoration: none; font-weight: 500;">
                                         {{ $old_request->student->surnames }}, {{ $old_request->student->name }}
                                     </a>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Matrícula: {{ $old_request->student->crew->name[0] }}/{{ $old_request->student->id }}</div>
                                 @elseif($old_request->report_id)
-                                    {{ $old_request->report->surnames }}, {{ $old_request->report->name }}
+                                    <span class="text-uppercase">{{ $old_request->report->surnames }}, {{ $old_request->report->name }}</span>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Informe #{{ $old_request->report_id }}</div>
                                 @else
                                     -

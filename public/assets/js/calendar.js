@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    setupDependentSelects('staffSelect', 'departmentSelect', 'subjectSelect');
+    setupDependentSelects('editStaffSelect', 'editDepartmentSelect', 'editSubjectSelect');
+
     calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
         locale: "es",
         buttonText: {
@@ -43,6 +46,13 @@ document.addEventListener("DOMContentLoaded", function () {
             container.appendChild(strong);
             container.appendChild(document.createElement("br"));
 
+            const deptSpan = document.createElement("span");
+            deptSpan.style.fontSize = "0.85em";
+            deptSpan.style.color = "#666";
+            deptSpan.textContent = props.department_name || '';
+            container.appendChild(deptSpan);
+            container.appendChild(document.createElement("br"));
+
             const span = document.createElement("span");
             span.textContent = props.subject_name;
             container.appendChild(span);
@@ -58,7 +68,10 @@ document.addEventListener("DOMContentLoaded", function () {
         dateClick: function (info) {
             document.getElementById("selectedDate").value = info.dateStr;
             document.getElementById("staffSelect").value = "";
-            document.getElementById("subjectSelect").value = "";
+            document.getElementById("departmentSelect").innerHTML = '<option value="" disabled selected>Primero selecciona un trabajador</option>';
+            document.getElementById("departmentSelect").disabled = true;
+            document.getElementById("subjectSelect").innerHTML = '<option value="" disabled selected>Primero selecciona un departamento</option>';
+            document.getElementById("subjectSelect").disabled = true;
             document.getElementById("startTime").value = "";
             document.getElementById("endTime").value = "";
 
@@ -73,7 +86,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             document.getElementById("editAssignmentId").value = event.id;
             document.getElementById("editStaffSelect").value = props.staff_id;
-            document.getElementById("editSubjectSelect").value = props.subject_id;
+
+            populateDepartmentsForStaff('editStaffSelect', 'editDepartmentSelect', props.department_id);
+
+            setTimeout(() => {
+                populateSubjectsForDepartment('editDepartmentSelect', 'editSubjectSelect', props.subject_id);
+            }, 50);
+
             document.getElementById("editStartTime").value = formatTime(props.start_time);
             document.getElementById("editEndTime").value = formatTime(props.end_time);
 
@@ -109,10 +128,93 @@ document.addEventListener("DOMContentLoaded", function () {
     calendar.render();
 });
 
+function setupDependentSelects(staffSelectId, deptSelectId, subjectSelectId) {
+    const staffSelect = document.getElementById(staffSelectId);
+    const deptSelect = document.getElementById(deptSelectId);
+    const subjectSelect = document.getElementById(subjectSelectId);
+
+    staffSelect.addEventListener('change', function() {
+        populateDepartmentsForStaff(staffSelectId, deptSelectId);
+        subjectSelect.innerHTML = '<option value="" disabled selected>Primero selecciona un departamento</option>';
+        subjectSelect.disabled = true;
+    });
+
+    deptSelect.addEventListener('change', function() {
+        populateSubjectsForDepartment(deptSelectId, subjectSelectId);
+    });
+}
+
+function populateDepartmentsForStaff(staffSelectId, deptSelectId, selectedDeptId = null) {
+    const staffSelect = document.getElementById(staffSelectId);
+    const deptSelect = document.getElementById(deptSelectId);
+    const selectedOption = staffSelect.options[staffSelect.selectedIndex];
+
+    if (!selectedOption || !selectedOption.value) {
+        deptSelect.innerHTML = '<option value="" disabled selected>Primero selecciona un trabajador</option>';
+        deptSelect.disabled = true;
+        return;
+    }
+
+    const deptIds = JSON.parse(selectedOption.dataset.departments || '[]');
+
+    deptSelect.innerHTML = '<option value="" disabled selected>Selecciona un departamento</option>';
+
+    calendarConfig.departments.forEach(dept => {
+        if (deptIds.includes(dept.id)) {
+            const option = document.createElement('option');
+            option.value = dept.id;
+            option.textContent = dept.name;
+            if (selectedDeptId && dept.id == selectedDeptId) {
+                option.selected = true;
+            }
+            deptSelect.appendChild(option);
+        }
+    });
+
+    deptSelect.disabled = deptIds.length === 0;
+
+    if (deptIds.length === 0) {
+        deptSelect.innerHTML = '<option value="" disabled selected>Este trabajador no tiene departamentos asignados</option>';
+    }
+}
+
+function populateSubjectsForDepartment(deptSelectId, subjectSelectId, selectedSubjectId = null) {
+    const deptSelect = document.getElementById(deptSelectId);
+    const subjectSelect = document.getElementById(subjectSelectId);
+    const deptId = deptSelect.value;
+
+    if (!deptId) {
+        subjectSelect.innerHTML = '<option value="" disabled selected>Primero selecciona un departamento</option>';
+        subjectSelect.disabled = true;
+        return;
+    }
+
+    const subjects = calendarConfig.subjectsByDepartment[deptId] || [];
+
+    subjectSelect.innerHTML = '<option value="" disabled selected>Selecciona una materia</option>';
+
+    subjects.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject.id;
+        option.textContent = subject.name;
+        if (selectedSubjectId && subject.id == selectedSubjectId) {
+            option.selected = true;
+        }
+        subjectSelect.appendChild(option);
+    });
+
+    subjectSelect.disabled = subjects.length === 0;
+
+    if (subjects.length === 0) {
+        subjectSelect.innerHTML = '<option value="" disabled selected>No hay materias en este departamento</option>';
+    }
+}
+
 document.getElementById("assignForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
     const staffId = document.getElementById("staffSelect").value;
+    const departmentId = document.getElementById("departmentSelect").value;
     const subjectId = document.getElementById("subjectSelect").value;
     const startTime = document.getElementById("startTime").value;
     const endTime = document.getElementById("endTime").value;
@@ -122,7 +224,7 @@ document.getElementById("assignForm").addEventListener("submit", function (e) {
     errorBox.classList.add("d-none");
     errorBox.textContent = "";
 
-    if (!staffId || !subjectId || !startTime || !endTime || !date) {
+    if (!staffId || !departmentId || !subjectId || !startTime || !endTime || !date) {
         errorBox.textContent = "Completa todos los campos.";
         errorBox.classList.remove("d-none");
         return;
@@ -146,6 +248,7 @@ document.getElementById("assignForm").addEventListener("submit", function (e) {
         },
         body: JSON.stringify({
             staff_id: staffId,
+            department_id: departmentId,
             subject_id: subjectId,
             date: date,
             start_time: startTime,
@@ -179,6 +282,7 @@ document.getElementById("editForm").addEventListener("submit", function (e) {
 
     const id = document.getElementById("editAssignmentId").value;
     const staffId = document.getElementById("editStaffSelect").value;
+    const departmentId = document.getElementById("editDepartmentSelect").value;
     const subjectId = document.getElementById("editSubjectSelect").value;
     const startTime = document.getElementById("editStartTime").value;
     const endTime = document.getElementById("editEndTime").value;
@@ -191,6 +295,7 @@ document.getElementById("editForm").addEventListener("submit", function (e) {
         },
         body: JSON.stringify({
             staff_id: staffId,
+            department_id: departmentId,
             subject_id: subjectId,
             start_time: startTime,
             end_time: endTime,
@@ -233,4 +338,3 @@ function closeOnOverlay(e, modalId) {
         closeModal(modalId);
     }
 }
-

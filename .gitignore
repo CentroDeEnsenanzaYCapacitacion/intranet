@@ -70,3 +70,6 @@ public/.htaccess
 
 CLAUDE.md
 AGENTS.md
+
+.sonar/
+.scannerwork/

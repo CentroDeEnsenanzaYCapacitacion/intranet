@@ -23,15 +23,17 @@ class StaffRequest extends FormRequest
             'personal_mail' => 'nullable|email|max:255',
             'department' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
-            'cost' => ['required', 'numeric', 'min:0'],
-            'cost_type' => ['required', 'in:day,hour'],
-            'isRoster' => 'sometimes|boolean',
+            'departments' => 'nullable|array',
+            'departments.*.department_id' => 'nullable|exists:departments,id',
+            'departments.*.cost' => 'nullable|numeric|min:0',
+            'departments.*.cost_type' => 'nullable|in:day,hour',
         ];
 
         if ($this->isMethod('post')) {
             $rules['name'] = 'required|string|max:255';
             $rules['surnames'] = 'nullable|string|max:255';
             $rules['requiresMail'] = 'sometimes|boolean';
+            $rules['crew_id'] = 'nullable|exists:crews,id';
         }
 
         if ($this->isMethod('put')) {

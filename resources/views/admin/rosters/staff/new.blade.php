@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.staff.store') }}" method="POST">
+        <form action="{{ route('admin.staff.store') }}" method="POST" class="staff-form">
             @csrf
 
             @if ($userCrewId == 1)
@@ -90,19 +90,9 @@
                 <input type="text" name="rfc" class="modern-input">
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="modern-field">
-                        <label for="department">Departamento</label>
-                        <input type="text" name="department" class="modern-input">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="modern-field">
-                        <label for="position">Puesto</label>
-                        <input type="text" name="position" class="modern-input">
-                    </div>
-                </div>
+            <div class="modern-field">
+                <label for="position">Puesto</label>
+                <input type="text" name="position" class="modern-input">
             </div>
 
             <div class="modern-field">
@@ -117,22 +107,17 @@
                 </label>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="modern-field">
-                        <label for="cost">Costo *</label>
-                        <input type="number" name="cost" class="modern-input" step="0.01" min="0" required>
-                    </div>
+            <div class="departments-section" style="margin-top: 24px; padding: 20px; background: var(--bg-secondary, #f8f9fa); border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; font-size: 1.1rem;">Departamentos y Costos</h3>
+                    <button type="button" id="add-department-btn" class="btn-modern btn-primary" style="padding: 8px 16px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Agregar
+                    </button>
                 </div>
-                <div class="col-md-6">
-                    <div class="modern-field">
-                        <label for="cost_type">Tipo de costo *</label>
-                        <select name="cost_type" class="modern-input" required>
-                            <option value="day">Por día</option>
-                            <option value="hour">Por hora</option>
-                        </select>
-                    </div>
-                </div>
+                <div id="departments-container"></div>
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 24px;">
@@ -152,4 +137,11 @@
             </div>
         </form>
     </div>
+
+    <script>
+        window.staffDepartmentsConfig = {
+            departments: @json($departments)
+        };
+    </script>
+    <script src="{{ asset('assets/js/staff-departments.js') }}"></script>
 @endsection

@@ -15,7 +15,7 @@
 
     <div class="dashboard-welcome">
         <h1 class="dashboard-title">Completar Ficha de Estudiante</h1>
-        <p class="dashboard-subtitle">{{ $student->surnames . ', ' . $student->name }} - {{ $student->crew->name[0] . '/' . $student->id }}</p>
+        <p class="dashboard-subtitle text-uppercase">{{ $student->surnames . ', ' . $student->name }} - {{ $student->crew->name[0] . '/' . $student->id }}</p>
     </div>
 
     @if ($errors->any())

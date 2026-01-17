@@ -42,7 +42,7 @@ class PasswordResetController extends Controller
 
         PasswordReset::create([
             'email' => $request->email,
-            'token' => $token,
+            'token' => Hash::make($token),
             'created_at' => now(),
         ]);
 
@@ -59,8 +59,15 @@ class PasswordResetController extends Controller
 
     public function showResetForm($token)
     {
+        $passwordResets = PasswordReset::all();
+        $passwordReset = null;
 
-        $passwordReset = PasswordReset::where('token', $token)->first();
+        foreach ($passwordResets as $reset) {
+            if (Hash::check($token, $reset->token)) {
+                $passwordReset = $reset;
+                break;
+            }
+        }
 
         if (!$passwordReset) {
             return redirect()->route('login')->withErrors([
@@ -69,7 +76,7 @@ class PasswordResetController extends Controller
         }
 
         if (now()->diffInMinutes($passwordReset->created_at) > 60) {
-            PasswordReset::where('token', $token)->delete();
+            $passwordReset->delete();
             return redirect()->route('login')->withErrors([
                 'token' => 'El enlace de recuperación ha expirado. Por favor solicita uno nuevo.',
             ]);
@@ -96,19 +103,16 @@ class PasswordResetController extends Controller
             'password.regex' => 'La contraseña debe incluir mayúsculas, minúsculas, números y símbolos (@$!%*?&).',
         ]);
 
-        $passwordReset = PasswordReset::where([
-            'token' => $request->token,
-            'email' => $request->email,
-        ])->first();
+        $passwordReset = PasswordReset::where('email', $request->email)->first();
 
-        if (!$passwordReset) {
+        if (!$passwordReset || !Hash::check($request->token, $passwordReset->token)) {
             return back()->withErrors([
                 'token' => 'El token de recuperación no es válido.',
             ]);
         }
 
         if (now()->diffInMinutes($passwordReset->created_at) > 60) {
-            PasswordReset::where('token', $request->token)->delete();
+            $passwordReset->delete();
             return back()->withErrors([
                 'token' => 'El enlace de recuperación ha expirado.',
             ]);

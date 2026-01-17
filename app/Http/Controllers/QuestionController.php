@@ -108,7 +108,7 @@ class QuestionController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('admin.catalogues.questions.new')
-                ->with('error', 'Error al guardar la pregunta: ' . $e->getMessage());
+                ->with('error', 'Error al guardar la pregunta. Intente nuevamente.');
         }
     }
 
@@ -178,7 +178,7 @@ class QuestionController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('admin.catalogues.questions.edit', $id)
-                ->with('error', 'Error al actualizar la pregunta: ' . $e->getMessage());
+                ->with('error', 'Error al actualizar la pregunta. Intente nuevamente.');
         }
     }
 

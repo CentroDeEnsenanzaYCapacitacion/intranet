@@ -9,7 +9,14 @@ class HourAssignment extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'staff_id',
+        'subject_id',
+        'crew_id',
+        'department_id',
+        'date',
+        'hours'
+    ];
 
     public function staff()
     {
@@ -26,4 +33,8 @@ class HourAssignment extends Model
         return $this->belongsTo(Crew::class);
     }
 
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }
