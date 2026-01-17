@@ -52,7 +52,7 @@ class RequestController extends Controller
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
 
-        $sysrequest = SysRequest::find($request_id);
+        $sysrequest = SysRequest::findOrFail($request_id);
         if($action==="approve"){
             $sysrequest->approved = true;
 
@@ -78,7 +78,7 @@ class RequestController extends Controller
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
 
-        $request = SysRequest::find($request_id);
+        $request = SysRequest::findOrFail($request_id);
         return view('admin.requests.edit',compact('request'));
     }
 
@@ -87,7 +87,7 @@ class RequestController extends Controller
             abort(403, 'No tienes permisos para realizar esta acción.');
         }
 
-        $sysrequest = SysRequest::find($request_id);
+        $sysrequest = SysRequest::findOrFail($request_id);
         $array = explode("-",$sysrequest->description);
         $reason = $array[1];
         $sysrequest->description = $request->discount .' - '.$reason;
@@ -107,9 +107,9 @@ class RequestController extends Controller
             'new_tuition' => 'required|numeric|min:0.01'
         ]);
 
-        $sysrequest = SysRequest::find($request_id);
+        $sysrequest = SysRequest::findOrFail($request_id);
 
-        $student = Student::find($sysrequest->student_id);
+        $student = Student::findOrFail($sysrequest->student_id);
         $student->tuition = $request->new_tuition;
         $student->save();
 

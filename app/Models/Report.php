@@ -9,7 +9,19 @@ class Report extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'surnames',
+        'email',
+        'marketing_id',
+        'crew_id',
+        'phone',
+        'genre',
+        'cel_phone',
+        'course_id',
+        'responsible_id',
+        'signed'
+    ];
 
     public function course() {
         return $this->belongsTo(Course::class);

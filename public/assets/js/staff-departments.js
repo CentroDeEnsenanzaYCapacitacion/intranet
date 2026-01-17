@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const addBtn = document.getElementById('add-department-btn');
     let rowIndex = 0;
 
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function createDepartmentRow(data = {}) {
         const row = document.createElement('div');
         row.className = 'department-row';
@@ -20,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const isUsed = usedDepartmentIds.includes(dept.id.toString());
             const isSelected = data.department_id && data.department_id == dept.id;
             if (!isUsed || isSelected) {
-                departmentOptions += `<option value="${dept.id}" ${isSelected ? 'selected' : ''}>${dept.name}</option>`;
+                departmentOptions += `<option value="${dept.id}" ${isSelected ? 'selected' : ''}>${escapeHtml(dept.name)}</option>`;
             }
         });
 

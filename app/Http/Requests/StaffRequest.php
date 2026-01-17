@@ -33,6 +33,7 @@ class StaffRequest extends FormRequest
             $rules['name'] = 'required|string|max:255';
             $rules['surnames'] = 'nullable|string|max:255';
             $rules['requiresMail'] = 'sometimes|boolean';
+            $rules['crew_id'] = 'nullable|exists:crews,id';
         }
 
         if ($this->isMethod('put')) {

@@ -65,6 +65,17 @@ class StudentController extends Controller
 
     public function upload_profile_image($student_id, Request $request)
     {
+        $student = Student::find($student_id);
+
+        if (!$student) {
+            abort(404);
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $student->crew_id) {
+            abort(403);
+        }
+
         $messages = [
             'image.required' => 'Es necesario que seleccione un archivo de imagen.',
             'image.image' => 'El archivo debe ser una imagen.',
@@ -210,6 +221,15 @@ class StudentController extends Controller
         }
 
         $student = Student::find($request->student_id);
+
+        if (!$student) {
+            abort(404);
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $student->crew_id) {
+            abort(403);
+        }
         $wasFirstTime = $student->first_time;
         $student->pc = $request->pc;
         $student->colony = $request->colony;
@@ -343,17 +363,29 @@ class StudentController extends Controller
         ], $messages);
 
         $student_id = $request->student_id;
+        $student = Student::find($student_id);
+
+        if (!$student) {
+            abort(404);
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $student->crew_id) {
+            abort(403);
+        }
+
         $document_id = $request->document_id;
 
         $document = \App\Models\StudentDocument::find($document_id);
 
         $directory = 'profiles/' . $student_id;
 
-        $fileName = str_replace(' ', '_', strtolower($document->name)) . '.' . $request->document_file->extension();
+        $safeDocName = preg_replace('/[^a-z0-9_]/', '', str_replace(' ', '_', strtolower($document->name)));
+        $fileName = $safeDocName . '.' . $request->document_file->extension();
 
         $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
         foreach ($extensions as $ext) {
-            $existingFile = $directory . '/' . str_replace(' ', '_', strtolower($document->name)) . '.' . $ext;
+            $existingFile = $directory . '/' . $safeDocName . '.' . $ext;
             if (Storage::disk('local')->exists($existingFile)) {
                 Storage::disk('local')->delete($existingFile);
             }
@@ -361,7 +393,6 @@ class StudentController extends Controller
 
         $request->document_file->storeAs($directory, $fileName);
 
-        $student = Student::find($student_id);
         $student->documents()->updateExistingPivot($document_id, ['uploaded' => true]);
 
         return redirect()->route('system.student.profile', ['student_id' => $student_id])
@@ -383,7 +414,7 @@ class StudentController extends Controller
         }
 
         $directory = 'profiles/' . $student_id;
-        $baseFileName = str_replace(' ', '_', strtolower($document->name));
+        $baseFileName = preg_replace('/[^a-z0-9_]/', '', str_replace(' ', '_', strtolower($document->name)));
 
         $extensions = ['jpeg', 'png', 'jpg', 'gif', 'svg', 'webp', 'pdf'];
         $filePath = null;

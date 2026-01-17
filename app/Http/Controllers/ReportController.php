@@ -36,6 +36,16 @@ class ReportController extends Controller
     public static function updateReport($report_id)
     {
         $report = Report::find($report_id);
+
+        if (!$report) {
+            return;
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $report->crew_id) {
+            abort(403);
+        }
+
         $report->signed = true;
         $report->save();
     }
@@ -65,6 +75,15 @@ class ReportController extends Controller
     public function receiptOrRequest(Request $request)
     {
         $report = Report::with('course')->find($request->report_id);
+
+        if (!$report) {
+            abort(404);
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $report->crew_id) {
+            abort(403);
+        }
         $isBachilleratoExamen = $report && $report->course && stripos($report->course->name, 'BACHILLERATO EN UN EXAMEN') !== false;
 
         if ($isBachilleratoExamen) {
@@ -160,6 +179,12 @@ class ReportController extends Controller
     public function signDiscount($report_id)
     {
         $report = Report::with('course')->findOrFail($report_id);
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $user->crew_id != $report->crew_id) {
+            abort(403);
+        }
+
         return view('system.reports.set_amount', compact('report_id', 'report'));
     }
 

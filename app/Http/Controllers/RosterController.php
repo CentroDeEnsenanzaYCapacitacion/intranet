@@ -64,6 +64,12 @@ class RosterController extends Controller
     public function destroyAdjustment($id)
     {
         $adjustment = StaffAdjustment::findOrFail($id);
+
+        $userCrewId = auth()->user()->crew_id;
+        if ($userCrewId != 1 && $adjustment->crew_id != $userCrewId) {
+            abort(403);
+        }
+
         $adjustment->delete();
 
         return redirect()->back()->with('success', 'Ajuste eliminado correctamente.');
@@ -113,6 +119,12 @@ class RosterController extends Controller
     public function deactivate($id)
     {
         $staff = Staff::findOrFail($id);
+
+        $userCrewId = auth()->user()->crew_id;
+        if ($userCrewId != 1 && $staff->crew_id != $userCrewId) {
+            abort(403);
+        }
+
         $staff->isActive = false;
         $staff->save();
 
@@ -122,6 +134,12 @@ class RosterController extends Controller
     public function edit($id)
     {
         $staff = Staff::with('departmentCosts')->findOrFail($id);
+
+        $userCrewId = auth()->user()->crew_id;
+        if ($userCrewId != 1 && $staff->crew_id != $userCrewId) {
+            abort(403);
+        }
+
         $departments = Department::where('is_active', true)->get();
         return view('admin.rosters.staff.edit', compact('staff', 'departments'));
     }
@@ -134,6 +152,11 @@ class RosterController extends Controller
     public function update(StaffRequest $request, $id)
     {
         $staff = Staff::findOrFail($id);
+
+        $userCrewId = auth()->user()->crew_id;
+        if ($userCrewId != 1 && $staff->crew_id != $userCrewId) {
+            abort(403);
+        }
 
         $data = $request->validated();
 
