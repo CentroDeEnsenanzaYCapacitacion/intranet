@@ -90,19 +90,9 @@
                 <input type="text" name="rfc" class="modern-input">
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="modern-field">
-                        <label for="department">Departamento</label>
-                        <input type="text" name="department" class="modern-input">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="modern-field">
-                        <label for="position">Puesto</label>
-                        <input type="text" name="position" class="modern-input">
-                    </div>
-                </div>
+            <div class="modern-field">
+                <label for="position">Puesto</label>
+                <input type="text" name="position" class="modern-input">
             </div>
 
             <div class="modern-field">
