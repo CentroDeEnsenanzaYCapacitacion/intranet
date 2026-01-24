@@ -14,9 +14,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
 
-        if (password.length < 8) {
+        if (password.length < 12) {
             e.preventDefault();
-            alert('La contraseña debe tener al menos 8 caracteres.');
+            alert('La contraseña debe tener al menos 12 caracteres.');
+            return false;
+        }
+
+        const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).+$/;
+
+        if (!pattern.test(password)) {
+            e.preventDefault();
+            alert('La contraseña debe incluir mayúsculas, minúsculas, números y símbolos.');
             return false;
         }
     });

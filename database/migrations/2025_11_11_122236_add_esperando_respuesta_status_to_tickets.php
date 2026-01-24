@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         DB::statement("ALTER TABLE tickets MODIFY COLUMN status ENUM('abierto', 'en progreso', 'esperando respuesta', 'resuelto', 'cerrado') DEFAULT 'abierto'");
     }
 
@@ -20,6 +24,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         DB::statement("ALTER TABLE tickets MODIFY COLUMN status ENUM('abierto', 'en progreso', 'resuelto', 'cerrado') DEFAULT 'abierto'");
     }
 };

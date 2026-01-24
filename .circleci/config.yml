@@ -38,6 +38,11 @@ jobs:
             source "$BASH_ENV"
             echo "$COMPOSER_CHANGED" > .composer_changed
 
+      - run:
+          name: Run tests DEV
+          command: |
+            php artisan test
+
       - persist_to_workspace:
           root: .
           paths:
@@ -251,6 +256,27 @@ jobs:
             - composer.json
             - composer.lock
 
+  test-production:
+    docker:
+      - image: cimg/php:8.2
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install PHP dependencies TEST
+          command: |
+            echo "Running composer install (TEST)"
+            composer install \
+              --no-interaction \
+              --prefer-dist \
+              --optimize-autoloader
+
+      - run:
+          name: Run tests MAIN
+          command: |
+            php artisan test
+
   deploy-production:
     docker:
       - image: cimg/php:8.2
@@ -407,9 +433,15 @@ workflows:
             branches:
               only: main
 
+      - test-production:
+          filters:
+            branches:
+              only: main
+
       - deploy-production:
           requires:
             - build-production
+            - test-production
           filters:
             branches:
               only: main
