@@ -3,33 +3,35 @@
 ## Progreso
 - [x] Login básico: éxito, credenciales inválidas, inactivo, redirect de guest.
 - [x] Autorización por rol (ejemplo: calendario).
-- [ ] Confirmación de contraseña: requiere confirmación en rutas sensibles, respeta ventana.
-- [ ] Políticas de contraseña: cambio, set-password y reset-password con reglas fuertes.
-- [ ] Reset de contraseña: envío de correo, token inválido/expirado, restablece y limpia tokens.
-- [ ] Set-password por invitación: token válido/inválido, marca invitación usada.
-- [ ] Cambio de contraseña: password actual incorrecta, nueva diferente, reglas.
+- [x] Confirmación de contraseña: requiere confirmación en rutas sensibles, respeta ventana.
+- [x] Políticas de contraseña: cambio, set-password y reset-password con reglas fuertes.
+- [x] Reset de contraseña: envío de correo, token inválido/expirado, restablece y limpia tokens.
+- [x] Set-password por invitación: token válido/inválido, marca invitación usada.
+- [x] Cambio de contraseña: password actual incorrecta, nueva diferente, reglas.
+- [x] Tickets: crear, mensajes, cambio de estado, acceso a adjuntos de terceros.
 
 ## Prioridad y cobertura
 ### Seguridad y acceso
 - [ ] Rate limiting en login y recuperación.
-- [ ] Confirmación de contraseña en rutas sensibles.
-- [ ] Acceso por rol en rutas admin/system/web (matriz de roles clave).
-- [ ] Acceso denegado para usuarios inactivos.
-- [ ] Login actualiza last_login.
+- [x] Confirmación de contraseña en rutas sensibles.
+- [x] Acceso por rol en rutas admin/system/web (matriz de roles clave).
+- [x] Acceso denegado para usuarios inactivos.
+- [x] Login actualiza last_login.
 
 ### Usuarios y roles
-- [ ] Crear/editar/bloquear/activar usuarios.
-- [ ] Reenvío de invitación.
-- [ ] Invitación: token válido/inválido, uso único.
+- [x] Crear/editar/bloquear/activar usuarios.
+- [x] Reenvío de invitación.
+- [x] Invitación: token válido/inválido, uso único.
 - [ ] Cambio de rol y validación de permisos efectivos.
 
 ### Estudiantes
-- [ ] Búsqueda y perfil.
+- [x] Búsqueda y perfil.
 - [ ] Actualización de datos y formulario.
-- [ ] Imagen de perfil: upload y acceso.
-- [ ] Documentos: upload y descarga.
-- [ ] Observaciones y solicitud de cambio de colegiatura.
-- [ ] Acceso denegado a documentos de otro estudiante.
+- [x] Imagen de perfil: upload y acceso.
+- [x] Documentos: upload y descarga.
+- [x] Observaciones.
+- [ ] Solicitud de cambio de colegiatura.
+- [x] Acceso denegado a documentos de otro estudiante.
 
 ### Cobranza
 - [ ] Buscar colegiaturas.
@@ -53,16 +55,16 @@
 - [ ] Respuestas inválidas no modifican el catálogo.
 
 ### Calendarios
-- [ ] EUB update.
+- [x] EUB update.
 - [ ] Hour assignments: alta/edición/baja.
 - [ ] Conflictos de horarios rechazados.
 
 ### Tickets
-- [ ] Crear ticket.
-- [ ] Mensajes.
-- [ ] Cambio de estado.
-- [ ] Adjuntos e imágenes.
-- [ ] No permite ver adjuntos de tickets ajenos.
+- [x] Crear ticket.
+- [x] Mensajes.
+- [x] Cambio de estado.
+- [x] Adjuntos e imágenes.
+- [x] No permite ver adjuntos de tickets ajenos.
 
 ### Web admin
 - [ ] Carousel: alta/baja/actualización.
@@ -76,8 +78,8 @@
 - [ ] Respuesta con PDF y headers correctos.
 
 ### Correo
-- [ ] Reset de contraseña.
-- [ ] Invitación de usuario.
+- [x] Reset de contraseña.
+- [x] Invitación de usuario.
 - [ ] Notificaciones de tickets.
 - [ ] Bienvenida alumno.
 - [ ] No se envía correo si usuario inactivo.

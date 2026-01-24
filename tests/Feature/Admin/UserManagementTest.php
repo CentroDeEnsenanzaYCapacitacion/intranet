@@ -168,4 +168,42 @@ class UserManagementTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_admin_can_resend_invitation(): void
+    {
+        Mail::fake();
+
+        $user = $this->createUser($this->managerRole->id);
+
+        $oldToken = 'old_' . uniqid();
+        UserInvitationModel::create([
+            'user_id' => $user->id,
+            'token' => $oldToken,
+            'expires_at' => now()->addDays(3),
+            'used' => false,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->withSession(['auth.password_confirmed_at' => time()])
+            ->post('/admin/user/resend-invitation/' . $user->id);
+
+        $response->assertRedirect(route('admin.users.show'));
+        $response->assertSessionHas('success', 'Invitación reenviada exitosamente');
+
+        $this->assertFalse(UserInvitationModel::where('token', $oldToken)->exists());
+        $this->assertSame(1, UserInvitationModel::where('user_id', $user->id)->where('used', false)->count());
+        Mail::assertSent(UserInvitation::class);
+    }
+
+    public function test_staff_cannot_resend_invitation(): void
+    {
+        $user = $this->createUser($this->managerRole->id);
+        $staff = $this->createUser($this->staffRole->id);
+
+        $response = $this->actingAs($staff)
+            ->withSession(['auth.password_confirmed_at' => time()])
+            ->post('/admin/user/resend-invitation/' . $user->id);
+
+        $response->assertStatus(403);
+    }
 }
