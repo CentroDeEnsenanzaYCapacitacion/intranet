@@ -12,12 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('sys_requests', function (Blueprint $table) {
-            // Hacer report_id nullable para solicitudes que no son de reportes
-            $table->unsignedBigInteger('report_id')->nullable()->change();
-            
-            // Agregar student_id para solicitudes relacionadas con estudiantes
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->unsignedBigInteger('report_id')->nullable()->change();
+            }
+
             $table->unsignedBigInteger('student_id')->nullable()->after('report_id');
-            $table->foreign('student_id')->references('id')->on('students');
+
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->foreign('student_id')->references('id')->on('students');
+            }
         });
     }
 
@@ -27,7 +30,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('sys_requests', function (Blueprint $table) {
-            $table->dropForeign(['student_id']);
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->dropForeign(['student_id']);
+            }
+
             $table->dropColumn('student_id');
         });
     }

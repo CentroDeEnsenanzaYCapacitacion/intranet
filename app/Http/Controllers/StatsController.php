@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StatsController extends Controller
 {
@@ -34,7 +35,11 @@ class StatsController extends Controller
             return redirect()->route('admin.stats.reports', ['period' => 'semestral', 'year' => $year, 'month' => $defaultSemester]);
         }
 
-        $availableYears = Report::selectRaw('YEAR(created_at) as year')
+        $yearExpression = DB::connection()->getDriverName() === 'sqlite'
+            ? "strftime('%Y', created_at)"
+            : 'YEAR(created_at)';
+
+        $availableYears = Report::selectRaw($yearExpression . ' as year')
             ->distinct()
             ->orderByDesc('year')
             ->pluck('year');

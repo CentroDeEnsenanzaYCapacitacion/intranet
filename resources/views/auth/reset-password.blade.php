@@ -87,7 +87,7 @@
                             <span class="form-error" style="display: block;">{{ $message }}</span>
                         @else
                             <small class="text-muted" style="display: block; margin-top: 6px; font-size: 13px; color: #6E5F52;">
-                                La contraseña debe tener al menos 8 caracteres.
+                                La contraseña debe tener al menos 12 caracteres e incluir mayúsculas, minúsculas, números y símbolos.
                             </small>
                         @enderror
                     </div>

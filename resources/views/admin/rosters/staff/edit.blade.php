@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.staff.update', $staff->id) }}" method="POST">
+        <form action="{{ route('admin.staff.update', $staff->id) }}" method="POST" class="staff-form">
             @csrf
             @method('PUT')
 
@@ -101,7 +101,7 @@
                 <div class="col-md-6">
                     <div class="modern-field">
                         <label>Correo CEC</label>
-                        <input type="email" name="cec_mail" class="modern-input" value="{{ old('cec_mail', $staff->cec_mail) }}" readonly>
+                        <input type="email" name="cec_mail" class="modern-input" value="{{ old('cec_mail', $staff->cec_mail) }}">
                     </div>
                 </div>
             </div>

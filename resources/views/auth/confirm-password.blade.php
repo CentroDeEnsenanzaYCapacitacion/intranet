@@ -1,19 +1,13 @@
 @extends('layout.mainLayout')
 
-@section('title', 'Cambiar contraseña')
+@section('title', 'Confirmar contraseña')
 
 @section('content')
     <div style="max-width: 1500px; margin: 0 auto; width: 100%;">
         <div class="dashboard-welcome">
-            <h1 class="dashboard-title">Cambiar contraseña</h1>
-            <p class="dashboard-subtitle">Actualiza tu contraseña de acceso.</p>
+            <h1 class="dashboard-title">Confirmar contraseña</h1>
+            <p class="dashboard-subtitle">Por seguridad, confirma tu contraseña para continuar.</p>
         </div>
-
-        @if (session('success'))
-            <div class="alert alert-success" style="background: #d1fae5; border: 1px solid #065f46; color: #065f46; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
-                {{ session('success') }}
-            </div>
-        @endif
 
         @if ($errors->any())
             <div class="alert alert-danger" style="background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
@@ -25,7 +19,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('password.change.update') }}" id="changePasswordForm" onsubmit="showLoader(true)">
+        <form method="POST" action="{{ route('password.confirm.store') }}">
             @csrf
 
             <div class="modern-card">
@@ -44,55 +38,20 @@
                     <div class="row">
                         <div class="col-12 col-lg-8 mx-auto">
                             <div class="modern-field">
-                                <label for="current_password">Contraseña actual</label>
-                                <input type="password"
-                                       class="form-control modern-input"
-                                       id="current_password"
-                                       name="current_password"
-                                       placeholder="Contraseña actual"
-                                       required>
-                            </div>
-                            @error('current_password')
-                                <div style="color: #991b1b; font-size: 14px; margin-top: 4px;">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-top: 16px;">
-                        <div class="col-12 col-lg-8 mx-auto">
-                            <div class="modern-field">
-                                <label for="password">Nueva contraseña</label>
+                                <label for="password">Contraseña</label>
                                 <input type="password"
                                        class="form-control modern-input"
                                        id="password"
                                        name="password"
-                                       placeholder="Nueva contraseña"
-                                       required>
-                                <small class="text-muted" style="display: block; margin-top: 6px;">
-                                    Debe tener al menos 12 caracteres, incluir mayúsculas, minúsculas, números y símbolos, y ser diferente a la actual.
-                                </small>
+                                       placeholder="Confirma tu contraseña"
+                                       required
+                                       autocomplete="current-password">
                             </div>
                             @error('password')
                                 <div style="color: #991b1b; font-size: 14px; margin-top: 4px;">
                                     {{ $message }}
                                 </div>
                             @enderror
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-top: 16px;">
-                        <div class="col-12 col-lg-8 mx-auto">
-                            <div class="modern-field">
-                                <label for="password_confirmation">Confirmar nueva contraseña</label>
-                                <input type="password"
-                                       class="form-control modern-input"
-                                       id="password_confirmation"
-                                       name="password_confirmation"
-                                       placeholder="Confirmar nueva contraseña"
-                                       required>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -105,9 +64,9 @@
                         <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M7 3V8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    Cambiar contraseña
+                    Confirmar
                 </button>
-                <a href="{{ route('dashboard') }}" class="btn-modern" style="min-width: 200px; background: white; color: #6b7280; border: 1px solid #e5e7eb;" onclick="showLoader(true)">
+                <a href="{{ route('dashboard') }}" class="btn-modern" style="min-width: 200px; background: white; color: #6b7280; border: 1px solid #e5e7eb;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -118,7 +77,3 @@
         </form>
     </div>
 @endsection
-
-@push('scripts')
-<script src="{{ asset('assets/js/password_validation.js') }}"></script>
-@endpush

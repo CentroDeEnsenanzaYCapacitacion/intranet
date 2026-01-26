@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\SetPasswordController;
+use App\Http\Controllers\ConfirmPasswordController;
 use App\Http\Controllers\SystemCalendarController;
 use Illuminate\Support\Facades\Artisan;
 
@@ -76,7 +77,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/system/calendars/eub', [SystemCalendarController::class, 'eub'])
         ->name('system.calendars.eub');
     Route::post('/system/calendars/eub/{student_id}', [SystemCalendarController::class, 'updateEub'])
-        ->name('system.calendars.eub.update');
+        ->name('system.calendars.eub.update')
+        ->middleware('password.confirm');
 
 
     Route::get('/system/grades/menu', function () {
@@ -93,6 +95,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/change-password', [ChangePasswordController::class, 'showChangeForm'])->name('password.change');
     Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])->name('password.change.update');
+
+    Route::get('/confirm-password', [ConfirmPasswordController::class, 'show'])->name('password.confirm');
+    Route::post('/confirm-password', [ConfirmPasswordController::class, 'confirm'])->name('password.confirm.store');
 
     require 'admin_users.php';
     require 'admin_stats.php';

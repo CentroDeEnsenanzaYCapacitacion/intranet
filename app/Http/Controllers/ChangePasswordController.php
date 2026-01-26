@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class ChangePasswordController extends Controller
 {
@@ -20,18 +21,20 @@ class ChangePasswordController extends Controller
             'current_password' => 'required',
             'password' => [
                 'required',
-                'min:8',
                 'confirmed',
                 'different:current_password',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
+                Password::min(12)->mixedCase()->numbers()->symbols()->uncompromised(),
             ],
         ], [
             'current_password.required' => 'La contraseña actual es requerida.',
             'password.required' => 'La nueva contraseña es requerida.',
-            'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
             'password.different' => 'La nueva contraseña debe ser diferente a la actual.',
-            'password.regex' => 'La contraseña debe incluir mayúsculas, minúsculas, números y símbolos (@$!%*?&).',
+            'password.min' => 'La nueva contraseña debe tener al menos 12 caracteres.',
+            'password.mixed' => 'La nueva contraseña debe incluir mayúsculas y minúsculas.',
+            'password.numbers' => 'La nueva contraseña debe incluir al menos un número.',
+            'password.symbols' => 'La nueva contraseña debe incluir al menos un símbolo.',
+            'password.uncompromised' => 'La nueva contraseña ha aparecido en filtraciones. Usa otra.',
         ]);
 
         $user = Auth::user();

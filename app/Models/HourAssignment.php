@@ -15,6 +15,8 @@ class HourAssignment extends Model
         'crew_id',
         'department_id',
         'date',
+        'start_time',
+        'end_time',
         'hours'
     ];
 

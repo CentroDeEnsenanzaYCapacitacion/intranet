@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Mail\ResetPassword;
+use Illuminate\Validation\Rules\Password;
 
 class PasswordResetController extends Controller
 {
@@ -92,15 +93,17 @@ class PasswordResetController extends Controller
             'email' => 'required|email|exists:users,email',
             'password' => [
                 'required',
-                'min:8',
                 'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
+                Password::min(12)->mixedCase()->numbers()->symbols()->uncompromised(),
             ],
         ], [
             'password.required' => 'La contraseña es requerida.',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
-            'password.regex' => 'La contraseña debe incluir mayúsculas, minúsculas, números y símbolos (@$!%*?&).',
+            'password.min' => 'La contraseña debe tener al menos 12 caracteres.',
+            'password.mixed' => 'La contraseña debe incluir mayúsculas y minúsculas.',
+            'password.numbers' => 'La contraseña debe incluir al menos un número.',
+            'password.symbols' => 'La contraseña debe incluir al menos un símbolo.',
+            'password.uncompromised' => 'La contraseña ha aparecido en filtraciones. Usa otra.',
         ]);
 
         $passwordReset = PasswordReset::where('email', $request->email)->first();

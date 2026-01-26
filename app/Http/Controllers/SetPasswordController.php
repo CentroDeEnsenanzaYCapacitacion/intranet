@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserInvitation;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class SetPasswordController extends Controller
 {
@@ -31,15 +32,17 @@ class SetPasswordController extends Controller
             'token' => 'required',
             'password' => [
                 'required',
-                'min:8',
                 'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/',
+                Password::min(12)->mixedCase()->numbers()->symbols()->uncompromised(),
             ],
         ], [
             'password.required' => 'La contraseña es requerida.',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'password.confirmed' => 'Las contraseñas no coinciden.',
-            'password.regex' => 'La contraseña debe incluir mayúsculas, minúsculas, números y símbolos (@$!%*?&).',
+            'password.min' => 'La contraseña debe tener al menos 12 caracteres.',
+            'password.mixed' => 'La contraseña debe incluir mayúsculas y minúsculas.',
+            'password.numbers' => 'La contraseña debe incluir al menos un número.',
+            'password.symbols' => 'La contraseña debe incluir al menos un símbolo.',
+            'password.uncompromised' => 'La contraseña ha aparecido en filtraciones. Usa otra.',
         ]);
 
         $invitation = UserInvitation::where('token', $request->token)->first();
