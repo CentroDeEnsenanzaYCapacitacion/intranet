@@ -192,12 +192,17 @@ class TicketController extends Controller
         $user = Auth::user();
 
         $attachment = TicketMessageAttachment::where('path', $filename)->first();
+        $ticketImage = TicketImage::where('path', $filename)->first();
 
-        if (!$attachment) {
+        if (!$attachment && !$ticketImage) {
             abort(404);
         }
 
-        $ticket = $attachment->message->ticket;
+        if ($attachment) {
+            $ticket = $attachment->message->ticket;
+        } else {
+            $ticket = $ticketImage->ticket;
+        }
 
         if ($user->role_id != 1 && $ticket->user_id != $user->id) {
             abort(403, 'No tienes permiso para acceder a este recurso.');
