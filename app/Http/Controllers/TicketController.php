@@ -21,7 +21,7 @@ class TicketController extends Controller
                 $query->whereNotIn('status', ['cerrado', 'resuelto'])
                     ->orWhere(function ($q) {
                         $q->whereIn('status', ['cerrado', 'resuelto'])
-                          ->where('closed_at', '>=', now()->subDays(15));
+                          ->where('closed_at', '>=', now()->subDays(10));
                     });
             })
             ->latest()
@@ -190,13 +190,14 @@ class TicketController extends Controller
     public function getAttachment($filename)
     {
         $user = Auth::user();
-        $ticketImage = TicketImage::where('path', $filename)->first();
 
-        if (!$ticketImage) {
+        $attachment = TicketMessageAttachment::where('path', $filename)->first();
+
+        if (!$attachment) {
             abort(404);
         }
 
-        $ticket = $ticketImage->ticket;
+        $ticket = $attachment->message->ticket;
 
         if ($user->role_id != 1 && $ticket->user_id != $user->id) {
             abort(403, 'No tienes permiso para acceder a este recurso.');

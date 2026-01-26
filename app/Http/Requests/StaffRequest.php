@@ -21,6 +21,7 @@ class StaffRequest extends FormRequest
             'cel' => 'nullable|string|max:20',
             'rfc' => 'nullable|string|max:20',
             'personal_mail' => 'nullable|email|max:255',
+            'cec_mail' => 'nullable|email|max:255|ends_with:@capacitacioncec.edu.mx',
             'department' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
             'departments' => 'nullable|array',
