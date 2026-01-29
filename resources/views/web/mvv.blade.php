@@ -12,7 +12,7 @@
         </div>
     @endif
 
-    <form id="form" action="{{ route('web.mvv.post') }}" method="post" enctype="multipart/form-data">
+    <form id="form" action="{{ route('web.mvv.post') }}" method="post" enctype="multipart/form-data" data-password-confirm>
         @csrf
         @foreach($data as $index => $item)
             <div class="modern-card" style="margin-bottom: 24px;">
@@ -57,3 +57,5 @@
 @push('scripts')
 <script src="{{ asset('assets/js/text_counter.js') }}"></script>
 @endpush
+
+@include('includes.password-confirm-modal')

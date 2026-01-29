@@ -23,7 +23,7 @@
     @endif
 
     <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-        <form action="{{ route('web.opinions.add') }}" method="post">
+        <form action="{{ route('web.opinions.add') }}" method="post" data-password-confirm>
             @csrf
             <button type="submit" class="btn-modern btn-primary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,7 +37,7 @@
 
     @php($opinionCount = $opinions->count())
     @php($ratingOptions = ['0', '0.5', '1', '1.5', '2', '2.5', '3', '3.5', '4', '4.5', '5'])
-    <form id="form" class="opinions-form" action="{{ route('web.opinions.post') }}" method="post" enctype="multipart/form-data">
+    <form id="form" class="opinions-form" action="{{ route('web.opinions.post') }}" method="post" enctype="multipart/form-data" data-password-confirm>
         @csrf
         @foreach($opinions as $opinion)
             @php($opinionId = $opinion->id)
@@ -186,3 +186,5 @@
 <script src="{{ asset('assets/js/file_input.js') }}"></script>
 <script src="{{ asset('assets/js/opinions_counter.js') }}"></script>
 @endpush
+
+@include('includes.password-confirm-modal')
