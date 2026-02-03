@@ -104,4 +104,37 @@ class AmountController extends Controller
         return redirect()->route('admin.catalogues.amounts.show')
             ->with('success', 'Se han eliminado todos los costos que no son inscripciones');
     }
+
+    public function createAmountForm()
+    {
+        $crews = Crew::where('is_active', true)->get();
+        $courses = Course::where('is_active', true)->get();
+        $receiptTypes = ReceiptType::all();
+
+        return view('admin.catalogues.amounts.create', compact('crews', 'courses', 'receiptTypes'));
+    }
+
+    public function storeAmount(AmountRequest $request)
+    {
+        $exists = Amount::where('crew_id', $request->crew_id)
+            ->where('course_id', $request->course_id)
+            ->where('receipt_type_id', $request->receipt_type_id)
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['duplicate' => 'Ya existe un costo con esa combinación de plantel, curso y tipo de recibo.']);
+        }
+
+        Amount::create([
+            'crew_id' => $request->crew_id,
+            'course_id' => $request->course_id,
+            'receipt_type_id' => $request->receipt_type_id,
+            'amount' => $request->amount,
+        ]);
+
+        return redirect()->route('admin.catalogues.amounts.show')
+            ->with('success', 'Costo creado correctamente');
+    }
 }

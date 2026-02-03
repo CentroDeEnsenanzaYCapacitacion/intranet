@@ -9,3 +9,6 @@ Route::get('/admin/catalogues/amounts/clean', [AmountController::class,'cleanAmo
 Route::get('/admin/catalogues/amount/edit/{id}', [AmountController::class,'editAmount'])->name('admin.catalogues.amount.edit');
 
 Route::put('/admin/catalogues/amount/update/{id}', [AmountController::class,'updateAmount'])->name('admin.catalogues.amount.update')->middleware('password.confirm');
+
+Route::get('/admin/catalogues/amount/create', [AmountController::class,'createAmountForm'])->name('admin.catalogues.amount.create');
+Route::post('/admin/catalogues/amount/store', [AmountController::class,'storeAmount'])->name('admin.catalogues.amount.store')->middleware('password.confirm');

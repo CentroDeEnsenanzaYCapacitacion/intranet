@@ -1,9 +1,9 @@
 @extends('layout.mainLayout')
-@section('title', 'Modificar costo')
+@section('title', 'Nuevo Costo')
 @section('content')
     <div class="dashboard-welcome">
-        <h1 class="dashboard-title">Modificar Costo</h1>
-        <p class="dashboard-subtitle">Actualiza el monto del costo seleccionado</p>
+        <h1 class="dashboard-title">Nuevo Costo</h1>
+        <p class="dashboard-subtitle">Añade un nuevo costo al sistema</p>
     </div>
 
     @if ($errors->any())
@@ -16,41 +16,58 @@
         </div>
     @endif
 
-    @if (session('success'))
-        <div id="success" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left: 4px solid #10b981; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="modern-card" style="margin-bottom: 24px;">
         <div class="card-header-modern">
             <div class="header-title">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <h2>Información del Costo</h2>
             </div>
         </div>
 
         <div style="padding: 24px;">
-            <div style="text-align: center; margin-bottom: 32px;">
-                <h3 style="color: #1f2937; font-size: 1.5rem; font-weight: 600; margin-bottom: 8px;">
-                    {{ $amount->receiptType->name }}
-                    @if ($amount->course)
-                        {{ $amount->course->name }}
-                    @endif
-                    @if ($amount->crew_id != 1)
-                        {{ $amount->crew->name }}
-                    @endif
-                </h3>
-            </div>
-
-            <form action="{{ route('admin.catalogues.amount.update', ['id' => $amount->id]) }}" method="POST">
+            <form action="{{ route('admin.catalogues.amount.store') }}" method="POST">
                 @csrf
-                @method('PUT')
 
-                <div style="max-width: 500px; margin: 0 auto;">
+                <div style="max-width: 600px; margin: 0 auto;">
+                    <div class="modern-field">
+                        <label for="crew_id" class="modern-label">Plantel</label>
+                        <select id="crew_id" name="crew_id" class="modern-input" required>
+                            <option value="">Seleccione un plantel</option>
+                            <option value="1" {{ old('crew_id') == 1 ? 'selected' : '' }}>TODOS LOS PLANTELES</option>
+                            @foreach ($crews as $crew)
+                                <option value="{{ $crew->id }}" {{ old('crew_id') == $crew->id ? 'selected' : '' }}>
+                                    {{ $crew->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="modern-field">
+                        <label for="course_id" class="modern-label">Curso</label>
+                        <select id="course_id" name="course_id" class="modern-input" required>
+                            <option value="">Seleccione un curso</option>
+                            @foreach ($courses as $course)
+                                <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
+                                    {{ $course->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="modern-field">
+                        <label for="receipt_type_id" class="modern-label">Tipo de Recibo</label>
+                        <select id="receipt_type_id" name="receipt_type_id" class="modern-input" required>
+                            <option value="">Seleccione un tipo</option>
+                            @foreach ($receiptTypes as $type)
+                                <option value="{{ $type->id }}" {{ old('receipt_type_id') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="modern-field">
                         <label for="amount" class="modern-label">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
@@ -63,7 +80,7 @@
                             class="modern-input"
                             name="amount"
                             type="text"
-                            value="{{ old('amount', $amount->amount) }}"
+                            value="{{ old('amount') }}"
                             placeholder="Ingrese el monto"
                             required>
                     </div>
@@ -75,7 +92,7 @@
                                 <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M7 3V7H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Guardar Cambios
+                            Guardar Costo
                         </button>
                         <a href="{{ route('admin.catalogues.amounts.show') }}" class="btn-modern btn-primary">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
