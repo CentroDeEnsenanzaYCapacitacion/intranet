@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form action="{{ route('system.report.insert') }}" method="POST">
+    <form action="{{ route('system.report.insert') }}" method="POST" data-password-confirm>
         @csrf
         <div class="modern-card">
             <div class="card-header-modern">
@@ -160,4 +160,6 @@
             </a>
         </div>
     </form>
+
+    @include('includes.password-confirm-modal')
 @endsection

@@ -209,7 +209,7 @@
 
                             <div class="collapse mt-3" id="{{ $collapseId }}">
                                 <div style="padding: 16px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                                    <form action="{{ route('admin.staff.adjustments.store') }}" method="POST" style="margin-bottom: 16px;">
+                                    <form action="{{ route('admin.staff.adjustments.store') }}" method="POST" style="margin-bottom: 16px;" data-password-confirm>
                                         @csrf
                                         <input type="hidden" name="staff_id" value="{{ $staff->id }}">
                                         <input type="hidden" name="year" value="{{ request('year', now()->year) }}">
@@ -250,7 +250,7 @@
                                                             <span style="font-weight: 600; color: {{ $adj->adjustmentDefinition->type === 'perception' ? '#065f46' : '#991b1b' }};">
                                                                 {{ $adj->adjustmentDefinition->type === 'deduction' ? '-' : '' }}${{ number_format($adj->amount, 2) }}
                                                             </span>
-                                                            <form action="{{ route('admin.staff.adjustments.destroy', $adj->id) }}" method="POST" class="d-inline">
+                                                            <form action="{{ route('admin.staff.adjustments.destroy', $adj->id) }}" method="POST" class="d-inline" data-password-confirm>
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="action-btn action-delete" title="Eliminar" style="width: 32px; height: 32px;">
@@ -290,4 +290,5 @@
         </div>
     </div>
 
+    @include('includes.password-confirm-modal')
 @endsection

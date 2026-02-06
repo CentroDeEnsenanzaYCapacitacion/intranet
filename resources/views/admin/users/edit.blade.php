@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.users.update', ['id' => $user->id]) }}" method="POST" onsubmit="showLoader(true)">
+    <form action="{{ route('admin.users.update', ['id' => $user->id]) }}" method="POST" data-password-confirm>
         @csrf
         @method('PUT')
 
@@ -188,6 +188,8 @@
             </a>
         </div>
     </form>
+
+    @include('includes.password-confirm-modal')
 @endsection
 
 @push('scripts')

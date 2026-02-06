@@ -21,7 +21,7 @@
                 </div>
 
                 <div style="padding: 24px;">
-                    <form action="{{ route('admin.catalogues.perceptions.store') }}" method="POST" style="margin-bottom: 24px;">
+                    <form action="{{ route('admin.catalogues.perceptions.store') }}" method="POST" style="margin-bottom: 24px;" data-password-confirm>
                         @csrf
                         <input type="hidden" name="type" value="perception">
                         <div style="display: flex; gap: 12px;">
@@ -39,7 +39,7 @@
                         @foreach ($perceptions as $perception)
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f9fafb; border-radius: 8px; margin-bottom: 8px;">
                                 <span style="font-size: 14px; color: #1a1a1a; font-weight: 500;">{{ $perception->name }}</span>
-                                <form action="{{ route('admin.catalogues.perceptions.destroy', $perception->id) }}" method="POST" onsubmit="return confirm('¿Eliminar esta percepción?')" class="d-inline">
+                                <form action="{{ route('admin.catalogues.perceptions.destroy', $perception->id) }}" method="POST" class="d-inline" data-password-confirm>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="action-btn action-delete" title="Eliminar percepción" style="padding: 8px;">
@@ -70,7 +70,7 @@
                 </div>
 
                 <div style="padding: 24px;">
-                    <form action="{{ route('admin.catalogues.perceptions.store') }}" method="POST" style="margin-bottom: 24px;">
+                    <form action="{{ route('admin.catalogues.perceptions.store') }}" method="POST" style="margin-bottom: 24px;" data-password-confirm>
                         @csrf
                         <input type="hidden" name="type" value="deduction">
                         <div style="display: flex; gap: 12px;">
@@ -88,7 +88,7 @@
                         @foreach ($deductions as $deduction)
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #f9fafb; border-radius: 8px; margin-bottom: 8px;">
                                 <span style="font-size: 14px; color: #1a1a1a; font-weight: 500;">{{ $deduction->name }}</span>
-                                <form action="{{ route('admin.catalogues.perceptions.destroy', $deduction->id) }}" method="POST" onsubmit="return confirm('¿Eliminar esta deducción?')" class="d-inline">
+                                <form action="{{ route('admin.catalogues.perceptions.destroy', $deduction->id) }}" method="POST" class="d-inline" data-password-confirm>
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="action-btn action-delete" title="Eliminar deducción" style="padding: 8px;">
@@ -105,4 +105,6 @@
             </div>
         </div>
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection

@@ -27,7 +27,7 @@
         </div>
 
         <div style="padding: 24px;">
-            <form action="{{ route('admin.catalogues.amount.store') }}" method="POST">
+            <form action="{{ route('admin.catalogues.amount.store') }}" method="POST" data-password-confirm>
                 @csrf
 
                 <div style="max-width: 600px; margin: 0 auto;">
@@ -75,4 +75,6 @@
             </form>
         </div>
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection

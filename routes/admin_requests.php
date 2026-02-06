@@ -6,6 +6,6 @@ use App\Http\Controllers\RequestController;
 
 Route::get('/admin/requests', [RequestController::class,'getRequests'])->name('admin.requests.show');
 Route::get('/admin/request/{request_id}', [RequestController::class,'editRequest'])->name('admin.requests.edit');
-Route::post('/admin/request/{request_id}', [RequestController::class,'changePercentage'])->name('admin.requests.changePercentage')->middleware('password.confirm');
-Route::post('/admin/request/{request_id}/tuition', [RequestController::class,'changeTuition'])->name('admin.requests.changeTuition')->middleware('password.confirm');
-Route::get('/admin/request/{request_id}/{action}', [RequestController::class,'updateRequest'])->name('admin.request.update')->middleware('password.confirm');
+Route::post('/admin/request/{request_id}', [RequestController::class,'changePercentage'])->name('admin.requests.changePercentage');
+Route::post('/admin/request/{request_id}/tuition', [RequestController::class,'changeTuition'])->name('admin.requests.changeTuition');
+Route::get('/admin/request/{request_id}/{action}', [RequestController::class,'updateRequest'])->name('admin.request.update');

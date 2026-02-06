@@ -51,7 +51,7 @@
                             <tr>
                                 <td class="text-uppercase font-medium">
                                     {{ $student->crew->name[0].'/'.$student->id }}
-                                    <form id="eub-form-{{ $student->id }}" action="{{ route('system.calendars.eub.update', $student->id) }}" method="POST">
+                                    <form id="eub-form-{{ $student->id }}" action="{{ route('system.calendars.eub.update', $student->id) }}" method="POST" data-password-confirm>
                                         @csrf
                                     </form>
                                 </td>
@@ -103,4 +103,6 @@
             </div>
         @endif
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection

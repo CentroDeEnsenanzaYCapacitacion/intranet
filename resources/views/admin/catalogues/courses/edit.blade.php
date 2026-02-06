@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.catalogues.courses.update', ['id' => $course->id]) }}" method="post" onsubmit="showLoader(true)">
+    <form action="{{ route('admin.catalogues.courses.update', ['id' => $course->id]) }}" method="post" data-password-confirm>
         @csrf
         @method('PUT')
 
@@ -85,4 +85,6 @@
             </a>
         </div>
     </form>
+
+    @include('includes.password-confirm-modal')
 @endsection

@@ -77,8 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/system/calendars/eub', [SystemCalendarController::class, 'eub'])
         ->name('system.calendars.eub');
     Route::post('/system/calendars/eub/{student_id}', [SystemCalendarController::class, 'updateEub'])
-        ->name('system.calendars.eub.update')
-        ->middleware('password.confirm');
+        ->name('system.calendars.eub.update');
 
 
     Route::get('/system/grades/menu', function () {

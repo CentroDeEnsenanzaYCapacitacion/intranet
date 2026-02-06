@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.staff.store') }}" method="POST" class="staff-form">
+        <form action="{{ route('admin.staff.store') }}" method="POST" class="staff-form" data-password-confirm>
             @csrf
 
             @if ($userCrewId == 1)
@@ -144,4 +144,6 @@
         };
     </script>
     <script src="{{ asset('assets/js/staff-departments.js') }}"></script>
+
+    @include('includes.password-confirm-modal')
 @endsection

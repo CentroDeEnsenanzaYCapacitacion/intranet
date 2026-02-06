@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <form id="newTuitionForm" action="{{ route('system.collection.tuitions.receipt-post') }}" method="POST">
+    <form id="newTuitionForm" action="{{ route('system.collection.tuitions.receipt-post') }}" method="POST" data-password-confirm>
         @csrf
         <input type="hidden" value="{{ $student->crew_id }}" name="crew_id">
         <input type="hidden" value="{{ $student->id }}" name="student_id">
@@ -191,6 +191,8 @@
         var receipt_attributes = @json($receipt_attributes);
         var student_tuition_receipts = @json($student_tuition_receipts);
     </script>
+
+    @include('includes.password-confirm-modal')
 @endsection
 @push('scripts')
 <script src="{{ asset('assets/js/xss-protection.js') }}"></script>

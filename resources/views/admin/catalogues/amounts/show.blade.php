@@ -29,7 +29,7 @@
                         Nuevo Costo
                     </a>
                 @endif
-                <a href="{{ route('admin.catalogues.amounts.generate') }}" class="btn-modern btn-primary" onclick="showLoader(true)">
+                <a href="{{ route('admin.catalogues.amounts.generate') }}" class="btn-modern btn-primary" data-password-confirm>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 4V9H4.582M4.582 9C5.24585 7.35817 6.43568 5.9829 7.96503 5.08985C9.49438 4.1968 11.2768 3.8364 13.033 4.06513C14.7891 4.29386 16.4198 5.09878 17.6694 6.35377C18.919 7.60875 19.7168 9.24285 19.938 11M4.582 9H9M20 20V15H19.418M19.418 15C18.7542 16.6409 17.5648 18.0154 16.0361 18.9079C14.5073 19.8003 12.7257 20.1604 10.9704 19.9316C9.21509 19.7028 7.58521 18.8981 6.33579 17.6435C5.08636 16.389 4.28834 14.7555 4.067 13M19.418 15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -38,7 +38,7 @@
                 @if($amounts->where('receipt_type_id', '!=', 1)->where('crew_id', '!=', 1)->count() > 0)
                     <a href="{{ route('admin.catalogues.amounts.clean') }}"
                        class="btn-modern btn-danger"
-                       onclick="return confirm('¿Estás seguro de eliminar todos los costos que no sean inscripciones?') && showLoader(true)">
+                       data-password-confirm>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -117,4 +117,6 @@
             </table>
         </div>
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection

@@ -46,7 +46,7 @@
                 </h3>
             </div>
 
-            <form action="{{ route('admin.catalogues.amount.update', ['id' => $amount->id]) }}" method="POST">
+            <form action="{{ route('admin.catalogues.amount.update', ['id' => $amount->id]) }}" method="POST" data-password-confirm>
                 @csrf
                 @method('PUT')
 
@@ -88,4 +88,6 @@
             </form>
         </div>
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection

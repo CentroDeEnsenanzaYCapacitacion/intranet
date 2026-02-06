@@ -26,7 +26,7 @@
         <ul id="error-list" class="mb-0" style="padding-left: 20px;"></ul>
     </div>
 
-    <form id="inscriptionForm" action="{{ route('system.report.receiptorrequest') }}" method="POST">
+    <form id="inscriptionForm" action="{{ route('system.report.receiptorrequest') }}" method="POST" data-password-confirm>
         @csrf
         <input type="hidden" value="{{ $report_id }}" name="report_id">
         <input type="hidden" value="{{ $report->course->name ?? '' }}" id="courseName">
@@ -116,6 +116,8 @@
             </a>
         </div>
     </form>
+
+    @include('includes.password-confirm-modal')
 @endsection
 @push('scripts')
     <script src="{{ asset('assets/js/xss-protection.js') }}"></script>

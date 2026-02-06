@@ -53,12 +53,11 @@
                                                 </svg>
                                             </a>
                                             <form method="POST" action="{{ route('admin.catalogues.courses.delete', ['id' => $course->id]) }}"
-                                                  id="delete-course-{{ $course->id }}" class="d-inline">
+                                                  class="d-inline" data-password-confirm>
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button"
+                                                <button type="submit"
                                                         class="action-btn action-delete"
-                                                        onclick="confirmDelete('course',{{ $course->id }})"
                                                         title="Eliminar curso">
                                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -85,12 +84,11 @@
                                             </svg>
                                         </a>
                                         <form method="POST" action="{{ route('admin.catalogues.courses.delete', ['id' => $course->id]) }}"
-                                              id="delete-course-{{ $course->id }}" class="d-inline">
+                                              class="d-inline" data-password-confirm>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button"
+                                            <button type="submit"
                                                     class="action-btn action-delete"
-                                                    onclick="confirmDelete('course',{{ $course->id }})"
                                                     title="Eliminar curso">
                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -107,4 +105,6 @@
             </table>
         </div>
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection

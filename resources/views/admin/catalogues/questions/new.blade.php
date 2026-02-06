@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.catalogues.questions.insert') }}" method="post" id="questionForm" onsubmit="showLoader(true)">
+    <form action="{{ route('admin.catalogues.questions.insert') }}" method="post" id="questionForm" data-password-confirm>
         @csrf
         <div class="modern-card" style="margin-bottom: 24px;">
             <div class="card-header-modern">
@@ -172,3 +172,5 @@
 @push('scripts')
 <script src="{{ asset('assets/js/questions_options.js') }}"></script>
 @endpush
+
+@include('includes.password-confirm-modal')

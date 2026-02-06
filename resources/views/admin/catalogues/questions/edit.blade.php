@@ -7,7 +7,7 @@
     </div>
 
     @if(Auth::user()->role_id == 7 && $question->created_by == Auth::id())
-    <form action="{{ route('admin.catalogues.questions.update', ['id' => $question->id]) }}" method="post" id="questionForm">
+    <form action="{{ route('admin.catalogues.questions.update', ['id' => $question->id]) }}" method="post" id="questionForm" data-password-confirm>
         @csrf
         @method('PUT')
         <div class="modern-card" style="margin-bottom: 24px;">
@@ -142,6 +142,8 @@
     </script>
     <script src="{{ asset('assets/js/questions_options.js') }}"></script>
     @endpush
+
+    @include('includes.password-confirm-modal')
 
     @else
     <div class="modern-card" style="margin-bottom: 24px;">
