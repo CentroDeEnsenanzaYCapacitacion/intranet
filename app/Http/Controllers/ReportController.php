@@ -17,12 +17,12 @@ class ReportController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:1,4,6');
+        $this->middleware('role:1,2,4,6');
     }
 
     public function getReports()
     {
-        if (Auth::user()->role_id == 1) {
+        if (Auth::user()->role_id == 1 || Auth::user()->role_id == 6) {
             $crew_reports = Report::where('signed', false)->get();
         } else {
             $crew_reports = Report::where('crew_id', Auth::user()->crew_id)
@@ -42,7 +42,7 @@ class ReportController extends Controller
         }
 
         $user = Auth::user();
-        if ($user->role_id != 1 && $user->crew_id != $report->crew_id) {
+        if ($user->role_id != 1 && $user->role_id != 6 && $user->crew_id != $report->crew_id) {
             abort(403);
         }
 
@@ -81,7 +81,7 @@ class ReportController extends Controller
         }
 
         $user = Auth::user();
-        if ($user->role_id != 1 && $user->crew_id != $report->crew_id) {
+        if ($user->role_id != 1 && $user->role_id != 6 && $user->crew_id != $report->crew_id) {
             abort(403);
         }
         $isBachilleratoExamen = $report && $report->course && stripos($report->course->name, 'BACHILLERATO EN UN EXAMEN') !== false;
@@ -181,7 +181,7 @@ class ReportController extends Controller
         $report = Report::with('course')->findOrFail($report_id);
 
         $user = Auth::user();
-        if ($user->role_id != 1 && $user->crew_id != $report->crew_id) {
+        if ($user->role_id != 1 && $user->role_id != 6 && $user->crew_id != $report->crew_id) {
             abort(403);
         }
 
