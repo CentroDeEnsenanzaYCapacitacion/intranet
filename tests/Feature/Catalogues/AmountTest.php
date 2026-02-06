@@ -283,7 +283,7 @@ class AmountTest extends TestCase
         ]);
     }
 
-    public function test_create_requires_password_confirmation(): void
+    public function test_admin_can_create_amount_without_password_confirmation(): void
     {
         $response = $this->actingAs($this->admin)
             ->post('/admin/catalogues/amount/store', [
@@ -291,10 +291,11 @@ class AmountTest extends TestCase
                 'amount' => '150.00',
             ]);
 
-        $response->assertRedirect(route('password.confirm'));
+        $response->assertRedirect(route('admin.catalogues.amounts.show'));
+        $this->assertDatabaseHas('receipt_types', ['name' => 'Test']);
     }
 
-    public function test_update_requires_password_confirmation(): void
+    public function test_admin_can_update_amount_without_password_confirmation(): void
     {
         $amount = Amount::create([
             'crew_id' => $this->crew->id,
@@ -308,6 +309,10 @@ class AmountTest extends TestCase
                 'amount' => '2500.75',
             ]);
 
-        $response->assertRedirect(route('password.confirm'));
+        $response->assertRedirect(route('admin.catalogues.amounts.show'));
+        $this->assertDatabaseHas('amounts', [
+            'id' => $amount->id,
+            'amount' => 2500.75,
+        ]);
     }
 }
