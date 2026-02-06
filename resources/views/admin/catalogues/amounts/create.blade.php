@@ -32,56 +32,26 @@
 
                 <div style="max-width: 600px; margin: 0 auto;">
                     <div class="modern-field">
-                        <label for="crew_id" class="modern-label">Plantel</label>
-                        <select id="crew_id" name="crew_id" class="modern-input" required>
-                            <option value="">Seleccione un plantel</option>
-                            <option value="1" {{ old('crew_id') == 1 ? 'selected' : '' }}>TODOS LOS PLANTELES</option>
-                            @foreach ($crews as $crew)
-                                <option value="{{ $crew->id }}" {{ old('crew_id') == $crew->id ? 'selected' : '' }}>
-                                    {{ $crew->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <label for="name" class="modern-label">Nombre</label>
+                        <input
+                            id="name"
+                            class="modern-input"
+                            name="name"
+                            type="text"
+                            value="{{ old('name') }}"
+                            placeholder="Ej: Credencial, Certificado, Material"
+                            required>
                     </div>
 
                     <div class="modern-field">
-                        <label for="course_id" class="modern-label">Curso</label>
-                        <select id="course_id" name="course_id" class="modern-input" required>
-                            <option value="">Seleccione un curso</option>
-                            @foreach ($courses as $course)
-                                <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
-                                    {{ $course->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="modern-field">
-                        <label for="receipt_type_id" class="modern-label">Tipo de Recibo</label>
-                        <select id="receipt_type_id" name="receipt_type_id" class="modern-input" required>
-                            <option value="">Seleccione un tipo</option>
-                            @foreach ($receiptTypes as $type)
-                                <option value="{{ $type->id }}" {{ old('receipt_type_id') == $type->id ? 'selected' : '' }}>
-                                    {{ $type->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="modern-field">
-                        <label for="amount" class="modern-label">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
-                                <path d="M12 2V22M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            Monto
-                        </label>
+                        <label for="amount" class="modern-label">Monto</label>
                         <input
                             id="amount"
                             class="modern-input"
                             name="amount"
                             type="text"
                             value="{{ old('amount') }}"
-                            placeholder="Ingrese el monto"
+                            placeholder="Ej: 150.00"
                             required>
                     </div>
 
@@ -92,7 +62,7 @@
                                 <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M7 3V7H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Guardar Costo
+                            Guardar
                         </button>
                         <a href="{{ route('admin.catalogues.amounts.show') }}" class="btn-modern btn-primary">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

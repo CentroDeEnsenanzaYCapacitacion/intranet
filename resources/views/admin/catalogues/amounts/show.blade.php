@@ -21,12 +21,14 @@
                 <h2>Costos Registrados</h2>
             </div>
             <div class="header-actions">
-                <a href="{{ route('admin.catalogues.amount.create') }}" class="btn-modern btn-primary" onclick="showLoader(true)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    Nuevo Costo
-                </a>
+                @if (Auth::user()->role_id === 1)
+                    <a href="{{ route('admin.catalogues.amount.create') }}" class="btn-modern btn-primary" onclick="showLoader(true)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Nuevo Costo
+                    </a>
+                @endif
                 <a href="{{ route('admin.catalogues.amounts.generate') }}" class="btn-modern btn-primary" onclick="showLoader(true)">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 4V9H4.582M4.582 9C5.24585 7.35817 6.43568 5.9829 7.96503 5.08985C9.49438 4.1968 11.2768 3.8364 13.033 4.06513C14.7891 4.29386 16.4198 5.09878 17.6694 6.35377C18.919 7.60875 19.7168 9.24285 19.938 11M4.582 9H9M20 20V15H19.418M19.418 15C18.7542 16.6409 17.5648 18.0154 16.0361 18.9079C14.5073 19.8003 12.7257 20.1604 10.9704 19.9316C9.21509 19.7028 7.58521 18.8981 6.33579 17.6435C5.08636 16.389 4.28834 14.7555 4.067 13M19.418 15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

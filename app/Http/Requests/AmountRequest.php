@@ -14,20 +14,12 @@ class AmountRequest extends FormRequest
 
     public function rules(): array
     {
-        $rules = [
+        return [
             'amount' => [
                 'required',
                 'numeric',
                 'regex:/^\d{1,6}(\.\d{1,2})?$/'
             ]
         ];
-
-        if ($this->isMethod('post')) {
-            $rules['crew_id'] = 'required|exists:crews,id';
-            $rules['course_id'] = 'required|exists:courses,id';
-            $rules['receipt_type_id'] = 'required|exists:receipt_types,id';
-        }
-
-        return $rules;
     }
 }

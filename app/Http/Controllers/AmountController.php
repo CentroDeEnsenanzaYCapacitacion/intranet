@@ -107,30 +107,27 @@ class AmountController extends Controller
 
     public function createAmountForm()
     {
-        $crews = Crew::where('is_active', true)->get();
-        $courses = Course::where('is_active', true)->get();
-        $receiptTypes = ReceiptType::all();
-
-        return view('admin.catalogues.amounts.create', compact('crews', 'courses', 'receiptTypes'));
+        return view('admin.catalogues.amounts.create');
     }
 
-    public function storeAmount(AmountRequest $request)
+    public function storeAmount(Request $request)
     {
-        $exists = Amount::where('crew_id', $request->crew_id)
-            ->where('course_id', $request->course_id)
-            ->where('receipt_type_id', $request->receipt_type_id)
-            ->exists();
+        $request->validate([
+            'name' => 'required|string|max:255|unique:receipt_types,name',
+            'amount' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
+        ], [
+            'name.unique' => 'Ya existe un tipo de costo con ese nombre.',
+        ]);
 
-        if ($exists) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['duplicate' => 'Ya existe un costo con esa combinación de plantel, curso y tipo de recibo.']);
-        }
+        $receiptType = ReceiptType::create([
+            'name' => $request->name,
+            'automatic_amount' => false,
+        ]);
 
         Amount::create([
-            'crew_id' => $request->crew_id,
-            'course_id' => $request->course_id,
-            'receipt_type_id' => $request->receipt_type_id,
+            'crew_id' => 1,
+            'course_id' => null,
+            'receipt_type_id' => $receiptType->id,
             'amount' => $request->amount,
         ]);
 

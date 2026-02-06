@@ -107,113 +107,82 @@ class AmountTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_admin_can_view_create_amount_form(): void
+    public function test_admin_can_view_create_form(): void
     {
         $response = $this->actingAs($this->admin)->get('/admin/catalogues/amount/create');
 
         $response->assertStatus(200);
         $response->assertViewIs('admin.catalogues.amounts.create');
-        $response->assertViewHas('crews');
-        $response->assertViewHas('courses');
-        $response->assertViewHas('receiptTypes');
     }
 
-    public function test_admin_can_create_amount(): void
+    public function test_admin_can_create_receipt_type_with_amount(): void
     {
         $response = $this->actingAs($this->admin)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->post('/admin/catalogues/amount/store', [
-                'crew_id' => $this->crew->id,
-                'course_id' => $this->course->id,
-                'receipt_type_id' => $this->receiptType->id,
-                'amount' => '1500.50',
+                'name' => 'Credencial Nueva',
+                'amount' => '150.00',
             ]);
 
         $response->assertRedirect(route('admin.catalogues.amounts.show'));
         $response->assertSessionHas('success', 'Costo creado correctamente');
 
-        $this->assertDatabaseHas('amounts', [
-            'crew_id' => $this->crew->id,
-            'course_id' => $this->course->id,
-            'receipt_type_id' => $this->receiptType->id,
-            'amount' => 1500.50,
+        $this->assertDatabaseHas('receipt_types', [
+            'name' => 'Credencial Nueva',
+            'automatic_amount' => false,
         ]);
-    }
 
-    public function test_admin_can_create_amount_for_all_crews(): void
-    {
-        $response = $this->actingAs($this->admin)
-            ->withSession(['auth.password_confirmed_at' => time()])
-            ->post('/admin/catalogues/amount/store', [
-                'crew_id' => 1,
-                'course_id' => $this->course->id,
-                'receipt_type_id' => $this->receiptType->id,
-                'amount' => '2000.00',
-            ]);
-
-        $response->assertRedirect(route('admin.catalogues.amounts.show'));
+        $receiptType = ReceiptType::where('name', 'Credencial Nueva')->first();
 
         $this->assertDatabaseHas('amounts', [
+            'receipt_type_id' => $receiptType->id,
             'crew_id' => 1,
-            'course_id' => $this->course->id,
-            'receipt_type_id' => $this->receiptType->id,
+            'course_id' => null,
+            'amount' => 150.00,
         ]);
     }
 
-    public function test_cannot_create_duplicate_amount(): void
+    public function test_cannot_create_duplicate_receipt_type(): void
     {
-        Amount::create([
-            'crew_id' => $this->crew->id,
-            'course_id' => $this->course->id,
-            'receipt_type_id' => $this->receiptType->id,
-            'amount' => 1000,
-        ]);
+        ReceiptType::create(['name' => 'Constancia']);
 
         $response = $this->actingAs($this->admin)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->post('/admin/catalogues/amount/store', [
-                'crew_id' => $this->crew->id,
-                'course_id' => $this->course->id,
-                'receipt_type_id' => $this->receiptType->id,
-                'amount' => '1500.50',
+                'name' => 'Constancia',
+                'amount' => '200.00',
             ]);
 
-        $response->assertSessionHasErrors('duplicate');
-
-        $this->assertDatabaseCount('amounts', 1);
+        $response->assertSessionHasErrors('name');
     }
 
-    public function test_create_amount_validates_required_fields(): void
+    public function test_create_validates_required_fields(): void
     {
         $response = $this->actingAs($this->admin)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->post('/admin/catalogues/amount/store', []);
 
-        $response->assertSessionHasErrors(['crew_id', 'course_id', 'receipt_type_id', 'amount']);
+        $response->assertSessionHasErrors(['name', 'amount']);
     }
 
-    public function test_create_amount_validates_amount_format(): void
+    public function test_create_validates_amount_format(): void
     {
         $response = $this->actingAs($this->admin)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->post('/admin/catalogues/amount/store', [
-                'crew_id' => $this->crew->id,
-                'course_id' => $this->course->id,
-                'receipt_type_id' => $this->receiptType->id,
+                'name' => 'Test',
                 'amount' => 'invalid',
             ]);
 
         $response->assertSessionHasErrors('amount');
     }
 
-    public function test_create_amount_validates_amount_max_digits(): void
+    public function test_create_validates_amount_max_digits(): void
     {
         $response = $this->actingAs($this->admin)
             ->withSession(['auth.password_confirmed_at' => time()])
             ->post('/admin/catalogues/amount/store', [
-                'crew_id' => $this->crew->id,
-                'course_id' => $this->course->id,
-                'receipt_type_id' => $this->receiptType->id,
+                'name' => 'Test',
                 'amount' => '1234567.00',
             ]);
 
@@ -318,10 +287,8 @@ class AmountTest extends TestCase
     {
         $response = $this->actingAs($this->admin)
             ->post('/admin/catalogues/amount/store', [
-                'crew_id' => $this->crew->id,
-                'course_id' => $this->course->id,
-                'receipt_type_id' => $this->receiptType->id,
-                'amount' => '1500.50',
+                'name' => 'Test',
+                'amount' => '150.00',
             ]);
 
         $response->assertRedirect(route('password.confirm'));
@@ -342,39 +309,5 @@ class AmountTest extends TestCase
             ]);
 
         $response->assertRedirect(route('password.confirm'));
-    }
-
-    public function test_only_active_crews_shown_in_create_form(): void
-    {
-        $inactiveCrew = Crew::create([
-            'name' => 'Plantel Inactivo',
-            'adress' => 'Direccion',
-            'phone' => '5550001',
-            'mail' => 'inactivo@test.com',
-            'is_active' => false,
-        ]);
-
-        $response = $this->actingAs($this->admin)->get('/admin/catalogues/amount/create');
-
-        $crews = $response->viewData('crews');
-
-        $this->assertTrue($crews->contains('id', $this->crew->id));
-        $this->assertFalse($crews->contains('id', $inactiveCrew->id));
-    }
-
-    public function test_only_active_courses_shown_in_create_form(): void
-    {
-        $inactiveCourse = Course::create([
-            'name' => 'Curso Inactivo',
-            'is_active' => false,
-            'crew_id' => $this->crew->id,
-        ]);
-
-        $response = $this->actingAs($this->admin)->get('/admin/catalogues/amount/create');
-
-        $courses = $response->viewData('courses');
-
-        $this->assertTrue($courses->contains('id', $this->course->id));
-        $this->assertFalse($courses->contains('id', $inactiveCourse->id));
     }
 }
