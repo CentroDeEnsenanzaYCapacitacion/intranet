@@ -52,11 +52,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    closeBtn.addEventListener('click', function () {
+    function resetModal() {
         closeModal('passwordConfirmModal');
+        if (typeof showLoader === 'function') {
+            showLoader(false);
+        }
         pendingForm = null;
         pendingSubmitter = null;
         pendingLink = null;
+    }
+
+    closeBtn.addEventListener('click', resetModal);
+
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+            resetModal();
+        }
     });
 
     function submitPassword() {

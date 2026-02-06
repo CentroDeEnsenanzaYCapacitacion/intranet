@@ -7,7 +7,7 @@
 <script src="{{ asset('assets/js/password_confirm_modal.js') }}"></script>
 @endpush
 
-<div class="custom-modal" id="passwordConfirmModal" style="display:none;" onclick="closeOnOverlay(event, 'passwordConfirmModal')">
+<div class="custom-modal" id="passwordConfirmModal" style="display:none;">
     <div class="custom-modal-content">
         <span class="custom-modal-close" id="passwordConfirmClose">&times;</span>
         <h5>Confirmar contraseña</h5>
