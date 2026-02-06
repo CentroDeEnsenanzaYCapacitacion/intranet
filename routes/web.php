@@ -77,8 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/system/calendars/eub', [SystemCalendarController::class, 'eub'])
         ->name('system.calendars.eub');
     Route::post('/system/calendars/eub/{student_id}', [SystemCalendarController::class, 'updateEub'])
-        ->name('system.calendars.eub.update')
-        ->middleware('password.confirm');
+        ->name('system.calendars.eub.update');
 
 
     Route::get('/system/grades/menu', function () {
@@ -98,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/confirm-password', [ConfirmPasswordController::class, 'show'])->name('password.confirm');
     Route::post('/confirm-password', [ConfirmPasswordController::class, 'confirm'])->name('password.confirm.store');
+    Route::post('/confirm-password/ajax', [ConfirmPasswordController::class, 'confirmAjax'])->name('password.confirm.ajax');
 
     require 'admin_users.php';
     require 'admin_stats.php';

@@ -22,7 +22,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.users.insert') }}" method="POST" onsubmit="showLoader(true)">
+    <form action="{{ route('admin.users.insert') }}" method="POST" data-password-confirm>
         @csrf
 
         <div class="modern-card" style="margin-bottom: 24px;">
@@ -216,6 +216,8 @@
         </div>
     </form>
 @endsection
+
+@include('includes.password-confirm-modal')
 
 @push('scripts')
 <script src="{{ asset('assets/js/user_role_toggle.js') }}"></script>

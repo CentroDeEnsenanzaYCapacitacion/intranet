@@ -74,11 +74,10 @@
                                     </a>
                                     @if ($user->invitation && !$user->invitation->used)
                                         <form method="POST" action="{{ route('admin.users.resend-invitation', ['id' => $user->id]) }}"
-                                              id="resend-invitation-{{ $user->id }}" class="d-inline">
+                                              class="d-inline" data-password-confirm>
                                             @csrf
                                             <button type="submit"
                                                     class="action-btn action-warning"
-                                                    onclick="showLoader(true)"
                                                     title="Reenviar invitación">
                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C9.5 21 7.25 20 5.5 18.25" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -88,12 +87,11 @@
                                         </form>
                                     @endif
                                     <form method="POST" action="{{ route('admin.users.block', ['id' => $user->id]) }}"
-                                          id="delete-user-{{ $user->id }}" class="d-inline">
+                                          class="d-inline" data-password-confirm>
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button"
+                                        <button type="submit"
                                                 class="action-btn action-delete"
-                                                onclick="confirmDelete('user',{{ $user->id }})"
                                                 title="Bloquear usuario">
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
@@ -153,7 +151,7 @@
                                 <div class="action-buttons">
                                     <a href="{{ route('admin.users.activate', ['id' => $user->id]) }}"
                                        class="action-btn action-success"
-                                       onclick="showLoader(true)"
+                                       data-password-confirm
                                        title="Activar usuario">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M21.5 2V22M21.5 2L16 7.5M21.5 2L16 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -168,4 +166,6 @@
             </table>
         </div>
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection

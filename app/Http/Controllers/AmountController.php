@@ -104,4 +104,34 @@ class AmountController extends Controller
         return redirect()->route('admin.catalogues.amounts.show')
             ->with('success', 'Se han eliminado todos los costos que no son inscripciones');
     }
+
+    public function createAmountForm()
+    {
+        return view('admin.catalogues.amounts.create');
+    }
+
+    public function storeAmount(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:receipt_types,name',
+            'amount' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
+        ], [
+            'name.unique' => 'Ya existe un tipo de costo con ese nombre.',
+        ]);
+
+        $receiptType = ReceiptType::create([
+            'name' => $request->name,
+            'automatic_amount' => false,
+        ]);
+
+        Amount::create([
+            'crew_id' => 1,
+            'course_id' => null,
+            'receipt_type_id' => $receiptType->id,
+            'amount' => $request->amount,
+        ]);
+
+        return redirect()->route('admin.catalogues.amounts.show')
+            ->with('success', 'Costo creado correctamente');
+    }
 }

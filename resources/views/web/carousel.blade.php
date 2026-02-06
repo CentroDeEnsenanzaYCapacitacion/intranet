@@ -23,7 +23,7 @@
     @endif
 
     <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-        <form action="{{ route('web.carousel.add') }}" method="post">
+        <form action="{{ route('web.carousel.add') }}" method="post" data-password-confirm>
             @csrf
             <button type="submit" class="btn-modern btn-primary" onclick="showLoader(true)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,7 +37,7 @@
 
     @php($carouselCount = $carousels->count())
 
-    <form id="form" class="carousel-form" action="{{ route('web.carousel.post') }}" method="post" enctype="multipart/form-data">
+    <form id="form" class="carousel-form" action="{{ route('web.carousel.post') }}" method="post" enctype="multipart/form-data" data-password-confirm>
         @csrf
 
         @foreach($carousels as $carousel)
@@ -151,3 +151,5 @@
 <script src="{{ asset('assets/js/file_input.js') }}"></script>
 <script src="{{ asset('assets/js/carousel_validation.js') }}"></script>
 @endpush
+
+@include('includes.password-confirm-modal')

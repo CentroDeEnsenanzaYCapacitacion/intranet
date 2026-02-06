@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.catalogues.courses.insert') }}" method="post" onsubmit="showLoader(true)">
+    <form action="{{ route('admin.catalogues.courses.insert') }}" method="post" data-password-confirm>
         @csrf
 
         <div class="modern-card" style="margin-bottom: 24px;">
@@ -84,4 +84,6 @@
             </a>
         </div>
     </form>
+
+    @include('includes.password-confirm-modal')
 @endsection

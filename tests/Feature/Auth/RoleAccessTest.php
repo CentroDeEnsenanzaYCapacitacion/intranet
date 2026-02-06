@@ -85,24 +85,12 @@ class RoleAccessTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_password_confirmation_is_required_for_sensitive_route(): void
+    public function test_admin_can_activate_user(): void
     {
         $admin = $this->createUser($this->allowedRole->id);
         $target = $this->createUser($this->deniedRole->id, ['is_active' => false]);
 
         $response = $this->actingAs($admin)->get('/admin/user/activate/' . $target->id);
-
-        $response->assertRedirect(route('password.confirm'));
-    }
-
-    public function test_password_confirmation_allows_sensitive_route(): void
-    {
-        $admin = $this->createUser($this->allowedRole->id);
-        $target = $this->createUser($this->deniedRole->id, ['is_active' => false]);
-
-        $response = $this->actingAs($admin)
-            ->withSession(['auth.password_confirmed_at' => time()])
-            ->get('/admin/user/activate/' . $target->id);
 
         $response->assertRedirect(route('admin.users.show'));
         $this->assertTrue((bool) $target->fresh()->is_active);

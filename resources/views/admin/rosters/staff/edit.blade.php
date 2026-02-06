@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.staff.update', $staff->id) }}" method="POST" class="staff-form">
+        <form action="{{ route('admin.staff.update', $staff->id) }}" method="POST" class="staff-form" data-password-confirm>
             @csrf
             @method('PUT')
 
@@ -144,4 +144,6 @@
         };
     </script>
     <script src="{{ asset('assets/js/staff-departments.js') }}"></script>
+
+    @include('includes.password-confirm-modal')
 @endsection

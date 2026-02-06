@@ -36,6 +36,10 @@ document.addEventListener('submit', (event) => {
         return;
     }
 
+    if (form.hasAttribute('data-password-confirm') && form.dataset.passwordConfirmed !== 'true') {
+        return;
+    }
+
     scheduleLoader();
 });
 

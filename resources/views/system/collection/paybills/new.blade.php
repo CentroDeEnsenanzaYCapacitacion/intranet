@@ -29,7 +29,7 @@
         </div>
 
         <div style="padding: 24px;">
-            <form id="paybillForm" action="{{ route('system.collection.paybill-post') }}" method="POST">
+            <form id="paybillForm" action="{{ route('system.collection.paybill-post') }}" method="POST" data-password-confirm>
                 @csrf
                 <input type="hidden" value="{{ Auth::user()->crew_id }}" name="crew_id">
 
@@ -82,6 +82,7 @@
         </div>
     </div>
 
+    @include('includes.password-confirm-modal')
 @endsection
 @push('scripts')
 <script src="{{ asset('assets/js/xss-protection.js') }}"></script>

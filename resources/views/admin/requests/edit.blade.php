@@ -39,7 +39,7 @@
                     $reason = preg_replace('/Nueva colegiatura: \$[\d,\.]+ - /', '', $request->description);
                 @endphp
 
-                <form id="myForm" action="{{ route('admin.requests.changeTuition', ['request_id' => $request->id]) }}" method="POST">
+                <form id="myForm" action="{{ route('admin.requests.changeTuition', ['request_id' => $request->id]) }}" method="POST" data-password-confirm>
                     @csrf
                     <div class="modern-field">
                         <label for="new_tuition"><b>Nueva colegiatura:</b></label>
@@ -103,4 +103,6 @@
             </div>
         </div>
     @endif
+
+    @include('includes.password-confirm-modal')
 @endsection

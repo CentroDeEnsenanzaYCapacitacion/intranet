@@ -115,12 +115,12 @@
                                         <form method="POST"
                                               action="{{ route('admin.catalogues.questions.delete', ['id' => $question->id]) }}"
                                               id="delete-question-{{ $question->id }}"
-                                              class="d-inline">
+                                              class="d-inline"
+                                              data-password-confirm>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button"
+                                            <button type="submit"
                                                     class="action-btn action-delete"
-                                                    onclick="confirmDelete('question',{{ $question->id }})"
                                                     title="Eliminar pregunta">
                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -181,11 +181,8 @@
         subjectFilter.addEventListener('change', filterQuestions);
         difficultyFilter.addEventListener('change', filterQuestions);
 
-        function confirmDelete(type, id) {
-            if (confirm('¿Está seguro de que desea eliminar esta pregunta?')) {
-                document.getElementById('delete-' + type + '-' + id).submit();
-            }
-        }
     </script>
+
+    @include('includes.password-confirm-modal')
 @endsection
 

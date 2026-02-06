@@ -56,7 +56,7 @@
                             @if(Auth::user()->role_id === 1)
                             <td>
                                 <div class="table-actions">
-                                    <a href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}" class="action-btn action-approve" title="Aprobar" onclick="showLoader(true)">
+                                    <a href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'approve']) }}" class="action-btn action-approve" title="Aprobar" data-password-confirm>
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
@@ -67,11 +67,11 @@
                                             <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
                                     </a>
-                                    <button class="action-btn action-delete" title="Rechazar" onclick="confirmDelete('request',{{ $request->id }})">
+                                    <a href="{{ route('admin.request.update',['request_id' => $request->id,'action'=>'decline']) }}" class="action-btn action-delete" title="Rechazar" data-password-confirm>
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
-                                    </button>
+                                    </a>
                                 </div>
                             </td>
                             @endif
@@ -160,4 +160,6 @@
             </table>
         </div>
     </div>
+
+    @include('includes.password-confirm-modal')
 @endsection
