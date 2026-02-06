@@ -87,6 +87,9 @@ document.addEventListener('DOMContentLoaded', function () {
             confirmBtn.disabled = false;
             if (result.ok && result.data.confirmed) {
                 closeModal('passwordConfirmModal');
+                if (typeof showLoader === 'function') {
+                    showLoader(true);
+                }
                 if (pendingForm) {
                     pendingForm.dataset.passwordConfirmed = 'true';
                     if (pendingSubmitter && pendingSubmitter.hasAttribute('formaction')) {
