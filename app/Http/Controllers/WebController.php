@@ -9,7 +9,6 @@ use App\Models\WebCarousel;
 use App\Models\WebMvv;
 use App\Models\WebOpinion;
 
-use Illuminate\Support\Facades\Log;
 
 class WebController extends Controller
 {
@@ -234,14 +233,6 @@ class WebController extends Controller
             mkdir($webPath, 0775, true);
         }
 
-        Log::info('Carousel upload paths', [
-            'base_path' => $basePath,
-            'intranet' => $intranetPath,
-            'web' => $webPath,
-            'environment' => app()->environment(),
-            'public_path_result' => public_path('assets/img/carousel/')
-        ]);
-
         $destinationPath = $intranetPath;
 
         $images = $request->file('img', []);
@@ -268,10 +259,6 @@ class WebController extends Controller
 
                     if (file_exists($sourcePath)) {
                         copy($sourcePath, $targetPath);
-                        Log::info('Carousel image copied', [
-                            'from' => $sourcePath,
-                            'to' => $targetPath
-                        ]);
                     }
                 }
 
@@ -373,10 +360,6 @@ class WebController extends Controller
 
                     if (file_exists($sourcePath)) {
                         copy($sourcePath, $targetPath);
-                        Log::info('Opinion image copied', [
-                            'from' => $sourcePath,
-                            'to' => $targetPath
-                        ]);
                     }
                 }
 
