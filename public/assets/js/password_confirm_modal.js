@@ -10,6 +10,60 @@ document.addEventListener('DOMContentLoaded', function () {
     var pendingSubmitter = null;
     var pendingLink = null;
 
+    function checkStatusAndProceed(element, isForm, submitter) {
+        fetch('/confirm-password/status', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            if (data.confirmed) {
+                element.dataset.passwordConfirmed = 'true';
+                if (isForm) {
+                    if (submitter && submitter.hasAttribute('formaction')) {
+                        submitter.click();
+                    } else {
+                        element.submit();
+                    }
+                } else {
+                    element.click();
+                }
+            } else {
+                if (isForm) {
+                    pendingForm = element;
+                    pendingSubmitter = submitter;
+                    pendingLink = null;
+                } else {
+                    pendingLink = element;
+                    pendingForm = null;
+                    pendingSubmitter = null;
+                }
+                input.value = '';
+                errorEl.style.display = 'none';
+                openModal('passwordConfirmModal');
+                setTimeout(function () { input.focus(); }, 350);
+            }
+        })
+        .catch(function () {
+            if (isForm) {
+                pendingForm = element;
+                pendingSubmitter = submitter;
+                pendingLink = null;
+            } else {
+                pendingLink = element;
+                pendingForm = null;
+                pendingSubmitter = null;
+            }
+            input.value = '';
+            errorEl.style.display = 'none';
+            openModal('passwordConfirmModal');
+            setTimeout(function () { input.focus(); }, 350);
+        });
+    }
+
     var forms = document.querySelectorAll('form[data-password-confirm]');
     forms.forEach(function (form) {
         form.addEventListener('submit', function (e) {
@@ -17,13 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             e.preventDefault();
-            pendingForm = form;
-            pendingSubmitter = e.submitter || null;
-            pendingLink = null;
-            input.value = '';
-            errorEl.style.display = 'none';
-            openModal('passwordConfirmModal');
-            setTimeout(function () { input.focus(); }, 350);
+            checkStatusAndProceed(form, true, e.submitter || null);
         });
     });
 
@@ -34,13 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             e.preventDefault();
-            pendingLink = link;
-            pendingForm = null;
-            pendingSubmitter = null;
-            input.value = '';
-            errorEl.style.display = 'none';
-            openModal('passwordConfirmModal');
-            setTimeout(function () { input.focus(); }, 350);
+            checkStatusAndProceed(link, false, null);
         });
     });
 

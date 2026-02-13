@@ -98,6 +98,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/confirm-password', [ConfirmPasswordController::class, 'show'])->name('password.confirm');
     Route::post('/confirm-password', [ConfirmPasswordController::class, 'confirm'])->name('password.confirm.store');
     Route::post('/confirm-password/ajax', [ConfirmPasswordController::class, 'confirmAjax'])->name('password.confirm.ajax');
+    Route::get('/confirm-password/status', [ConfirmPasswordController::class, 'status'])->name('password.confirm.status');
 
     require 'admin_users.php';
     require 'admin_stats.php';
