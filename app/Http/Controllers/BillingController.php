@@ -8,7 +8,9 @@ use App\Models\Crew;
 use App\Models\ReceiptType;
 use App\Models\PaymentType;
 use App\Models\Paybill;
+use App\Models\SysRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class BillingController extends Controller
 {
@@ -91,6 +93,49 @@ class BillingController extends Controller
             'tiposPagoConTotales'
         ));
 
+    }
+
+    public function requestAmountChange(Request $request)
+    {
+        $request->validate([
+            'type' => 'required|in:receipt,paybill',
+            'item_id' => 'required|integer',
+            'new_amount' => 'required|numeric|min:0.01',
+            'reason' => 'required|string|max:500'
+        ]);
+
+        $field = $request->type === 'receipt' ? 'receipt_id' : 'paybill_id';
+
+        $existingRequest = SysRequest::where($field, $request->item_id)
+            ->where('request_type_id', 4)
+            ->whereNull('approved')
+            ->first();
+
+        if ($existingRequest) {
+            return back()->with('error', 'Ya existe una solicitud de cambio de importe pendiente para este registro.');
+        }
+
+        if ($request->type === 'receipt') {
+            $item = Receipt::findOrFail($request->item_id);
+            $label = 'Recibo #' . $item->id;
+        } else {
+            $item = Paybill::findOrFail($request->item_id);
+            $label = 'Vale #' . $item->id;
+        }
+
+        $user = Auth::user();
+        if ($user->role_id != 1 && $item->crew_id != $user->crew_id) {
+            abort(403);
+        }
+
+        SysRequest::create([
+            'request_type_id' => 4,
+            'description' => $label . ' | Importe actual: $' . number_format($item->amount, 2) . ' | Nuevo importe: $' . number_format($request->new_amount, 2) . ' | ' . $request->reason,
+            'user_id' => Auth::id(),
+            $field => $request->item_id
+        ]);
+
+        return back()->with('success', 'Solicitud de cambio de importe enviada correctamente.');
     }
 
     private function getFechaRango(Request $request)

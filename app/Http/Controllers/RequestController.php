@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Paybill;
+use App\Models\Receipt;
 use App\Models\Student;
 use App\Models\SysRequest;
 use Illuminate\Http\Request;
@@ -65,6 +67,22 @@ class RequestController extends Controller
                     $student->save();
                 }
             }
+
+            if ($sysrequest->request_type_id == 4) {
+                preg_match('/Nuevo importe: \$([\d,\.]+)/', $sysrequest->description, $matches);
+                if (isset($matches[1])) {
+                    $newAmount = str_replace(',', '', $matches[1]);
+                    if ($sysrequest->receipt_id) {
+                        $item = Receipt::find($sysrequest->receipt_id);
+                    } elseif ($sysrequest->paybill_id) {
+                        $item = Paybill::find($sysrequest->paybill_id);
+                    }
+                    if (isset($item)) {
+                        $item->amount = $newAmount;
+                        $item->save();
+                    }
+                }
+            }
         }else{
             $sysrequest->approved = false;
         }
@@ -112,6 +130,43 @@ class RequestController extends Controller
         $student = Student::findOrFail($sysrequest->student_id);
         $student->tuition = $request->new_tuition;
         $student->save();
+
+        $sysrequest->approved = true;
+        $sysrequest->save();
+
+        return redirect()->route('admin.requests.show');
+    }
+
+    public function changeAmount(Request $request, $request_id)
+    {
+        if (auth()->user()->role_id !== 1) {
+            abort(403, 'No tienes permisos para realizar esta acción.');
+        }
+
+        $request->validate([
+            'new_amount' => 'required|numeric|min:0.01'
+        ]);
+
+        $sysrequest = SysRequest::findOrFail($request_id);
+
+        if ($sysrequest->request_type_id != 4) {
+            abort(403);
+        }
+
+        if ($sysrequest->approved !== null) {
+            return redirect()->route('admin.requests.show')->with('error', 'Esta solicitud ya fue atendida.');
+        }
+
+        if ($sysrequest->receipt_id) {
+            $item = Receipt::findOrFail($sysrequest->receipt_id);
+        } elseif ($sysrequest->paybill_id) {
+            $item = Paybill::findOrFail($sysrequest->paybill_id);
+        } else {
+            abort(404);
+        }
+
+        $item->amount = $request->new_amount;
+        $item->save();
 
         $sysrequest->approved = true;
         $sysrequest->save();

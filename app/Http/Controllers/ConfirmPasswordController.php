@@ -38,4 +38,13 @@ class ConfirmPasswordController extends Controller
 
         return response()->json(['confirmed' => true]);
     }
+
+    public function status(Request $request)
+    {
+        $confirmedAt = $request->session()->get('auth.password_confirmed_at', 0);
+        $timeout = config('auth.password_timeout', 1800);
+        $confirmed = (time() - $confirmedAt) < $timeout;
+
+        return response()->json(['confirmed' => $confirmed]);
+    }
 }

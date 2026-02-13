@@ -2,6 +2,7 @@
 @section('title', 'Estadísticas de cobranza')
 @section('content')
 
+    <link rel="stylesheet" href="{{ asset('assets/css/calendar-modal.css') }}">
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 
     <div class="dashboard-welcome">
@@ -150,25 +151,31 @@
             <table class="modern-table">
                 <thead style="position: sticky; top: 0; z-index: 10; background: #f9fafb;">
                     <tr>
-                        <th>#</th>
                         <th>Folio</th>
                         <th>Fecha</th>
                         <th>Estudiante</th>
                         <th>Monto</th>
                         <th>Tipo de Pago</th>
                         <th>Tipo de Recibo</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($receipts as $receipt)
                         <tr>
                             <td>{{ $receipt->id }}</td>
-                            <td class="font-medium">{{ $receipt->folio }}</td>
                             <td>{{ $receipt->created_at->format('d/m/Y') }}</td>
                             <td>{{ $receipt->student->name ?? 'No asignado' }}</td>
                             <td style="font-weight: 600; color: #065f46;">${{ number_format($receipt->amount, 2) }}</td>
                             <td class="text-uppercase">{{ $receipt->payment->name ?? 'No definido' }}</td>
                             <td class="text-uppercase">{{ $receipt->receiptType->name ?? 'No definido' }}</td>
+                            <td>
+                                <button type="button" class="action-btn action-edit btn-amount-change" title="Solicitar cambio de importe" data-type="receipt" data-id="{{ $receipt->id }}" data-folio="{{ $receipt->id }}" data-amount="{{ $receipt->amount }}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 1V23M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -206,21 +213,27 @@
             <table class="modern-table">
                 <thead style="position: sticky; top: 0; z-index: 10; background: #f9fafb;">
                     <tr>
-                        <th>#</th>
                         <th>Folio</th>
                         <th>Fecha</th>
                         <th>Plantel</th>
                         <th>Monto</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($paybills as $pb)
                         <tr>
                             <td>{{ $pb->id }}</td>
-                            <td class="font-medium">{{ $pb->folio }}</td>
                             <td>{{ $pb->created_at->format('d/m/Y') }}</td>
                             <td class="text-uppercase">{{ $pb->crew->name ?? 'No asignado' }}</td>
                             <td style="font-weight: 600; color: #991b1b;">${{ number_format($pb->amount, 2) }}</td>
+                            <td>
+                                <button type="button" class="action-btn action-edit btn-amount-change" title="Solicitar cambio de importe" data-type="paybill" data-id="{{ $pb->id }}" data-folio="{{ $pb->id }}" data-amount="{{ $pb->amount }}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 1V23M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -244,6 +257,41 @@
         </div>
     </div>
 
+    <div class="custom-modal" id="amountChangeModal" style="display:none;" onclick="closeOnOverlay(event, 'amountChangeModal')">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close" onclick="closeModal('amountChangeModal')">&times;</span>
+            <h5>Solicitar cambio de importe</h5>
+            <form method="POST" action="{{ route('admin.stats.billing.requestAmountChange') }}">
+                @csrf
+                <input type="hidden" name="type" id="amountChangeType">
+                <input type="hidden" name="item_id" id="amountChangeItemId">
+                <div class="mb-3">
+                    <label class="form-label"><b>Registro:</b></label>
+                    <p id="amountChangeLabel"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><b>Importe actual:</b></label>
+                    <p id="amountChangeCurrent"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="new_amount" class="form-label"><b>Nuevo importe:</b></label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
+                        <input type="number" class="form-control" id="new_amount" name="new_amount" step="0.01" min="0.01" required style="font-size: 16px; font-weight: 600;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="amount_change_reason" class="form-label"><b>Motivo del cambio:</b></label>
+                    <textarea class="form-control" id="amount_change_reason" name="reason" rows="3" required></textarea>
+                </div>
+                <div class="mt-4 text-end">
+                    <button type="button" class="btn bg-orange text-white me-2" onclick="closeModal('amountChangeModal')">Cancelar</button>
+                    <button type="submit" class="btn bg-orange text-white">Enviar solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function mostrarInputFecha() {
             const seleccion = document.getElementById("fecha").value;
@@ -253,3 +301,8 @@
     </script>
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('assets/js/modal_utils.js') }}"></script>
+<script src="{{ asset('assets/js/billing_amount_change.js') }}"></script>
+@endpush

@@ -8,4 +8,5 @@ Route::get('/admin/requests', [RequestController::class,'getRequests'])->name('a
 Route::get('/admin/request/{request_id}', [RequestController::class,'editRequest'])->name('admin.requests.edit');
 Route::post('/admin/request/{request_id}', [RequestController::class,'changePercentage'])->name('admin.requests.changePercentage');
 Route::post('/admin/request/{request_id}/tuition', [RequestController::class,'changeTuition'])->name('admin.requests.changeTuition');
+Route::post('/admin/request/{request_id}/amount', [RequestController::class,'changeAmount'])->name('admin.requests.changeAmount');
 Route::get('/admin/request/{request_id}/{action}', [RequestController::class,'updateRequest'])->name('admin.request.update');

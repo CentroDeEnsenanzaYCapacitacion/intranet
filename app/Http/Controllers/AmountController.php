@@ -33,18 +33,25 @@ class AmountController extends Controller
 
     public function updateAmount(AmountRequest $request, $id)
     {
-        $amount = Amount::find($id);
-        $amount->amount = $request->amount;
+        $amount = Amount::findOrFail($id);
 
+        if (Auth::user()->role_id !== 1 && $amount->id <= 133) {
+            abort(403);
+        }
+
+        $amount->amount = $request->amount;
         $amount->save();
 
         return redirect()->route('admin.catalogues.amounts.show')->with('success', 'Costo actualizado correctamente');
-
     }
 
     public function editAmount($id)
     {
-        $amount = Amount::find($id);
+        $amount = Amount::findOrFail($id);
+
+        if (Auth::user()->role_id !== 1 && $amount->id <= 133) {
+            abort(403);
+        }
 
         return view('admin.catalogues.amounts.edit', compact('amount'));
     }
@@ -67,6 +74,10 @@ class AmountController extends Controller
 
     public function generateAmounts()
     {
+        if (Auth::user()->role_id !== 1) {
+            abort(403);
+        }
+
         $courses = Course::where('is_active', true)->get();
         $amounts = Amount::all();
 
@@ -96,6 +107,9 @@ class AmountController extends Controller
 
     public function cleanAmounts()
     {
+        if (Auth::user()->role_id !== 1) {
+            abort(403);
+        }
 
         Amount::where('receipt_type_id', '!=', 1)
             ->where('crew_id', '!=', 1)
@@ -107,11 +121,19 @@ class AmountController extends Controller
 
     public function createAmountForm()
     {
+        if (Auth::user()->role_id !== 1) {
+            abort(403);
+        }
+
         return view('admin.catalogues.amounts.create');
     }
 
     public function storeAmount(Request $request)
     {
+        if (Auth::user()->role_id !== 1) {
+            abort(403);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255|unique:receipt_types,name',
             'amount' => ['required', 'numeric', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
