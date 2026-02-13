@@ -315,4 +315,142 @@ class AmountTest extends TestCase
             'amount' => 2500.75,
         ]);
     }
+
+    public function test_guest_cannot_access_amounts(): void
+    {
+        $response = $this->get('/admin/catalogues/amounts');
+        $response->assertRedirect(route('login'));
+    }
+
+    public function test_manager_cannot_create_amount(): void
+    {
+        $manager = $this->createUser($this->managerRole);
+
+        $response = $this->actingAs($manager)
+            ->post('/admin/catalogues/amount/store', [
+                'name' => 'Intento',
+                'amount' => '100.00',
+            ]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('receipt_types', ['name' => 'Intento']);
+    }
+
+    public function test_manager_cannot_access_create_form(): void
+    {
+        $manager = $this->createUser($this->managerRole);
+
+        $response = $this->actingAs($manager)->get('/admin/catalogues/amount/create');
+
+        $response->assertStatus(403);
+    }
+
+    public function test_manager_cannot_generate_amounts(): void
+    {
+        $manager = $this->createUser($this->managerRole);
+
+        $response = $this->actingAs($manager)->get('/admin/catalogues/amounts/generate');
+
+        $response->assertStatus(403);
+    }
+
+    public function test_manager_cannot_clean_amounts(): void
+    {
+        $manager = $this->createUser($this->managerRole);
+
+        $response = $this->actingAs($manager)->get('/admin/catalogues/amounts/clean');
+
+        $response->assertStatus(403);
+    }
+
+    public function test_manager_cannot_edit_protected_amount(): void
+    {
+        $manager = $this->createUser($this->managerRole);
+
+        $amount = Amount::create([
+            'id' => 100,
+            'crew_id' => $this->crew->id,
+            'course_id' => $this->course->id,
+            'receipt_type_id' => $this->receiptType->id,
+            'amount' => 1000,
+        ]);
+
+        $response = $this->actingAs($manager)->get('/admin/catalogues/amount/edit/' . $amount->id);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_manager_cannot_update_protected_amount(): void
+    {
+        $manager = $this->createUser($this->managerRole);
+
+        $amount = Amount::create([
+            'id' => 100,
+            'crew_id' => $this->crew->id,
+            'course_id' => $this->course->id,
+            'receipt_type_id' => $this->receiptType->id,
+            'amount' => 1000,
+        ]);
+
+        $response = $this->actingAs($manager)
+            ->put('/admin/catalogues/amount/update/' . $amount->id, [
+                'amount' => '9999.00',
+            ]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('amounts', [
+            'id' => $amount->id,
+            'amount' => 1000,
+        ]);
+    }
+
+    public function test_edit_nonexistent_amount_returns_404(): void
+    {
+        $response = $this->actingAs($this->admin)->get('/admin/catalogues/amount/edit/99999');
+
+        $response->assertStatus(404);
+    }
+
+    public function test_update_nonexistent_amount_returns_404(): void
+    {
+        $response = $this->actingAs($this->admin)
+            ->put('/admin/catalogues/amount/update/99999', [
+                'amount' => '100.00',
+            ]);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_clean_amounts_removes_non_inscription_non_general(): void
+    {
+        $otherCrew = Crew::create([
+            'name' => 'Otro Plantel',
+            'adress' => 'Otra Direccion',
+            'phone' => '5551111',
+            'mail' => 'otro@test.com',
+            'is_active' => true,
+        ]);
+
+        $otherType = ReceiptType::create(['name' => 'Colegiatura']);
+
+        $shouldKeep = Amount::create([
+            'crew_id' => 1,
+            'course_id' => $this->course->id,
+            'receipt_type_id' => $this->receiptType->id,
+            'amount' => 1000,
+        ]);
+
+        $shouldDelete = Amount::create([
+            'crew_id' => $otherCrew->id,
+            'course_id' => $this->course->id,
+            'receipt_type_id' => $otherType->id,
+            'amount' => 500,
+        ]);
+
+        $response = $this->actingAs($this->admin)->get('/admin/catalogues/amounts/clean');
+
+        $response->assertRedirect(route('admin.catalogues.amounts.show'));
+        $this->assertDatabaseHas('amounts', ['id' => $shouldKeep->id]);
+        $this->assertDatabaseMissing('amounts', ['id' => $shouldDelete->id]);
+    }
 }
