@@ -12,6 +12,8 @@ use App\Models\TicketMessageAttachment;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -239,5 +241,71 @@ class TicketFlowTest extends TestCase
         $response = $this->actingAs($admin)->get('/tickets/attachment/' . $image->path);
 
         $response->assertStatus(200);
+    }
+
+    public function test_list_auto_resolves_stale_waiting_response_tickets(): void
+    {
+        if (DB::getDriverName() === 'sqlite') {
+            $this->markTestSkipped('SQLite en este proyecto no incluye el estado esperando respuesta en tickets.status.');
+        }
+
+        $user = $this->createUser($this->staffRole);
+        $ticket = $this->createTicket($user, ['status' => 'esperando respuesta']);
+
+        Ticket::whereKey($ticket->id)->update([
+            'updated_at' => now()->subDays(16),
+        ]);
+
+        $this->actingAs($user)->get('/tickets')->assertStatus(200);
+
+        $ticket = $ticket->fresh();
+        $this->assertSame('resuelto', $ticket->status);
+        $this->assertNotNull($ticket->closed_at);
+    }
+
+    public function test_list_does_not_auto_resolve_recent_waiting_response_tickets(): void
+    {
+        if (DB::getDriverName() === 'sqlite') {
+            $this->markTestSkipped('SQLite en este proyecto no incluye el estado esperando respuesta en tickets.status.');
+        }
+
+        $user = $this->createUser($this->staffRole);
+        $ticket = $this->createTicket($user, ['status' => 'esperando respuesta']);
+
+        Ticket::whereKey($ticket->id)->update([
+            'updated_at' => now()->subDays(2),
+        ]);
+
+        $this->actingAs($user)->get('/tickets')->assertStatus(200);
+
+        $ticket = $ticket->fresh();
+        $this->assertSame('esperando respuesta', $ticket->status);
+        $this->assertNull($ticket->closed_at);
+    }
+
+    public function test_new_message_updates_ticket_activity_timestamp(): void
+    {
+        Storage::fake();
+
+        $user = $this->createUser($this->staffRole);
+        $ticket = $this->createTicket($user);
+
+        Ticket::whereKey($ticket->id)->update([
+            'updated_at' => now()->subDays(20),
+        ]);
+
+        $previousUpdatedAt = $ticket->fresh()->updated_at;
+
+        Carbon::setTestNow(now()->addMinute());
+        try {
+            $this->actingAs($user)->post('/tickets/' . $ticket->id . '/message', [
+                'message' => 'Actividad reciente',
+            ])->assertSessionHas('success', 'Mensaje enviado.');
+        } finally {
+            Carbon::setTestNow();
+        }
+
+        $ticket = $ticket->fresh();
+        $this->assertTrue($ticket->updated_at->greaterThan($previousUpdatedAt));
     }
 }
