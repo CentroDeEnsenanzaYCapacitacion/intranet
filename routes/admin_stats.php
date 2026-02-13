@@ -13,4 +13,5 @@ Route::get('/admin/stats/reports', function() {
 
 Route::get('/admin/stats/reports/{period}/{year?}', [StatsController::class,'reports'])->name('admin.stats.reports');
 Route::get('/admin/stats/billing/', [BillingController::class,'index'])->name('admin.stats.billing');
+Route::post('/admin/stats/billing/request-amount-change', [BillingController::class,'requestAmountChange'])->name('admin.stats.billing.requestAmountChange');
 

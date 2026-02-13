@@ -2,6 +2,7 @@
 @section('title', 'Estadísticas de cobranza')
 @section('content')
 
+    <link rel="stylesheet" href="{{ asset('assets/css/calendar-modal.css') }}">
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 
     <div class="dashboard-welcome">
@@ -157,6 +158,7 @@
                         <th>Monto</th>
                         <th>Tipo de Pago</th>
                         <th>Tipo de Recibo</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -169,10 +171,17 @@
                             <td style="font-weight: 600; color: #065f46;">${{ number_format($receipt->amount, 2) }}</td>
                             <td class="text-uppercase">{{ $receipt->payment->name ?? 'No definido' }}</td>
                             <td class="text-uppercase">{{ $receipt->receiptType->name ?? 'No definido' }}</td>
+                            <td>
+                                <button type="button" class="action-btn action-edit btn-amount-change" title="Solicitar cambio de importe" data-type="receipt" data-id="{{ $receipt->id }}" data-folio="{{ $receipt->id }}" data-amount="{{ $receipt->amount }}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 1V23M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #6b7280;">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 16px; opacity: 0.3;">
                                     <path d="M9 14L15 14M9 10L19 10M7 18V6C7 5.46957 7.21071 4.96086 7.58579 4.58579C7.96086 4.21071 8.46957 4 9 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V18C20 18.5304 19.7893 19.0391 19.4142 19.4142C19.0391 19.7893 18.5304 20 18 20H9C8.46957 20 7.96086 19.7893 7.58579 19.4142C7.21071 19.0391 7 18.5304 7 18ZM5 18C5 18.5304 4.78929 19.0391 4.41421 19.4142C4.03914 19.7893 3.53043 20 3 20C2.46957 20 1.96086 19.7893 1.58579 19.4142C1.21071 19.0391 1 18.5304 1 18C1 17.4696 1.21071 16.9609 1.58579 16.5858C1.96086 16.2107 2.46957 16 3 16C3.53043 16 4.03914 16.2107 4.41421 16.5858C4.78929 16.9609 5 17.4696 5 18ZM5 6C5 6.53043 4.78929 7.03914 4.41421 7.41421C4.03914 7.78929 3.53043 8 3 8C2.46957 8 1.96086 7.78929 1.58579 7.41421C1.21071 7.03914 1 6.53043 1 6C1 5.46957 1.21071 4.96086 1.58579 4.58579C1.96086 4.21071 2.46957 4 3 4C3.53043 4 4.03914 4.21071 4.41421 4.58579C4.78929 4.96086 5 5.46957 5 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -211,6 +220,7 @@
                         <th>Fecha</th>
                         <th>Plantel</th>
                         <th>Monto</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,10 +231,17 @@
                             <td>{{ $pb->created_at->format('d/m/Y') }}</td>
                             <td class="text-uppercase">{{ $pb->crew->name ?? 'No asignado' }}</td>
                             <td style="font-weight: 600; color: #991b1b;">${{ number_format($pb->amount, 2) }}</td>
+                            <td>
+                                <button type="button" class="action-btn action-edit btn-amount-change" title="Solicitar cambio de importe" data-type="paybill" data-id="{{ $pb->id }}" data-folio="{{ $pb->id }}" data-amount="{{ $pb->amount }}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 1V23M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #6b7280;">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 16px; opacity: 0.3;">
                                     <path d="M17 9V7C17 6.46957 16.7893 5.96086 16.4142 5.58579C16.0391 5.21071 15.5304 5 15 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19H7M9 15H19C19.5304 15 20.0391 14.7893 20.4142 14.4142C20.7893 14.0391 21 13.5304 21 13V11C21 10.4696 20.7893 9.96086 20.4142 9.58579C20.0391 9.21071 19.5304 9 19 9H9C8.46957 9 7.96086 9.21071 7.58579 9.58579C7.21071 9.96086 7 10.4696 7 11V13C7 13.5304 7.21071 14.0391 7.58579 14.4142C7.96086 14.7893 8.46957 15 9 15ZM14 12C14 12.2652 13.8946 12.5196 13.7071 12.7071C13.5196 12.8946 13.2652 13 13 13C12.7348 13 12.4804 12.8946 12.2929 12.7071C12.1054 12.5196 12 12.2652 12 12C12 11.7348 12.1054 11.4804 12.2929 11.2929C12.4804 11.1054 12.7348 11 13 11C13.2652 11 13.5196 11.1054 13.7071 11.2929C13.8946 11.4804 14 11.7348 14 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -244,6 +261,41 @@
         </div>
     </div>
 
+    <div class="custom-modal" id="amountChangeModal" style="display:none;" onclick="closeOnOverlay(event, 'amountChangeModal')">
+        <div class="custom-modal-content">
+            <span class="custom-modal-close" onclick="closeModal('amountChangeModal')">&times;</span>
+            <h5>Solicitar cambio de importe</h5>
+            <form method="POST" action="{{ route('admin.stats.billing.requestAmountChange') }}">
+                @csrf
+                <input type="hidden" name="type" id="amountChangeType">
+                <input type="hidden" name="item_id" id="amountChangeItemId">
+                <div class="mb-3">
+                    <label class="form-label"><b>Registro:</b></label>
+                    <p id="amountChangeLabel"></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><b>Importe actual:</b></label>
+                    <p id="amountChangeCurrent"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="new_amount" class="form-label"><b>Nuevo importe:</b></label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="background: linear-gradient(135deg, #F57F17 0%, #F9A825 100%); color: white; font-weight: 600; border: none; font-size: 18px;">$</span>
+                        <input type="number" class="form-control" id="new_amount" name="new_amount" step="0.01" min="0.01" required style="font-size: 16px; font-weight: 600;">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="amount_change_reason" class="form-label"><b>Motivo del cambio:</b></label>
+                    <textarea class="form-control" id="amount_change_reason" name="reason" rows="3" required></textarea>
+                </div>
+                <div class="mt-4 text-end">
+                    <button type="button" class="btn bg-orange text-white me-2" onclick="closeModal('amountChangeModal')">Cancelar</button>
+                    <button type="submit" class="btn bg-orange text-white">Enviar solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function mostrarInputFecha() {
             const seleccion = document.getElementById("fecha").value;
@@ -253,3 +305,8 @@
     </script>
 
 @endsection
+
+@push('scripts')
+<script src="{{ asset('assets/js/modal_utils.js') }}"></script>
+<script src="{{ asset('assets/js/billing_amount_change.js') }}"></script>
+@endpush

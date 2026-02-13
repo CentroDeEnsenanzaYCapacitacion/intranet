@@ -5,6 +5,10 @@ namespace Tests\Feature\Admin;
 use App\Models\Course;
 use App\Models\Crew;
 use App\Models\Marketing;
+use App\Models\Paybill;
+use App\Models\PaymentType;
+use App\Models\Receipt;
+use App\Models\ReceiptType;
 use App\Models\Report;
 use App\Models\RequestType;
 use App\Models\Role;
@@ -29,6 +33,7 @@ class RequestTest extends TestCase
     private Report $report;
     private RequestType $discountType;
     private RequestType $tuitionType;
+    private RequestType $amountChangeType;
 
     protected function setUp(): void
     {
@@ -74,6 +79,7 @@ class RequestTest extends TestCase
         RequestType::firstOrCreate(['id' => 1], ['name' => 'Inscripcion']);
         $this->discountType = RequestType::firstOrCreate(['id' => 2], ['name' => 'Descuento']);
         $this->tuitionType = RequestType::firstOrCreate(['id' => 3], ['name' => 'Cambio de colegiatura']);
+        $this->amountChangeType = RequestType::firstOrCreate(['id' => 4], ['name' => 'Cambio de importe']);
     }
 
     private function createUser(Role $role, array $overrides = []): User
@@ -355,5 +361,288 @@ class RequestTest extends TestCase
         $response = $this->get('/admin/requests');
 
         $response->assertRedirect(route('login'));
+    }
+
+    private function createReceipt(array $overrides = []): Receipt
+    {
+        $student = $this->createStudent();
+        $receiptType = ReceiptType::firstOrCreate(['id' => 1], ['name' => 'Inscripcion']);
+        $paymentType = PaymentType::firstOrCreate(['id' => 1], ['name' => 'Efectivo']);
+
+        $data = array_merge([
+            'crew_id' => $this->crew->id,
+            'user_id' => $this->admin->id,
+            'student_id' => $student->id,
+            'receipt_type_id' => $receiptType->id,
+            'payment_type_id' => $paymentType->id,
+            'concept' => 'Pago test',
+            'amount' => 500,
+        ], $overrides);
+
+        return Receipt::create($data);
+    }
+
+    private function createPaybill(array $overrides = []): Paybill
+    {
+        $data = array_merge([
+            'crew_id' => $this->crew->id,
+            'user_id' => $this->admin->id,
+            'receives' => 'Proveedor Test',
+            'concept' => 'Gasto test',
+            'amount' => 300,
+        ], $overrides);
+
+        return Paybill::create($data);
+    }
+
+    public function test_user_can_request_receipt_amount_change(): void
+    {
+        $receipt = $this->createReceipt();
+
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/stats/billing/request-amount-change', [
+                'type' => 'receipt',
+                'item_id' => $receipt->id,
+                'new_amount' => 750,
+                'reason' => 'Error en el monto',
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('sys_requests', [
+            'request_type_id' => 4,
+            'receipt_id' => $receipt->id,
+            'approved' => null,
+        ]);
+    }
+
+    public function test_user_can_request_paybill_amount_change(): void
+    {
+        $paybill = $this->createPaybill();
+
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/stats/billing/request-amount-change', [
+                'type' => 'paybill',
+                'item_id' => $paybill->id,
+                'new_amount' => 400,
+                'reason' => 'Monto incorrecto',
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('sys_requests', [
+            'request_type_id' => 4,
+            'paybill_id' => $paybill->id,
+            'approved' => null,
+        ]);
+    }
+
+    public function test_cannot_duplicate_pending_amount_change_request(): void
+    {
+        $receipt = $this->createReceipt();
+
+        $this->actingAs($this->admin)
+            ->post('/admin/stats/billing/request-amount-change', [
+                'type' => 'receipt',
+                'item_id' => $receipt->id,
+                'new_amount' => 750,
+                'reason' => 'Primera solicitud',
+            ]);
+
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/stats/billing/request-amount-change', [
+                'type' => 'receipt',
+                'item_id' => $receipt->id,
+                'new_amount' => 800,
+                'reason' => 'Segunda solicitud',
+            ]);
+
+        $response->assertSessionHas('error');
+        $this->assertEquals(1, SysRequest::where('receipt_id', $receipt->id)->where('request_type_id', 4)->count());
+    }
+
+    public function test_amount_change_validates_input(): void
+    {
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/stats/billing/request-amount-change', [
+                'type' => 'invalid',
+                'item_id' => 999,
+                'new_amount' => 0,
+                'reason' => '',
+            ]);
+
+        $response->assertSessionHasErrors(['type', 'new_amount', 'reason']);
+    }
+
+    public function test_manager_cannot_request_change_for_other_crew_receipt(): void
+    {
+        $otherCrew = Crew::create([
+            'name' => 'Otro Plantel',
+            'adress' => 'Otra Direccion',
+            'phone' => '5559999',
+            'mail' => 'otro_billing@test.com',
+            'is_active' => true,
+        ]);
+        $receipt = $this->createReceipt(['crew_id' => $otherCrew->id]);
+        $manager = $this->createUser($this->managerRole);
+
+        $response = $this->actingAs($manager)
+            ->post('/admin/stats/billing/request-amount-change', [
+                'type' => 'receipt',
+                'item_id' => $receipt->id,
+                'new_amount' => 999,
+                'reason' => 'Intento IDOR',
+            ]);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_admin_can_approve_amount_change_for_receipt(): void
+    {
+        $receipt = $this->createReceipt(['amount' => 500]);
+
+        $sysRequest = SysRequest::create([
+            'request_type_id' => 4,
+            'description' => 'Recibo #R-001 | Importe actual: $500.00 | Nuevo importe: $750.00 | Error',
+            'user_id' => $this->admin->id,
+            'receipt_id' => $receipt->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/request/' . $sysRequest->id . '/approve');
+
+        $response->assertRedirect(route('admin.requests.show'));
+        $this->assertDatabaseHas('receipts', [
+            'id' => $receipt->id,
+            'amount' => '750.00',
+        ]);
+        $this->assertDatabaseHas('sys_requests', [
+            'id' => $sysRequest->id,
+            'approved' => true,
+        ]);
+    }
+
+    public function test_admin_can_approve_amount_change_for_paybill(): void
+    {
+        $paybill = $this->createPaybill(['amount' => 300]);
+
+        $sysRequest = SysRequest::create([
+            'request_type_id' => 4,
+            'description' => 'Vale #V-001 | Importe actual: $300.00 | Nuevo importe: $450.00 | Error',
+            'user_id' => $this->admin->id,
+            'paybill_id' => $paybill->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->get('/admin/request/' . $sysRequest->id . '/approve');
+
+        $response->assertRedirect(route('admin.requests.show'));
+        $this->assertDatabaseHas('paybills', [
+            'id' => $paybill->id,
+            'amount' => '450.00',
+        ]);
+    }
+
+    public function test_admin_can_change_amount_via_edit(): void
+    {
+        $receipt = $this->createReceipt(['amount' => 500]);
+
+        $sysRequest = SysRequest::create([
+            'request_type_id' => 4,
+            'description' => 'Recibo #R-001 | Importe actual: $500.00 | Nuevo importe: $750.00 | Error',
+            'user_id' => $this->admin->id,
+            'receipt_id' => $receipt->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/request/' . $sysRequest->id . '/amount', [
+                'new_amount' => 900,
+            ]);
+
+        $response->assertRedirect(route('admin.requests.show'));
+        $this->assertDatabaseHas('receipts', [
+            'id' => $receipt->id,
+            'amount' => 900,
+        ]);
+        $this->assertDatabaseHas('sys_requests', [
+            'id' => $sysRequest->id,
+            'approved' => true,
+        ]);
+    }
+
+    public function test_change_amount_rejects_wrong_request_type(): void
+    {
+        $discountRequest = $this->createRequest($this->admin, $this->discountType);
+
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/request/' . $discountRequest->id . '/amount', [
+                'new_amount' => 100,
+            ]);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_change_amount_rejects_already_approved(): void
+    {
+        $receipt = $this->createReceipt(['amount' => 500]);
+
+        $sysRequest = SysRequest::create([
+            'request_type_id' => 4,
+            'description' => 'Recibo #R-001 | Importe actual: $500.00 | Nuevo importe: $750.00 | Error',
+            'user_id' => $this->admin->id,
+            'receipt_id' => $receipt->id,
+            'approved' => true,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/request/' . $sysRequest->id . '/amount', [
+                'new_amount' => 999,
+            ]);
+
+        $response->assertRedirect(route('admin.requests.show'));
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('receipts', [
+            'id' => $receipt->id,
+            'amount' => 500,
+        ]);
+    }
+
+    public function test_non_admin_cannot_change_amount(): void
+    {
+        $manager = $this->createUser($this->managerRole);
+        $receipt = $this->createReceipt(['amount' => 500]);
+
+        $sysRequest = SysRequest::create([
+            'request_type_id' => 4,
+            'description' => 'Recibo #R-001 | Importe actual: $500.00 | Nuevo importe: $750.00 | Error',
+            'user_id' => $manager->id,
+            'receipt_id' => $receipt->id,
+        ]);
+
+        $response = $this->actingAs($manager)
+            ->post('/admin/request/' . $sysRequest->id . '/amount', [
+                'new_amount' => 999,
+            ]);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_change_amount_validates_input(): void
+    {
+        $receipt = $this->createReceipt();
+
+        $sysRequest = SysRequest::create([
+            'request_type_id' => 4,
+            'description' => 'Recibo #R-001 | Importe actual: $500.00 | Nuevo importe: $750.00 | Error',
+            'user_id' => $this->admin->id,
+            'receipt_id' => $receipt->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->post('/admin/request/' . $sysRequest->id . '/amount', [
+                'new_amount' => 0,
+            ]);
+
+        $response->assertSessionHasErrors('new_amount');
     }
 }

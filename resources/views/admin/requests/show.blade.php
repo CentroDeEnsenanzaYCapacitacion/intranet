@@ -43,6 +43,10 @@
                                         {{ $request->student->surnames }}, {{ $request->student->name }}
                                     </a>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Matrícula: {{ $request->student->crew->name[0] }}/{{ $request->student->id }}</div>
+                                @elseif($request->receipt_id)
+                                    <span class="text-uppercase">Recibo #{{ $request->receipt_id }}</span>
+                                @elseif($request->paybill_id)
+                                    <span class="text-uppercase">Vale #{{ $request->paybill_id }}</span>
                                 @elseif($request->report_id)
                                     <span class="text-uppercase">{{ $request->report->surnames }}, {{ $request->report->name }}</span>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Informe #{{ $request->report_id }}</div>
@@ -128,6 +132,10 @@
                                         {{ $old_request->student->surnames }}, {{ $old_request->student->name }}
                                     </a>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Matrícula: {{ $old_request->student->crew->name[0] }}/{{ $old_request->student->id }}</div>
+                                @elseif($old_request->receipt_id)
+                                    <span class="text-uppercase">Recibo #{{ $old_request->receipt_id }}</span>
+                                @elseif($old_request->paybill_id)
+                                    <span class="text-uppercase">Vale #{{ $old_request->paybill_id }}</span>
                                 @elseif($old_request->report_id)
                                     <span class="text-uppercase">{{ $old_request->report->surnames }}, {{ $old_request->report->name }}</span>
                                     <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">Informe #{{ $old_request->report_id }}</div>

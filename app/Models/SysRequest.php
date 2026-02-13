@@ -26,4 +26,12 @@ class SysRequest extends Model
     public function student() {
         return $this->belongsTo(Student::class);
     }
+
+    public function receipt() {
+        return $this->belongsTo(Receipt::class);
+    }
+
+    public function paybill() {
+        return $this->belongsTo(Paybill::class);
+    }
 }
