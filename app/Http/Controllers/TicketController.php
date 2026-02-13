@@ -8,14 +8,20 @@ use App\Models\TicketCategory;
 use App\Models\TicketMessage;
 use App\Models\TicketImage;
 use App\Models\TicketMessageAttachment;
+use App\Services\TicketAutoResolveService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TicketController extends Controller
 {
-    public function list()
+    public function list(TicketAutoResolveService $ticketAutoResolveService)
     {
+        if (Cache::add('tickets:auto-resolve:last-run', true, now()->addMinutes(15))) {
+            $ticketAutoResolveService->resolveStaleTickets();
+        }
+
         $tickets = Ticket::with('category', 'user.crew')
             ->where(function ($query) {
                 $query->whereNotIn('status', ['cerrado', 'resuelto'])

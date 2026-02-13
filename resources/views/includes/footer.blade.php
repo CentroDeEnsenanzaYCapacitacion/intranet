@@ -12,7 +12,7 @@
                 <p>&copy; {{ date('Y') }} Todos los derechos reservados.</p>
             </div>
             <div class="footer-version">
-                <p>Versión 2.0 | Última actualización: {{ config('app.deploy_date') ?: 'Sin registro' }}</p>
+                <p>Última actualización: {{ config('app.deploy_date') ?: 'Sin registro' }}</p>
             </div>
             <div class="footer-github">
                 <a href="https://github.com/AjRoBSeYeR" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
