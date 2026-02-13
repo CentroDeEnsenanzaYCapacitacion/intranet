@@ -13,7 +13,7 @@ Sistema de gestion academica y administrativa del Centro de Capacitacion CEC. Pl
 |------------|------------|
 | Backend | PHP 8.1 + Laravel 10 |
 | Base de datos | MySQL / MariaDB |
-| Frontend | Blade + Vite |
+| Frontend | Blade + assets estaticos en `public/assets` |
 | PDF | TCPDF + endroid/qr-code |
 | Testing | PHPUnit + SQLite (in-memory) |
 
@@ -121,7 +121,6 @@ tests/
 ### Requisitos previos
 - PHP 8.1+
 - Composer
-- Node.js + npm
 - MySQL / MariaDB
 
 ### Instalacion
@@ -132,18 +131,7 @@ cd intranet
 composer install
 cp .env.example .env
 php artisan key:generate
-```
-
-Configurar en `.env`:
-- `APP_URL` — URL del entorno
-- `DB_*` — Conexion a base de datos
-- `MAIL_*` — Configuracion de correo
-- `CACHE_CLEAR_TOKEN` — Token para limpieza de cache
-
-```bash
 php artisan migrate --seed
-npm install
-npm run dev
 php artisan serve
 ```
 
@@ -161,29 +149,34 @@ php artisan test --filter=AmountTest
 php artisan test --filter=LoginTest
 ```
 
-### Cobertura por modulo
+### Cobertura por modulo (conteo de tests, no coverage real)
 
 | Modulo | Tests | Archivo |
 |--------|-------|---------|
 | Solicitudes | 27 | `Admin/RequestTest` |
 | Costos | 25 | `Catalogues/AmountTest` |
-| Usuarios | - | `Admin/UserManagementTest` |
-| Autenticacion | - | `Auth/LoginTest`, `Auth/ChangePasswordTest`, etc. |
-| Cursos | - | `Catalogues/CourseTest` |
-| Percepciones | - | `Catalogues/PerceptionTest` |
-| Preguntas | - | `Catalogues/QuestionTest` |
-| Estudiantes | - | `Students/StudentAccessTest`, `Students/StudentDocumentsAndCalendarTest` |
-| Cobranza | - | `System/CollectionTest` |
-| Reportes | - | `System/ReportTest` |
-| Tickets | - | `Tickets/TicketFlowTest` |
+| Usuarios | 7 | `Admin/UserManagementTest` |
+| Autenticacion | 40 | `Auth/*` |
+| Cursos | 12 | `Catalogues/CourseTest` |
+| Percepciones | 13 | `Catalogues/PerceptionTest` |
+| Preguntas | 18 | `Catalogues/QuestionTest` |
+| Estudiantes | 20 | `Students/StudentAccessTest`, `Students/StudentDocumentsAndCalendarTest` |
+| Cobranza | 15 | `System/CollectionTest` |
+| Reportes | 13 | `System/ReportTest` |
+| Tickets | 8 | `Tickets/TicketFlowTest` |
+| Personal | 18 | `Admin/StaffTest` |
+| Calendarios (parcial) | 9 | `Students/StudentDocumentsAndCalendarTest`, `Auth/RoleAccessTest` |
+| Contenido web | 0 | Sin tests Feature dedicados |
+
+Sin cobertura detectada:
+- Contenido web (`routes/web_admin.php`) no tiene tests Feature asociados.
+- `tests/Unit` no tiene pruebas (solo `.gitkeep`).
 
 ## Operacion
 
 ### Build de produccion
 
-```bash
-npm run build
-```
+No aplica pipeline de build frontend en este repositorio. Los assets se sirven desde `public/assets`.
 
 ### Limpieza de cache
 
