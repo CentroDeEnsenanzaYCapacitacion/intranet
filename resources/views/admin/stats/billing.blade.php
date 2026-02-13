@@ -151,7 +151,6 @@
             <table class="modern-table">
                 <thead style="position: sticky; top: 0; z-index: 10; background: #f9fafb;">
                     <tr>
-                        <th>#</th>
                         <th>Folio</th>
                         <th>Fecha</th>
                         <th>Estudiante</th>
@@ -165,7 +164,6 @@
                     @forelse ($receipts as $receipt)
                         <tr>
                             <td>{{ $receipt->id }}</td>
-                            <td class="font-medium">{{ $receipt->folio }}</td>
                             <td>{{ $receipt->created_at->format('d/m/Y') }}</td>
                             <td>{{ $receipt->student->name ?? 'No asignado' }}</td>
                             <td style="font-weight: 600; color: #065f46;">${{ number_format($receipt->amount, 2) }}</td>
@@ -181,7 +179,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" style="text-align: center; padding: 40px; color: #6b7280;">
+                            <td colspan="7" style="text-align: center; padding: 40px; color: #6b7280;">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 16px; opacity: 0.3;">
                                     <path d="M9 14L15 14M9 10L19 10M7 18V6C7 5.46957 7.21071 4.96086 7.58579 4.58579C7.96086 4.21071 8.46957 4 9 4H18C18.5304 4 19.0391 4.21071 19.4142 4.58579C19.7893 4.96086 20 5.46957 20 6V18C20 18.5304 19.7893 19.0391 19.4142 19.4142C19.0391 19.7893 18.5304 20 18 20H9C8.46957 20 7.96086 19.7893 7.58579 19.4142C7.21071 19.0391 7 18.5304 7 18ZM5 18C5 18.5304 4.78929 19.0391 4.41421 19.4142C4.03914 19.7893 3.53043 20 3 20C2.46957 20 1.96086 19.7893 1.58579 19.4142C1.21071 19.0391 1 18.5304 1 18C1 17.4696 1.21071 16.9609 1.58579 16.5858C1.96086 16.2107 2.46957 16 3 16C3.53043 16 4.03914 16.2107 4.41421 16.5858C4.78929 16.9609 5 17.4696 5 18ZM5 6C5 6.53043 4.78929 7.03914 4.41421 7.41421C4.03914 7.78929 3.53043 8 3 8C2.46957 8 1.96086 7.78929 1.58579 7.41421C1.21071 7.03914 1 6.53043 1 6C1 5.46957 1.21071 4.96086 1.58579 4.58579C1.96086 4.21071 2.46957 4 3 4C3.53043 4 4.03914 4.21071 4.41421 4.58579C4.78929 4.96086 5 5.46957 5 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
@@ -215,7 +213,6 @@
             <table class="modern-table">
                 <thead style="position: sticky; top: 0; z-index: 10; background: #f9fafb;">
                     <tr>
-                        <th>#</th>
                         <th>Folio</th>
                         <th>Fecha</th>
                         <th>Plantel</th>
@@ -227,7 +224,6 @@
                     @forelse ($paybills as $pb)
                         <tr>
                             <td>{{ $pb->id }}</td>
-                            <td class="font-medium">{{ $pb->folio }}</td>
                             <td>{{ $pb->created_at->format('d/m/Y') }}</td>
                             <td class="text-uppercase">{{ $pb->crew->name ?? 'No asignado' }}</td>
                             <td style="font-weight: 600; color: #991b1b;">${{ number_format($pb->amount, 2) }}</td>
@@ -241,7 +237,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="text-align: center; padding: 40px; color: #6b7280;">
+                            <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 16px; opacity: 0.3;">
                                     <path d="M17 9V7C17 6.46957 16.7893 5.96086 16.4142 5.58579C16.0391 5.21071 15.5304 5 15 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19H7M9 15H19C19.5304 15 20.0391 14.7893 20.4142 14.4142C20.7893 14.0391 21 13.5304 21 13V11C21 10.4696 20.7893 9.96086 20.4142 9.58579C20.0391 9.21071 19.5304 9 19 9H9C8.46957 9 7.96086 9.21071 7.58579 9.58579C7.21071 9.96086 7 10.4696 7 11V13C7 13.5304 7.21071 14.0391 7.58579 14.4142C7.96086 14.7893 8.46957 15 9 15ZM14 12C14 12.2652 13.8946 12.5196 13.7071 12.7071C13.5196 12.8946 13.2652 13 13 13C12.7348 13 12.4804 12.8946 12.2929 12.7071C12.1054 12.5196 12 12.2652 12 12C12 11.7348 12.1054 11.4804 12.2929 11.2929C12.4804 11.1054 12.7348 11 13 11C13.2652 11 13.5196 11.1054 13.7071 11.2929C13.8946 11.4804 14 11.7348 14 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
