@@ -116,24 +116,48 @@ tests/
 | 4 | Docente | Acceso limitado a funcionalidades academicas |
 | 5 | Coordinador | Solicitudes y seguimiento operativo |
 
-## Configuracion local
+## Configuracion local (Laragon)
 
 ### Requisitos previos
-- PHP 8.1+
-- Composer
-- MySQL / MariaDB
+- [Laragon](https://laragon.org/) con PHP 8.1+ y MySQL/MariaDB incluidos
+- Composer (incluido en Laragon)
 
 ### Instalacion
 
+1. Clonar el repositorio en la carpeta de proyectos de Laragon (`C:\laragon\www\`):
+
 ```bash
-git clone <repo-url>
+cd C:\laragon\www
+git clone <repo-url> intranet
 cd intranet
 composer install
 cp .env.example .env
 php artisan key:generate
-php artisan migrate --seed
-php artisan serve
 ```
+
+2. Crear la base de datos desde el panel de Laragon o con HeidiSQL (incluido en Laragon):
+
+```sql
+CREATE DATABASE intranet CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+3. Configurar `.env` con los datos de conexion local:
+
+```
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=intranet
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+4. Ejecutar migraciones y seeders:
+
+```bash
+php artisan migrate --seed
+```
+
+5. Laragon genera automaticamente un virtual host accesible en `http://intranet.test`. Si no aparece, reiniciar Laragon con **Menu > Apache > Reload** o reiniciar todos los servicios.
 
 ## Testing
 
