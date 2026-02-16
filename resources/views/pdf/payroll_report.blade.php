@@ -138,6 +138,7 @@
                 <img src="{{ $dracBase64 }}" width="55">
             </td>
             <td>
+                <br>
                 <span class="company-name">Centro de Enseñanza y Capacitación</span><br>
                 <span class="company-info">Victor Raúl Baena Toledo &bull; RFC: BATV850516E15</span>
             </td>
