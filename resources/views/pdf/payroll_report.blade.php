@@ -49,9 +49,9 @@
         .crew-title {
             font-size: 11px;
             font-weight: bold;
-            color: #2d3748;
+            color: #7c2d12;
             padding: 5px 8px;
-            background-color: #e2e8f0;
+            background-color: #fed7aa;
             margin: 10px 0 4px 0;
         }
         .data-table {
@@ -60,7 +60,7 @@
             margin-bottom: 6px;
         }
         .data-table th {
-            background-color: #2d3748;
+            background-color: #c2410c;
             color: #ffffff;
             padding: 4px 6px;
             text-align: left;
@@ -72,17 +72,17 @@
         }
         .data-table td {
             padding: 3px 6px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #fdba74;
             font-size: 8px;
         }
         .data-table td.num {
             text-align: right;
         }
         .data-table tr.subtotal td {
-            border-top: 2px solid #2d3748;
+            border-top: 2px solid #c2410c;
             font-weight: bold;
             font-size: 9px;
-            background-color: #f7fafc;
+            background-color: #fff7ed;
             padding: 5px 6px;
         }
         .grand-total {
@@ -134,15 +134,12 @@
 <body>
     <table class="header-table">
         <tr>
-            <td width="60">
+            <td width="60" style="vertical-align: middle;">
                 <img src="{{ $dracBase64 }}" width="55">
             </td>
-            <td>
+            <td style="vertical-align: middle;">
                 <span class="company-name">Centro de Enseñanza y Capacitación</span><br>
                 <span class="company-info">Victor Raúl Baena Toledo &bull; RFC: BATV850516E15</span>
-            </td>
-            <td width="60" style="text-align: right;">
-                <img src="{{ $logoBase64 }}" width="55">
             </td>
         </tr>
     </table>
