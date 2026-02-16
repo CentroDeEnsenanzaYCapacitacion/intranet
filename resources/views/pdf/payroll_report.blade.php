@@ -114,13 +114,13 @@
             padding-top: 6px;
         }
         .signature-area {
-            margin-top: 30px;
+            margin-top: 60px;
             width: 100%;
         }
         .signature-area td {
             width: 33%;
             text-align: center;
-            padding-top: 40px;
+            padding-top: 60px;
             font-size: 9px;
         }
         .signature-line {
@@ -134,10 +134,10 @@
 <body>
     <table class="header-table">
         <tr>
-            <td width="60" style="vertical-align: middle;">
+            <td width="60">
                 <img src="{{ $dracBase64 }}" width="55">
             </td>
-            <td style="vertical-align: middle;">
+            <td>
                 <span class="company-name">Centro de Enseñanza y Capacitación</span><br>
                 <span class="company-info">Victor Raúl Baena Toledo &bull; RFC: BATV850516E15</span>
             </td>
@@ -211,6 +211,7 @@
         </tr>
     </table>
 
+    <br><br><br><br><br><br>
     <table class="signature-area">
         <tr>
             <td>
