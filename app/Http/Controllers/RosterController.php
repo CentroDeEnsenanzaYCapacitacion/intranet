@@ -184,6 +184,89 @@ class RosterController extends Controller
 
     public function rosters(Request $request)
     {
+        $data = $this->calculatePayroll($request);
+
+        $adjustmentDefinitions = \App\Models\AdjustmentDefinition::all();
+        $departments = Department::where('is_active', true)->get()->keyBy('id');
+
+        return view('admin.rosters.rosters.panel', array_merge($data, compact(
+            'adjustmentDefinitions',
+            'departments'
+        )));
+    }
+
+    public function payrollReport(Request $request)
+    {
+        $data = $this->calculatePayroll($request);
+        $departments = Department::where('is_active', true)->get()->keyBy('id');
+
+        $year = $request->input('year', now()->year);
+        $month = $request->input('month', now()->month);
+        $period = $request->input('period', '8-22');
+
+        $crewsReport = [];
+
+        foreach ($data['staffGrouped'] as $crewId => $staffList) {
+            $crew = $data['allCrews']->firstWhere('id', $crewId);
+            $rows = [];
+
+            foreach ($staffList as $staff) {
+                $staffDeptCosts = $data['allDepartmentCosts']->get($staff->id, collect());
+
+                $staffAssignments = $data['assignments']
+                    ->where('crew_id', $crewId)
+                    ->where('staff_id', $staff->id);
+
+                $hours = $staffAssignments->sum('hours');
+                $baseCost = $data['totalCostByStaff'][$staff->id] ?? 0;
+                $hasRoster = $staffDeptCosts->contains('is_roster', true);
+
+                $adjustments = $staff->filtered_adjustments ?? collect();
+                $perceptionsSum = 0;
+                $deductionsSum = 0;
+                foreach ($adjustments as $adj) {
+                    if ($adj->adjustmentDefinition->type === 'perception') {
+                        $perceptionsSum += $adj->amount;
+                    } else {
+                        $deductionsSum += $adj->amount;
+                    }
+                }
+
+                $rows[] = [
+                    'name' => $staff->name . ' ' . $staff->surnames,
+                    'position' => $staff->position ?? '-',
+                    'type' => $hasRoster ? 'Planilla' : 'Horas',
+                    'hours' => $hours,
+                    'baseCost' => $baseCost,
+                    'perceptions' => $perceptionsSum,
+                    'deductions' => $deductionsSum,
+                    'netPay' => $baseCost + $perceptionsSum - $deductionsSum,
+                ];
+            }
+
+            $crewsReport[] = [
+                'crew' => $crew,
+                'rows' => $rows,
+                'totalHours' => $data['totalHoursByCrew'][$crewId] ?? 0,
+                'totalCost' => $data['totalCostByCrew'][$crewId] ?? 0,
+            ];
+        }
+
+        $reportData = [
+            'crewsReport' => $crewsReport,
+            'year' => $year,
+            'month' => $month,
+            'period' => $period,
+            'periodDays' => $data['periodDays'],
+            'totalHours' => $data['totalHours'],
+            'totalCost' => $data['adjustedTotalCost'],
+        ];
+
+        return PdfController::generatePayrollReport($reportData);
+    }
+
+    private function calculatePayroll(Request $request)
+    {
         $userCrewId = auth()->user()->crew_id;
         $selectedCrew = $request->get('crew');
 
@@ -340,10 +423,7 @@ class RosterController extends Controller
             }
         }
 
-        $adjustmentDefinitions = \App\Models\AdjustmentDefinition::all();
-        $departments = Department::where('is_active', true)->get()->keyBy('id');
-
-        return view('admin.rosters.rosters.panel', compact(
+        return compact(
             'allCrews',
             'crewsToShow',
             'staffGrouped',
@@ -355,10 +435,8 @@ class RosterController extends Controller
             'totalCostByCrew',
             'totalCostByStaff',
             'totalCost',
-            'adjustmentDefinitions',
             'adjustedTotalCost',
-            'departments',
             'allDepartmentCosts'
-        ));
+        );
     }
 }

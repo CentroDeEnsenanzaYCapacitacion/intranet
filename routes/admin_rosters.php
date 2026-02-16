@@ -13,3 +13,4 @@ Route::put('/admin/staff/{id}', [RosterController::class, 'update'])->name('admi
 Route::get('/admin/rosters/', [RosterController::class,'rosters'])->name('admin.rosters.panel');
 Route::post('/admin/staff-adjustments', [RosterController::class, 'storeAdjustment'])->name('admin.staff.adjustments.store');
 Route::delete('/admin/staff-adjustments/{id}', [RosterController::class, 'destroyAdjustment'])->name('admin.staff.adjustments.destroy');
+Route::get('/admin/rosters/payroll-report', [RosterController::class, 'payrollReport'])->name('admin.rosters.payroll.report');

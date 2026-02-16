@@ -277,7 +277,7 @@
 
     <div class="modern-card" style="margin-top: 24px; background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); border: 2px solid #0369a1;">
         <div style="padding: 24px; text-align: center;">
-            <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;">
+            <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin-bottom: 16px;">
                 <div>
                     <div style="font-size: 14px; color: #0369a1; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Total de Horas</div>
                     <div style="font-size: 32px; font-weight: 700; color: #0c4a6e;">{{ number_format($totalHours, 1) }}</div>
@@ -287,6 +287,12 @@
                     <div style="font-size: 32px; font-weight: 700; color: #F57F17;">${{ number_format($adjustedTotalCost, 2) }}</div>
                 </div>
             </div>
+            <a href="{{ route('admin.rosters.payroll.report', ['year' => request('year', now()->year), 'month' => request('month', now()->month), 'period' => request('period', '8-22'), 'crew' => request('crew')]) }}" target="_blank" class="btn-modern btn-primary" style="min-width: 260px; text-decoration: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 9V2H18V9M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18M6 14H18V22H6V14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Imprimir reporte de nómina
+            </a>
         </div>
     </div>
 
