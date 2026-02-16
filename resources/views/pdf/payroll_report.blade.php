@@ -134,11 +134,10 @@
 <body>
     <table class="header-table">
         <tr>
-            <td width="60">
+            <td width="60" valign="top">
                 <img src="{{ $dracBase64 }}" width="55">
             </td>
-            <td>
-                <br>
+            <td valign="top" style="padding-top: 8px;">
                 <span class="company-name">Centro de Enseñanza y Capacitación</span><br>
                 <span class="company-info">Victor Raúl Baena Toledo &bull; RFC: BATV850516E15</span>
             </td>
