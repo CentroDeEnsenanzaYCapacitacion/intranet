@@ -160,7 +160,7 @@
                 <th class="num" style="width: 14%;">Base</th>
                 <th class="num" style="width: 14%;">Percepciones</th>
                 <th class="num" style="width: 13%;">Deducciones</th>
-                <th class="num" style="width: 12%;">Neto</th>
+                <th class="num" style="width: 12%;">Total</th>
             </tr>
             @php
                 $subHours = 0;

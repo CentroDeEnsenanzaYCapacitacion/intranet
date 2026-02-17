@@ -256,11 +256,14 @@ class RosterController extends Controller
 
                 $netPay = $baseCost + $perceptionsSum - $deductionsSum;
 
+                $costPerDay = $hasRoster ? $staffDeptCosts->where('is_roster', true)->sum('cost') : 0;
+
                 $rows[] = [
                     'name' => $staff->name . ' ' . $staff->surnames,
                     'position' => $staff->position ?? '-',
-                    'type' => $hasRoster ? 'Planilla' : 'Horas',
+                    'type' => $hasRoster ? 'Nómina' : 'Honorarios',
                     'hours' => $hours,
+                    'costPerDay' => $costPerDay,
                     'baseCost' => $baseCost,
                     'perceptions' => $perceptionsSum,
                     'deductions' => $deductionsSum,

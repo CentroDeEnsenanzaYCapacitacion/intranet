@@ -94,6 +94,7 @@ class PdfController extends Controller
         $htmlContent = view('pdf.payroll_report', compact('report', 'logoBase64', 'dracBase64'))->render();
 
         $pdf = new TCPDF('L', 'mm', 'LETTER', true, 'UTF-8', false);
+        $pdf->SetTitle('Reporte de Nómina');
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->SetMargins(10, 10, 10);
@@ -101,7 +102,7 @@ class PdfController extends Controller
         $pdf->AddPage();
         $pdf->writeHTML($htmlContent, true, false, true, false, '');
 
-        $pdf->Output('reporte_nomina.pdf', 'I');
+        $pdf->Output('Reporte de Nómina.pdf', 'I');
     }
 
     public static function generateFeeCheck(array $report)
@@ -117,6 +118,7 @@ class PdfController extends Controller
         $htmlContent = view('pdf.fee_check', compact('report', 'logoBase64', 'dracBase64'))->render();
 
         $pdf = new TCPDF('L', 'mm', 'LETTER', true, 'UTF-8', false);
+        $pdf->SetTitle('Cotejador de Honorarios');
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->SetMargins(10, 10, 10);
@@ -124,6 +126,6 @@ class PdfController extends Controller
         $pdf->AddPage();
         $pdf->writeHTML($htmlContent, true, false, true, false, '');
 
-        $pdf->Output('cotejador_honorarios.pdf', 'I');
+        $pdf->Output('Cotejador de Honorarios.pdf', 'I');
     }
 }

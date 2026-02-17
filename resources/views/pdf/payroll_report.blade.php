@@ -156,15 +156,13 @@
             <tr>
                 <th style="width: 25%;">Empleado</th>
                 <th style="width: 12%;">Puesto</th>
-                <th style="width: 8%;">Tipo</th>
-                <th class="num" style="width: 8%;">Horas</th>
-                <th class="num" style="width: 12%;">Sueldo Base</th>
-                <th class="num" style="width: 12%;">Percepciones</th>
-                <th class="num" style="width: 11%;">Deducciones</th>
-                <th class="num" style="width: 12%;">Neto</th>
+                <th class="num" style="width: 10%;">Costo/Día</th>
+                <th class="num" style="width: 14%;">Sueldo Base</th>
+                <th class="num" style="width: 14%;">Percepciones</th>
+                <th class="num" style="width: 13%;">Deducciones</th>
+                <th class="num" style="width: 12%;">Total</th>
             </tr>
             @php
-                $subHours = 0;
                 $subBase = 0;
                 $subPerceptions = 0;
                 $subDeductions = 0;
@@ -172,7 +170,6 @@
             @endphp
             @foreach ($crewReport['rows'] as $row)
                 @php
-                    $subHours += $row['hours'];
                     $subBase += $row['baseCost'];
                     $subPerceptions += $row['perceptions'];
                     $subDeductions += $row['deductions'];
@@ -181,8 +178,7 @@
                 <tr>
                     <td>{{ $row['name'] }}</td>
                     <td>{{ $row['position'] }}</td>
-                    <td>{{ $row['type'] }}</td>
-                    <td class="num">{{ $row['hours'] > 0 ? number_format($row['hours'], 1) : '-' }}</td>
+                    <td class="num">${{ number_format($row['costPerDay'], 2) }}</td>
                     <td class="num">${{ number_format($row['baseCost'], 2) }}</td>
                     <td class="num">{{ $row['perceptions'] > 0 ? '$' . number_format($row['perceptions'], 2) : '-' }}</td>
                     <td class="num">{{ $row['deductions'] > 0 ? '$' . number_format($row['deductions'], 2) : '-' }}</td>
@@ -190,8 +186,8 @@
                 </tr>
             @endforeach
             <tr class="subtotal">
-                <td colspan="3" style="text-align: right;">Subtotal {{ $crewReport['crew']->name }}</td>
-                <td class="num">{{ $subHours > 0 ? number_format($subHours, 1) : '-' }}</td>
+                <td colspan="2" style="text-align: right;">Subtotal {{ $crewReport['crew']->name }}</td>
+                <td class="num"></td>
                 <td class="num">${{ number_format($subBase, 2) }}</td>
                 <td class="num">{{ $subPerceptions > 0 ? '$' . number_format($subPerceptions, 2) : '-' }}</td>
                 <td class="num">{{ $subDeductions > 0 ? '$' . number_format($subDeductions, 2) : '-' }}</td>
@@ -201,10 +197,6 @@
     @endforeach
 
     <table class="grand-total">
-        <tr>
-            <td class="label">TOTAL HORAS:</td>
-            <td class="value">{{ number_format($report['totalHours'], 1) }}</td>
-        </tr>
         <tr>
             <td class="label">TOTAL NÓMINA:</td>
             <td class="value">${{ number_format($report['totalCost'], 2) }}</td>
