@@ -236,6 +236,11 @@ class RosterController extends Controller
                     ->where('staff_id', $staff->id);
 
                 $hours = $staffAssignments->sum('hours');
+
+                if (!$rosterFilter && $hours <= 0) {
+                    continue;
+                }
+
                 $baseCost = $data['totalCostByStaff'][$staff->id] ?? 0;
 
                 $adjustments = $staff->filtered_adjustments ?? collect();
