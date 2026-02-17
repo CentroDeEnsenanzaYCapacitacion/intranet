@@ -154,11 +154,11 @@
                                     <span style="font-weight: 600; color: #1a1a1a; font-size: 14px;">{{ $staff->name }} {{ $staff->surnames }}</span>
                                     <div style="margin-top: 4px; font-size: 13px; color: #6b7280;">
                                         @if ($hasRoster)
-                                            <span class="badge badge-primary" style="font-size: 10px; padding: 4px 10px;">PLANILLA</span>
+                                            <span class="badge badge-primary" style="font-size: 10px; padding: 4px 10px;">NÓMINA</span>
                                             <span>{{ $periodDays }} días</span>
                                         @endif
                                         @if ($hoursForThisCrew > 0)
-                                            <span class="badge badge-gray" style="font-size: 10px; padding: 4px 10px;">POR HORAS</span>
+                                            <span class="badge badge-gray" style="font-size: 10px; padding: 4px 10px;">HONORARIOS</span>
                                             <span>{{ number_format($hoursForThisCrew, 2) }} horas</span>
                                         @endif
                                     </div>

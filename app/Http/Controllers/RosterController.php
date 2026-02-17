@@ -355,10 +355,10 @@ class RosterController extends Controller
                     return $staff;
                 });
 
-            $rosterStaffIds = StaffDepartmentCost::where('is_roster', true)->pluck('staff_id')->unique();
-            $rosterStaff = Staff::where('crew_id', $crew->id)
+            $staffWithCostIds = StaffDepartmentCost::pluck('staff_id')->unique();
+            $activeStaffWithCosts = Staff::where('crew_id', $crew->id)
                 ->where('isActive', true)
-                ->whereIn('id', $rosterStaffIds)
+                ->whereIn('id', $staffWithCostIds)
                 ->with('departmentCosts')
                 ->get()
                 ->map(function ($staff) use ($year, $month, $period, $crew) {
@@ -372,7 +372,7 @@ class RosterController extends Controller
                     return $staff;
                 });
 
-            $mergedStaff = $staffWithHours->merge($rosterStaff)->unique('id')->map(function ($staff) use ($year, $month, $period, $crew) {
+            $mergedStaff = $staffWithHours->merge($activeStaffWithCosts)->unique('id')->map(function ($staff) use ($year, $month, $period, $crew) {
                 if (!isset($staff->filtered_adjustments)) {
                     $staff->filtered_adjustments = $staff->adjustments()
                         ->where('year', $year)
