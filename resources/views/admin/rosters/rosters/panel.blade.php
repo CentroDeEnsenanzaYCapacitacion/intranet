@@ -287,12 +287,20 @@
                     <div style="font-size: 32px; font-weight: 700; color: #F57F17;">${{ number_format($adjustedTotalCost, 2) }}</div>
                 </div>
             </div>
-            <a href="{{ route('admin.rosters.payroll.report', ['year' => request('year', now()->year), 'month' => request('month', now()->month), 'period' => request('period', '8-22'), 'crew' => request('crew')]) }}" target="_blank" class="btn-modern btn-primary" style="min-width: 260px; text-decoration: none;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 9V2H18V9M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18M6 14H18V22H6V14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Imprimir reporte de nómina
-            </a>
+            <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                <a href="{{ route('admin.rosters.payroll.fee-check', ['year' => request('year', now()->year), 'month' => request('month', now()->month), 'period' => request('period', '8-22'), 'crew' => request('crew')]) }}" target="_blank" class="btn-modern btn-primary" style="min-width: 260px; text-decoration: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Cotejador de honorarios
+                </a>
+                <a href="{{ route('admin.rosters.payroll.report', ['year' => request('year', now()->year), 'month' => request('month', now()->month), 'period' => request('period', '8-22'), 'crew' => request('crew')]) }}" target="_blank" class="btn-modern btn-primary" style="min-width: 260px; text-decoration: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 9V2H18V9M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18M6 14H18V22H6V14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Reporte de nómina
+                </a>
+            </div>
         </div>
     </div>
 

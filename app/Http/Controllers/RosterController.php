@@ -197,21 +197,39 @@ class RosterController extends Controller
 
     public function payrollReport(Request $request)
     {
+        return $this->buildReport($request, true, 'generatePayrollReport');
+    }
+
+    public function feeCheck(Request $request)
+    {
+        return $this->buildReport($request, false, 'generateFeeCheck');
+    }
+
+    private function buildReport(Request $request, bool $rosterFilter, string $pdfMethod)
+    {
         $data = $this->calculatePayroll($request);
-        $departments = Department::where('is_active', true)->get()->keyBy('id');
 
         $year = $request->input('year', now()->year);
         $month = $request->input('month', now()->month);
         $period = $request->input('period', '8-22');
 
         $crewsReport = [];
+        $grandTotalHours = 0;
+        $grandTotalCost = 0;
 
         foreach ($data['staffGrouped'] as $crewId => $staffList) {
             $crew = $data['allCrews']->firstWhere('id', $crewId);
             $rows = [];
+            $crewHours = 0;
+            $crewCost = 0;
 
             foreach ($staffList as $staff) {
                 $staffDeptCosts = $data['allDepartmentCosts']->get($staff->id, collect());
+                $hasRoster = $staffDeptCosts->contains('is_roster', true);
+
+                if ($hasRoster !== $rosterFilter) {
+                    continue;
+                }
 
                 $staffAssignments = $data['assignments']
                     ->where('crew_id', $crewId)
@@ -219,7 +237,6 @@ class RosterController extends Controller
 
                 $hours = $staffAssignments->sum('hours');
                 $baseCost = $data['totalCostByStaff'][$staff->id] ?? 0;
-                $hasRoster = $staffDeptCosts->contains('is_roster', true);
 
                 $adjustments = $staff->filtered_adjustments ?? collect();
                 $perceptionsSum = 0;
@@ -232,6 +249,8 @@ class RosterController extends Controller
                     }
                 }
 
+                $netPay = $baseCost + $perceptionsSum - $deductionsSum;
+
                 $rows[] = [
                     'name' => $staff->name . ' ' . $staff->surnames,
                     'position' => $staff->position ?? '-',
@@ -240,16 +259,24 @@ class RosterController extends Controller
                     'baseCost' => $baseCost,
                     'perceptions' => $perceptionsSum,
                     'deductions' => $deductionsSum,
-                    'netPay' => $baseCost + $perceptionsSum - $deductionsSum,
+                    'netPay' => $netPay,
+                ];
+
+                $crewHours += $hours;
+                $crewCost += $netPay;
+            }
+
+            if (!empty($rows)) {
+                $crewsReport[] = [
+                    'crew' => $crew,
+                    'rows' => $rows,
+                    'totalHours' => $crewHours,
+                    'totalCost' => $crewCost,
                 ];
             }
 
-            $crewsReport[] = [
-                'crew' => $crew,
-                'rows' => $rows,
-                'totalHours' => $data['totalHoursByCrew'][$crewId] ?? 0,
-                'totalCost' => $data['totalCostByCrew'][$crewId] ?? 0,
-            ];
+            $grandTotalHours += $crewHours;
+            $grandTotalCost += $crewCost;
         }
 
         $reportData = [
@@ -258,11 +285,11 @@ class RosterController extends Controller
             'month' => $month,
             'period' => $period,
             'periodDays' => $data['periodDays'],
-            'totalHours' => $data['totalHours'],
-            'totalCost' => $data['adjustedTotalCost'],
+            'totalHours' => $grandTotalHours,
+            'totalCost' => $grandTotalCost,
         ];
 
-        return PdfController::generatePayrollReport($reportData);
+        return PdfController::$pdfMethod($reportData);
     }
 
     private function calculatePayroll(Request $request)
