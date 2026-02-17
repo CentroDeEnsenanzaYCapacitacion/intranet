@@ -204,7 +204,7 @@
             <td class="value">{{ number_format($report['totalHours'], 1) }}</td>
         </tr>
         <tr>
-            <td class="label">TOTAL NÓMINA:</td>
+            <td class="label">TOTAL A PAGAR:</td>
             <td class="value">${{ number_format($report['totalCost'], 2) }}</td>
         </tr>
     </table>
