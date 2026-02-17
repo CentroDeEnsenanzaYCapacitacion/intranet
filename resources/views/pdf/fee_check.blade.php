@@ -154,27 +154,21 @@
         <div class="crew-title">{{ $crewReport['crew']->name }}</div>
         <table class="data-table">
             <tr>
-                <th style="width: 25%;">Proveedor</th>
-                <th style="width: 12%;">Nivel</th>
-                <th class="num" style="width: 10%;">Horas</th>
-                <th class="num" style="width: 14%;">Base</th>
-                <th class="num" style="width: 14%;">Percepciones</th>
-                <th class="num" style="width: 13%;">Deducciones</th>
-                <th class="num" style="width: 12%;">Total</th>
+                <th style="width: 35%;">Proveedor</th>
+                <th style="width: 15%;">Nivel</th>
+                <th class="num" style="width: 15%;">Horas</th>
+                <th class="num" style="width: 17%;">Base</th>
+                <th class="num" style="width: 18%;">Total</th>
             </tr>
             @php
                 $subHours = 0;
                 $subBase = 0;
-                $subPerceptions = 0;
-                $subDeductions = 0;
                 $subNet = 0;
             @endphp
             @foreach ($crewReport['rows'] as $row)
                 @php
                     $subHours += $row['hours'];
                     $subBase += $row['baseCost'];
-                    $subPerceptions += $row['perceptions'];
-                    $subDeductions += $row['deductions'];
                     $subNet += $row['netPay'];
                 @endphp
                 <tr>
@@ -182,8 +176,6 @@
                     <td>{{ $row['position'] }}</td>
                     <td class="num">{{ $row['hours'] > 0 ? number_format($row['hours'], 1) : '-' }}</td>
                     <td class="num">${{ number_format($row['baseCost'], 2) }}</td>
-                    <td class="num">{{ $row['perceptions'] > 0 ? '$' . number_format($row['perceptions'], 2) : '-' }}</td>
-                    <td class="num">{{ $row['deductions'] > 0 ? '$' . number_format($row['deductions'], 2) : '-' }}</td>
                     <td class="num">${{ number_format($row['netPay'], 2) }}</td>
                 </tr>
             @endforeach
@@ -191,8 +183,6 @@
                 <td colspan="2" style="text-align: right;">Subtotal {{ $crewReport['crew']->name }}</td>
                 <td class="num">{{ $subHours > 0 ? number_format($subHours, 1) : '-' }}</td>
                 <td class="num">${{ number_format($subBase, 2) }}</td>
-                <td class="num">{{ $subPerceptions > 0 ? '$' . number_format($subPerceptions, 2) : '-' }}</td>
-                <td class="num">{{ $subDeductions > 0 ? '$' . number_format($subDeductions, 2) : '-' }}</td>
                 <td class="num">${{ number_format($subNet, 2) }}</td>
             </tr>
         </table>
