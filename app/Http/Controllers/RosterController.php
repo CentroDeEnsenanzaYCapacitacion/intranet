@@ -184,6 +184,124 @@ class RosterController extends Controller
 
     public function rosters(Request $request)
     {
+        $data = $this->calculatePayroll($request);
+
+        $adjustmentDefinitions = \App\Models\AdjustmentDefinition::all();
+        $departments = Department::where('is_active', true)->get()->keyBy('id');
+
+        return view('admin.rosters.rosters.panel', array_merge($data, compact(
+            'adjustmentDefinitions',
+            'departments'
+        )));
+    }
+
+    public function payrollReport(Request $request)
+    {
+        return $this->buildReport($request, true, 'generatePayrollReport');
+    }
+
+    public function feeCheck(Request $request)
+    {
+        return $this->buildReport($request, false, 'generateFeeCheck');
+    }
+
+    private function buildReport(Request $request, bool $rosterFilter, string $pdfMethod)
+    {
+        $data = $this->calculatePayroll($request);
+
+        $year = $request->input('year', now()->year);
+        $month = $request->input('month', now()->month);
+        $period = $request->input('period', '8-22');
+
+        $crewsReport = [];
+        $grandTotalHours = 0;
+        $grandTotalCost = 0;
+
+        foreach ($data['staffGrouped'] as $crewId => $staffList) {
+            $crew = $data['allCrews']->firstWhere('id', $crewId);
+            $rows = [];
+            $crewHours = 0;
+            $crewCost = 0;
+
+            foreach ($staffList as $staff) {
+                $staffDeptCosts = $data['allDepartmentCosts']->get($staff->id, collect());
+                $hasRoster = $staffDeptCosts->contains('is_roster', true);
+
+                if ($hasRoster !== $rosterFilter) {
+                    continue;
+                }
+
+                $staffAssignments = $data['assignments']
+                    ->where('crew_id', $crewId)
+                    ->where('staff_id', $staff->id);
+
+                $hours = $staffAssignments->sum('hours');
+
+                if (!$rosterFilter && $hours <= 0) {
+                    continue;
+                }
+
+                $baseCost = $data['totalCostByStaff'][$staff->id] ?? 0;
+
+                $adjustments = $staff->filtered_adjustments ?? collect();
+                $perceptionsSum = 0;
+                $deductionsSum = 0;
+                foreach ($adjustments as $adj) {
+                    if ($adj->adjustmentDefinition->type === 'perception') {
+                        $perceptionsSum += $adj->amount;
+                    } else {
+                        $deductionsSum += $adj->amount;
+                    }
+                }
+
+                $netPay = $baseCost + $perceptionsSum - $deductionsSum;
+
+                $costPerDay = $hasRoster ? $staffDeptCosts->where('is_roster', true)->sum('cost') : 0;
+
+                $rows[] = [
+                    'name' => $staff->name . ' ' . $staff->surnames,
+                    'position' => $staff->position ?? '-',
+                    'type' => $hasRoster ? 'Nómina' : 'Honorarios',
+                    'hours' => $hours,
+                    'costPerDay' => $costPerDay,
+                    'baseCost' => $baseCost,
+                    'perceptions' => $perceptionsSum,
+                    'deductions' => $deductionsSum,
+                    'netPay' => $netPay,
+                ];
+
+                $crewHours += $hours;
+                $crewCost += $netPay;
+            }
+
+            if (!empty($rows)) {
+                $crewsReport[] = [
+                    'crew' => $crew,
+                    'rows' => $rows,
+                    'totalHours' => $crewHours,
+                    'totalCost' => $crewCost,
+                ];
+            }
+
+            $grandTotalHours += $crewHours;
+            $grandTotalCost += $crewCost;
+        }
+
+        $reportData = [
+            'crewsReport' => $crewsReport,
+            'year' => $year,
+            'month' => $month,
+            'period' => $period,
+            'periodDays' => $data['periodDays'],
+            'totalHours' => $grandTotalHours,
+            'totalCost' => $grandTotalCost,
+        ];
+
+        return PdfController::$pdfMethod($reportData);
+    }
+
+    private function calculatePayroll(Request $request)
+    {
         $userCrewId = auth()->user()->crew_id;
         $selectedCrew = $request->get('crew');
 
@@ -245,10 +363,10 @@ class RosterController extends Controller
                     return $staff;
                 });
 
-            $rosterStaffIds = StaffDepartmentCost::where('is_roster', true)->pluck('staff_id')->unique();
-            $rosterStaff = Staff::where('crew_id', $crew->id)
+            $staffWithCostIds = StaffDepartmentCost::pluck('staff_id')->unique();
+            $activeStaffWithCosts = Staff::where('crew_id', $crew->id)
                 ->where('isActive', true)
-                ->whereIn('id', $rosterStaffIds)
+                ->whereIn('id', $staffWithCostIds)
                 ->with('departmentCosts')
                 ->get()
                 ->map(function ($staff) use ($year, $month, $period, $crew) {
@@ -262,7 +380,7 @@ class RosterController extends Controller
                     return $staff;
                 });
 
-            $mergedStaff = $staffWithHours->merge($rosterStaff)->unique('id')->map(function ($staff) use ($year, $month, $period, $crew) {
+            $mergedStaff = $staffWithHours->merge($activeStaffWithCosts)->unique('id')->map(function ($staff) use ($year, $month, $period, $crew) {
                 if (!isset($staff->filtered_adjustments)) {
                     $staff->filtered_adjustments = $staff->adjustments()
                         ->where('year', $year)
@@ -340,10 +458,7 @@ class RosterController extends Controller
             }
         }
 
-        $adjustmentDefinitions = \App\Models\AdjustmentDefinition::all();
-        $departments = Department::where('is_active', true)->get()->keyBy('id');
-
-        return view('admin.rosters.rosters.panel', compact(
+        return compact(
             'allCrews',
             'crewsToShow',
             'staffGrouped',
@@ -355,10 +470,8 @@ class RosterController extends Controller
             'totalCostByCrew',
             'totalCostByStaff',
             'totalCost',
-            'adjustmentDefinitions',
             'adjustedTotalCost',
-            'departments',
             'allDepartmentCosts'
-        ));
+        );
     }
 }
