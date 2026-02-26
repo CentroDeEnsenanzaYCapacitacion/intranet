@@ -76,7 +76,7 @@ class PasswordResetController extends Controller
             ]);
         }
 
-        if (now()->diffInMinutes($passwordReset->created_at) > 60) {
+        if ($passwordReset->created_at->addMinutes(60)->isPast()) {
             $passwordReset->delete();
             return redirect()->route('login')->withErrors([
                 'token' => 'El enlace de recuperación ha expirado. Por favor solicita uno nuevo.',
@@ -114,7 +114,7 @@ class PasswordResetController extends Controller
             ]);
         }
 
-        if (now()->diffInMinutes($passwordReset->created_at) > 60) {
+        if ($passwordReset->created_at->addMinutes(60)->isPast()) {
             $passwordReset->delete();
             return back()->withErrors([
                 'token' => 'El enlace de recuperación ha expirado.',
