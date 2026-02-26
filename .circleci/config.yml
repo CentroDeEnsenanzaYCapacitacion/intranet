@@ -233,31 +233,30 @@ jobs:
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
               if [ "$VENDOR_SYNC_SCOPE" = "partial" ]; then
                 echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=partial → syncing changed vendor paths (DEV)"
-                TMP_LFTP_CMDS="$(mktemp /tmp/lftp_vendor_dev_XXXXXX.cmd)"
-                {
-                  echo "set ssl:verify-certificate no"
-                  echo "mirror -R vendor/composer $intra_ftp_dev_path/vendor/composer --verbose --delete"
-                  echo "put vendor/autoload.php -o $intra_ftp_dev_path/vendor/autoload.php"
-                  if [ -s .vendor_changed_packages ]; then
-                    while IFS= read -r package; do
-                      [ -z "$package" ] && continue
-                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$' && [ -d "vendor/$package" ]; then
-                        echo "mirror -R vendor/$package $intra_ftp_dev_path/vendor/$package --verbose --delete"
-                      fi
-                    done < .vendor_changed_packages
-                  fi
-                  if [ -s .vendor_removed_packages ]; then
-                    while IFS= read -r package; do
-                      [ -z "$package" ] && continue
-                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$'; then
-                        echo "glob -a rm -r $intra_ftp_dev_path/vendor/$package"
-                      fi
-                    done < .vendor_removed_packages
-                  fi
-                  echo "quit"
-                } > "$TMP_LFTP_CMDS"
-                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -f "$TMP_LFTP_CMDS"
-                rm -f "$TMP_LFTP_CMDS"
+                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; \
+                  mirror -R vendor/composer $intra_ftp_dev_path/vendor/composer --verbose --delete; \
+                  put vendor/autoload.php -o $intra_ftp_dev_path/vendor/autoload.php; \
+                  quit"
+                if [ -s .vendor_changed_packages ]; then
+                  while IFS= read -r package; do
+                    [ -z "$package" ] && continue
+                    if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$' && [ -d "vendor/$package" ]; then
+                      lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; \
+                        mirror -R vendor/$package $intra_ftp_dev_path/vendor/$package --verbose --delete; \
+                        quit"
+                    fi
+                  done < .vendor_changed_packages
+                fi
+                if [ -s .vendor_removed_packages ]; then
+                  while IFS= read -r package; do
+                    [ -z "$package" ] && continue
+                    if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$'; then
+                      lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; \
+                        glob -a rm -r $intra_ftp_dev_path/vendor/$package; \
+                        quit" || true
+                    fi
+                  done < .vendor_removed_packages
+                fi
               else
                 echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=full → syncing full vendor/ (DEV)"
                 lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
@@ -476,31 +475,30 @@ jobs:
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
               if [ "$VENDOR_SYNC_SCOPE" = "partial" ]; then
                 echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=partial → syncing changed vendor paths (PROD)"
-                TMP_LFTP_CMDS="$(mktemp /tmp/lftp_vendor_prod_XXXXXX.cmd)"
-                {
-                  echo "set ssl:verify-certificate no"
-                  echo "mirror -R vendor/composer $intra_ftp_prod_path/vendor/composer --verbose --delete"
-                  echo "put vendor/autoload.php -o $intra_ftp_prod_path/vendor/autoload.php"
-                  if [ -s .vendor_changed_packages ]; then
-                    while IFS= read -r package; do
-                      [ -z "$package" ] && continue
-                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$' && [ -d "vendor/$package" ]; then
-                        echo "mirror -R vendor/$package $intra_ftp_prod_path/vendor/$package --verbose --delete"
-                      fi
-                    done < .vendor_changed_packages
-                  fi
-                  if [ -s .vendor_removed_packages ]; then
-                    while IFS= read -r package; do
-                      [ -z "$package" ] && continue
-                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$'; then
-                        echo "glob -a rm -r $intra_ftp_prod_path/vendor/$package"
-                      fi
-                    done < .vendor_removed_packages
-                  fi
-                  echo "quit"
-                } > "$TMP_LFTP_CMDS"
-                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -f "$TMP_LFTP_CMDS"
-                rm -f "$TMP_LFTP_CMDS"
+                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; \
+                  mirror -R vendor/composer $intra_ftp_prod_path/vendor/composer --verbose --delete; \
+                  put vendor/autoload.php -o $intra_ftp_prod_path/vendor/autoload.php; \
+                  quit"
+                if [ -s .vendor_changed_packages ]; then
+                  while IFS= read -r package; do
+                    [ -z "$package" ] && continue
+                    if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$' && [ -d "vendor/$package" ]; then
+                      lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; \
+                        mirror -R vendor/$package $intra_ftp_prod_path/vendor/$package --verbose --delete; \
+                        quit"
+                    fi
+                  done < .vendor_changed_packages
+                fi
+                if [ -s .vendor_removed_packages ]; then
+                  while IFS= read -r package; do
+                    [ -z "$package" ] && continue
+                    if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$'; then
+                      lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; \
+                        glob -a rm -r $intra_ftp_prod_path/vendor/$package; \
+                        quit" || true
+                    fi
+                  done < .vendor_removed_packages
+                fi
               else
                 echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=full → syncing full vendor/ (PROD)"
                 lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
