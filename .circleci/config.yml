@@ -28,41 +28,7 @@ jobs:
             fi
             source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ] && git cat-file -e HEAD^:composer.lock >/dev/null 2>&1 && [ -f composer.lock ]; then
-              cat > /tmp/vendor_delta.php <<'PHP'
-              <?php
-              $old = json_decode(shell_exec('git show HEAD^:composer.lock 2>/dev/null'), true);
-              $new = json_decode(file_get_contents('composer.lock'), true);
-              $collect = function (?array $data): array {
-                  $packages = array_merge($data['packages'] ?? [], $data['packages-dev'] ?? []);
-                  $map = [];
-                  foreach ($packages as $package) {
-                      if (!isset($package['name'], $package['version'])) {
-                          continue;
-                      }
-                      $map[$package['name']] = $package['version'];
-                  }
-                  ksort($map);
-                  return $map;
-              };
-              $oldMap = $collect($old);
-              $newMap = $collect($new);
-              $changed = [];
-              foreach ($newMap as $name => $version) {
-                  if (!isset($oldMap[$name]) || $oldMap[$name] !== $version) {
-                      $changed[] = $name;
-                  }
-              }
-              $removed = [];
-              foreach ($oldMap as $name => $version) {
-                  if (!isset($newMap[$name])) {
-                      $removed[] = $name;
-                  }
-              }
-              file_put_contents('.vendor_changed_packages', implode(PHP_EOL, $changed));
-              file_put_contents('.vendor_removed_packages', implode(PHP_EOL, $removed));
-              PHP
-              php /tmp/vendor_delta.php
-              rm -f /tmp/vendor_delta.php
+              php -r '$old = json_decode(shell_exec("git show HEAD^:composer.lock 2>/dev/null"), true); $new = json_decode(file_get_contents("composer.lock"), true); $collect = function (?array $data): array { $packages = array_merge($data["packages"] ?? [], $data["packages-dev"] ?? []); $map = []; foreach ($packages as $package) { if (!isset($package["name"], $package["version"])) { continue; } $map[$package["name"]] = $package["version"]; } ksort($map); return $map; }; $oldMap = $collect($old); $newMap = $collect($new); $changed = []; foreach ($newMap as $name => $version) { if (!isset($oldMap[$name]) || $oldMap[$name] !== $version) { $changed[] = $name; } } $removed = []; foreach ($oldMap as $name => $version) { if (!isset($newMap[$name])) { $removed[] = $name; } } file_put_contents(".vendor_changed_packages", implode(PHP_EOL, $changed)); file_put_contents(".vendor_removed_packages", implode(PHP_EOL, $removed));'
               echo "partial" > .vendor_sync_scope
             else
               : > .vendor_changed_packages
@@ -349,41 +315,7 @@ jobs:
             fi
             source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ] && git cat-file -e HEAD^:composer.lock >/dev/null 2>&1 && [ -f composer.lock ]; then
-              cat > /tmp/vendor_delta.php <<'PHP'
-              <?php
-              $old = json_decode(shell_exec('git show HEAD^:composer.lock 2>/dev/null'), true);
-              $new = json_decode(file_get_contents('composer.lock'), true);
-              $collect = function (?array $data): array {
-                  $packages = array_merge($data['packages'] ?? [], $data['packages-dev'] ?? []);
-                  $map = [];
-                  foreach ($packages as $package) {
-                      if (!isset($package['name'], $package['version'])) {
-                          continue;
-                      }
-                      $map[$package['name']] = $package['version'];
-                  }
-                  ksort($map);
-                  return $map;
-              };
-              $oldMap = $collect($old);
-              $newMap = $collect($new);
-              $changed = [];
-              foreach ($newMap as $name => $version) {
-                  if (!isset($oldMap[$name]) || $oldMap[$name] !== $version) {
-                      $changed[] = $name;
-                  }
-              }
-              $removed = [];
-              foreach ($oldMap as $name => $version) {
-                  if (!isset($newMap[$name])) {
-                      $removed[] = $name;
-                  }
-              }
-              file_put_contents('.vendor_changed_packages', implode(PHP_EOL, $changed));
-              file_put_contents('.vendor_removed_packages', implode(PHP_EOL, $removed));
-              PHP
-              php /tmp/vendor_delta.php
-              rm -f /tmp/vendor_delta.php
+              php -r '$old = json_decode(shell_exec("git show HEAD^:composer.lock 2>/dev/null"), true); $new = json_decode(file_get_contents("composer.lock"), true); $collect = function (?array $data): array { $packages = array_merge($data["packages"] ?? [], $data["packages-dev"] ?? []); $map = []; foreach ($packages as $package) { if (!isset($package["name"], $package["version"])) { continue; } $map[$package["name"]] = $package["version"]; } ksort($map); return $map; }; $oldMap = $collect($old); $newMap = $collect($new); $changed = []; foreach ($newMap as $name => $version) { if (!isset($oldMap[$name]) || $oldMap[$name] !== $version) { $changed[] = $name; } } $removed = []; foreach ($oldMap as $name => $version) { if (!isset($newMap[$name])) { $removed[] = $name; } } file_put_contents(".vendor_changed_packages", implode(PHP_EOL, $changed)); file_put_contents(".vendor_removed_packages", implode(PHP_EOL, $removed));'
               echo "partial" > .vendor_sync_scope
             else
               : > .vendor_changed_packages
