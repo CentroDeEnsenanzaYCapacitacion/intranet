@@ -26,6 +26,15 @@ jobs:
               echo "No previous commit (first build); assuming dependency changes."
               echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
             fi
+            source "$BASH_ENV"
+            if [ "$COMPOSER_CHANGED" = "yes" ] && git cat-file -e HEAD^:composer.lock >/dev/null 2>&1 && [ -f composer.lock ]; then
+              php -r '$old = json_decode(shell_exec("git show HEAD^:composer.lock 2>/dev/null"), true); $new = json_decode(file_get_contents("composer.lock"), true); $collect = function (?array $data): array { $packages = array_merge($data["packages"] ?? [], $data["packages-dev"] ?? []); $map = []; foreach ($packages as $package) { if (!isset($package["name"], $package["version"])) { continue; } $map[$package["name"]] = $package["version"]; } ksort($map); return $map; }; $oldMap = $collect($old); $newMap = $collect($new); $changed = []; foreach ($newMap as $name => $version) { if (!isset($oldMap[$name]) || $oldMap[$name] !== $version) { $changed[] = $name; } } $removed = []; foreach ($oldMap as $name => $version) { if (!isset($newMap[$name])) { $removed[] = $name; } } file_put_contents(".vendor_changed_packages", implode(PHP_EOL, $changed)); file_put_contents(".vendor_removed_packages", implode(PHP_EOL, $removed));'
+              echo "partial" > .vendor_sync_scope
+            else
+              : > .vendor_changed_packages
+              : > .vendor_removed_packages
+              echo "full" > .vendor_sync_scope
+            fi
 
       - run:
           name: Install PHP dependencies DEV
@@ -42,6 +51,9 @@ jobs:
           root: .
           paths:
             - .composer_changed
+            - .vendor_sync_scope
+            - .vendor_changed_packages
+            - .vendor_removed_packages
             - vendor
             - composer.json
             - composer.lock
@@ -133,6 +145,14 @@ jobs:
               export COMPOSER_CHANGED=yes
             fi
             echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
+            if [ -f .vendor_sync_scope ]; then
+              export VENDOR_SYNC_SCOPE="$(cat .vendor_sync_scope)"
+              echo "VENDOR_SYNC_SCOPE from workspace: $VENDOR_SYNC_SCOPE"
+            else
+              echo ".vendor_sync_scope not found, assuming full"
+              export VENDOR_SYNC_SCOPE=full
+            fi
+            echo "VENDOR_SYNC_SCOPE=$VENDOR_SYNC_SCOPE" >> "$BASH_ENV"
 
       - run:
           name: Run migrations DEV
@@ -211,10 +231,39 @@ jobs:
           command: |
             source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → syncing vendor/ (DEV)"
-              lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
-                --verbose; \
-                quit"
+              if [ "$VENDOR_SYNC_SCOPE" = "partial" ]; then
+                echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=partial → syncing changed vendor paths (DEV)"
+                TMP_LFTP_CMDS="$(mktemp /tmp/lftp_vendor_dev_XXXXXX.cmd)"
+                {
+                  echo "set ssl:verify-certificate no"
+                  echo "mirror -R vendor/composer $intra_ftp_dev_path/vendor/composer --verbose --delete"
+                  echo "put vendor/autoload.php -o $intra_ftp_dev_path/vendor/autoload.php"
+                  if [ -s .vendor_changed_packages ]; then
+                    while IFS= read -r package; do
+                      [ -z "$package" ] && continue
+                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$' && [ -d "vendor/$package" ]; then
+                        echo "mirror -R vendor/$package $intra_ftp_dev_path/vendor/$package --verbose --delete"
+                      fi
+                    done < .vendor_changed_packages
+                  fi
+                  if [ -s .vendor_removed_packages ]; then
+                    while IFS= read -r package; do
+                      [ -z "$package" ] && continue
+                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$'; then
+                        echo "glob -a rm -r $intra_ftp_dev_path/vendor/$package"
+                      fi
+                    done < .vendor_removed_packages
+                  fi
+                  echo "quit"
+                } > "$TMP_LFTP_CMDS"
+                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -f "$TMP_LFTP_CMDS"
+                rm -f "$TMP_LFTP_CMDS"
+              else
+                echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=full → syncing full vendor/ (DEV)"
+                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_dev_path/vendor \
+                  --verbose; \
+                  quit"
+              fi
             else
               echo "COMPOSER_CHANGED=no → vendor/ not synced (DEV)"
             fi
@@ -264,6 +313,15 @@ jobs:
               echo "No previous commit (first build); assuming dependency changes."
               echo 'COMPOSER_CHANGED=yes' >> "$BASH_ENV"
             fi
+            source "$BASH_ENV"
+            if [ "$COMPOSER_CHANGED" = "yes" ] && git cat-file -e HEAD^:composer.lock >/dev/null 2>&1 && [ -f composer.lock ]; then
+              php -r '$old = json_decode(shell_exec("git show HEAD^:composer.lock 2>/dev/null"), true); $new = json_decode(file_get_contents("composer.lock"), true); $collect = function (?array $data): array { $packages = array_merge($data["packages"] ?? [], $data["packages-dev"] ?? []); $map = []; foreach ($packages as $package) { if (!isset($package["name"], $package["version"])) { continue; } $map[$package["name"]] = $package["version"]; } ksort($map); return $map; }; $oldMap = $collect($old); $newMap = $collect($new); $changed = []; foreach ($newMap as $name => $version) { if (!isset($oldMap[$name]) || $oldMap[$name] !== $version) { $changed[] = $name; } } $removed = []; foreach ($oldMap as $name => $version) { if (!isset($newMap[$name])) { $removed[] = $name; } } file_put_contents(".vendor_changed_packages", implode(PHP_EOL, $changed)); file_put_contents(".vendor_removed_packages", implode(PHP_EOL, $removed));'
+              echo "partial" > .vendor_sync_scope
+            else
+              : > .vendor_changed_packages
+              : > .vendor_removed_packages
+              echo "full" > .vendor_sync_scope
+            fi
 
       - run:
           name: Install PHP dependencies PROD
@@ -281,6 +339,9 @@ jobs:
           root: .
           paths:
             - .composer_changed
+            - .vendor_sync_scope
+            - .vendor_changed_packages
+            - .vendor_removed_packages
             - vendor
             - composer.json
             - composer.lock
@@ -327,6 +388,14 @@ jobs:
               export COMPOSER_CHANGED=yes
             fi
             echo "COMPOSER_CHANGED=$COMPOSER_CHANGED" >> "$BASH_ENV"
+            if [ -f .vendor_sync_scope ]; then
+              export VENDOR_SYNC_SCOPE="$(cat .vendor_sync_scope)"
+              echo "VENDOR_SYNC_SCOPE from workspace: $VENDOR_SYNC_SCOPE"
+            else
+              echo ".vendor_sync_scope not found, assuming full"
+              export VENDOR_SYNC_SCOPE=full
+            fi
+            echo "VENDOR_SYNC_SCOPE=$VENDOR_SYNC_SCOPE" >> "$BASH_ENV"
 
       - run:
           name: Run migrations PROD
@@ -405,10 +474,39 @@ jobs:
           command: |
             source "$BASH_ENV"
             if [ "$COMPOSER_CHANGED" = "yes" ]; then
-              echo "COMPOSER_CHANGED=yes → syncing vendor/ (PROD)"
-              lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
-                --verbose; \
-                quit"
+              if [ "$VENDOR_SYNC_SCOPE" = "partial" ]; then
+                echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=partial → syncing changed vendor paths (PROD)"
+                TMP_LFTP_CMDS="$(mktemp /tmp/lftp_vendor_prod_XXXXXX.cmd)"
+                {
+                  echo "set ssl:verify-certificate no"
+                  echo "mirror -R vendor/composer $intra_ftp_prod_path/vendor/composer --verbose --delete"
+                  echo "put vendor/autoload.php -o $intra_ftp_prod_path/vendor/autoload.php"
+                  if [ -s .vendor_changed_packages ]; then
+                    while IFS= read -r package; do
+                      [ -z "$package" ] && continue
+                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$' && [ -d "vendor/$package" ]; then
+                        echo "mirror -R vendor/$package $intra_ftp_prod_path/vendor/$package --verbose --delete"
+                      fi
+                    done < .vendor_changed_packages
+                  fi
+                  if [ -s .vendor_removed_packages ]; then
+                    while IFS= read -r package; do
+                      [ -z "$package" ] && continue
+                      if echo "$package" | grep -Eq '^[a-z0-9_.-]+/[a-z0-9_.-]+$'; then
+                        echo "glob -a rm -r $intra_ftp_prod_path/vendor/$package"
+                      fi
+                    done < .vendor_removed_packages
+                  fi
+                  echo "quit"
+                } > "$TMP_LFTP_CMDS"
+                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -f "$TMP_LFTP_CMDS"
+                rm -f "$TMP_LFTP_CMDS"
+              else
+                echo "COMPOSER_CHANGED=yes and VENDOR_SYNC_SCOPE=full → syncing full vendor/ (PROD)"
+                lftp -u "$ftp_username","$ftp_password" "$ftp_url" -e "set ssl:verify-certificate no; mirror -R vendor $intra_ftp_prod_path/vendor \
+                  --verbose; \
+                  quit"
+              fi
             else
               echo "COMPOSER_CHANGED=no → vendor/ not synced (PROD)"
             fi
