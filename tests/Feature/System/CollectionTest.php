@@ -110,8 +110,21 @@ class CollectionTest extends TestCase
         ]);
         Student::reguard();
 
-        $this->receiptType = ReceiptType::create(['name' => 'Colegiatura']);
+        $this->receiptType = ReceiptType::create(['name' => 'Colegiatura', 'automatic_amount' => 1]);
         $this->paymentType = PaymentType::create(['name' => 'Efectivo']);
+        PaymentType::create(['name' => 'Tarjeta']);
+
+        Amount::create([
+            'crew_id' => $this->crew->id,
+            'course_id' => $this->course->id,
+            'receipt_type_id' => $this->receiptType->id,
+            'amount' => '3500.00',
+        ]);
+
+        ReceiptAttribute::unguard();
+        ReceiptAttribute::create(['name' => 'Anticipo']);
+        ReceiptAttribute::create(['name' => 'Pago completo']);
+        ReceiptAttribute::reguard();
     }
 
     public function test_admin_can_view_collection_menu(): void
@@ -319,5 +332,171 @@ class CollectionTest extends TestCase
             ->get('/system/collection/99999/tuitions');
 
         $response->assertStatus(404);
+    }
+
+    public function test_admin_can_insert_receipt(): void
+    {
+        $this->actingAs($this->admin)
+            ->post('/system/collection/tuition/insert', [
+                'crew_id'         => $this->crew->id,
+                'student_id'      => $this->student->id,
+                'receipt_type_id' => $this->receiptType->id,
+                'concept'         => 'Pago completo Colegiatura Test # 1',
+                'amount'          => '$3,500.00',
+                'attr_id'         => 0,
+            ]);
+
+        $this->assertDatabaseHas('receipts', [
+            'student_id'      => $this->student->id,
+            'receipt_type_id' => $this->receiptType->id,
+            'concept'         => 'Pago completo Colegiatura Test # 1',
+            'amount'          => '3500.00',
+        ]);
+    }
+
+    public function test_insert_receipt_with_surcharge_20_percent(): void
+    {
+        $this->actingAs($this->admin)
+            ->post('/system/collection/tuition/insert', [
+                'crew_id'              => $this->crew->id,
+                'student_id'           => $this->student->id,
+                'receipt_type_id'      => $this->receiptType->id,
+                'concept'              => 'Pago completo Colegiatura Test # 1 con recargo',
+                'amount'               => '$3,500.00',
+                'attr_id'              => 0,
+                'apply_surcharge'      => '1',
+                'surcharge_percentage' => '20',
+            ]);
+
+        $this->assertDatabaseHas('receipts', [
+            'student_id' => $this->student->id,
+            'amount'     => '4200.00',
+        ]);
+    }
+
+    public function test_insert_receipt_with_card_payment(): void
+    {
+        $this->actingAs($this->admin)
+            ->post('/system/collection/tuition/insert', [
+                'crew_id'         => $this->crew->id,
+                'student_id'      => $this->student->id,
+                'receipt_type_id' => $this->receiptType->id,
+                'concept'         => 'Pago completo Colegiatura Test # 1',
+                'amount'          => '$3,500.00',
+                'attr_id'         => 0,
+                'card_payment'    => 'card',
+                'voucher'         => 'VOUCH123',
+            ]);
+
+        $this->assertDatabaseHas('receipts', [
+            'student_id'      => $this->student->id,
+            'payment_type_id' => 2,
+            'voucher'         => 'VOUCH123',
+        ]);
+    }
+
+    public function test_director_cannot_insert_receipt_for_other_crew_student(): void
+    {
+        $otherCrew = Crew::create([
+            'name'      => 'Otro Plantel',
+            'adress'    => 'Otra Direccion',
+            'phone'     => '5552222222',
+            'mail'      => 'otro@test.com',
+            'is_active' => true,
+        ]);
+
+        $modality = Modality::first();
+        $schedule  = Schedule::first();
+
+        Student::unguard();
+        $otherStudent = Student::create([
+            'name'        => 'Otro Estudiante',
+            'surnames'    => 'Test',
+            'curp'        => 'OTRO123456HTSLRN09',
+            'email'       => 'otro@test.com',
+            'phone'       => '5553333333',
+            'cel_phone'   => '5554444444',
+            'genre'       => 'F',
+            'crew_id'     => $otherCrew->id,
+            'course_id'   => $this->course->id,
+            'modality_id' => $modality->id,
+            'schedule_id' => $schedule->id,
+            'generation'  => '2024',
+            'tuition'     => 3500.00,
+        ]);
+        Student::reguard();
+
+        $response = $this->actingAs($this->director)
+            ->post('/system/collection/tuition/insert', [
+                'crew_id'         => $otherCrew->id,
+                'student_id'      => $otherStudent->id,
+                'receipt_type_id' => $this->receiptType->id,
+                'concept'         => 'Pago completo Colegiatura Test # 1',
+                'amount'          => '$3,500.00',
+                'attr_id'         => 0,
+            ]);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseMissing('receipts', [
+            'student_id' => $otherStudent->id,
+        ]);
+    }
+
+    public function test_insert_receipt_fails_with_invalid_surcharge_percentage(): void
+    {
+        $response = $this->actingAs($this->admin)
+            ->post('/system/collection/tuition/insert', [
+                'crew_id'              => $this->crew->id,
+                'student_id'           => $this->student->id,
+                'receipt_type_id'      => $this->receiptType->id,
+                'concept'              => 'Colegiatura Test # 1',
+                'amount'               => '$3,500.00',
+                'attr_id'              => 0,
+                'apply_surcharge'      => '1',
+                'surcharge_percentage' => '99',
+            ]);
+
+        $response->assertSessionHasErrors('surcharge_percentage');
+        $this->assertDatabaseMissing('receipts', ['student_id' => $this->student->id]);
+    }
+
+    public function test_insert_receipt_fails_without_required_fields(): void
+    {
+        $response = $this->actingAs($this->admin)
+            ->post('/system/collection/tuition/insert', [
+                'crew_id'    => $this->crew->id,
+                'student_id' => $this->student->id,
+            ]);
+
+        $response->assertSessionHasErrors(['receipt_type_id', 'concept', 'amount']);
+    }
+
+    public function test_guest_cannot_insert_receipt(): void
+    {
+        $response = $this->post('/system/collection/tuition/insert', [
+            'crew_id'         => $this->crew->id,
+            'student_id'      => $this->student->id,
+            'receipt_type_id' => $this->receiptType->id,
+            'concept'         => 'Colegiatura Test # 1',
+            'amount'          => '$3,500.00',
+        ]);
+
+        $response->assertRedirect(route('login'));
+    }
+
+    public function test_receipt_error_rejects_unknown_message(): void
+    {
+        $response = $this->actingAs($this->admin)
+            ->get('/system/collection/paybills/receiptError?error=' . urlencode('<script>alert(1)</script>'));
+
+        $response->assertSessionHas('error', 'Ha ocurrido un error al procesar el recibo.');
+    }
+
+    public function test_receipt_error_allows_whitelisted_message(): void
+    {
+        $response = $this->actingAs($this->admin)
+            ->get('/system/collection/paybills/receiptError?error=' . urlencode('El valor introducido no es correcto.'));
+
+        $response->assertSessionHas('error', 'El valor introducido no es correcto.');
     }
 }

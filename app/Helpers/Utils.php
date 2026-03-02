@@ -34,10 +34,12 @@ class Utils
     {
         $finalAmount = $amount;
         if (!isset($report_id)) {
-            if ($amount[0] == '$') {
+            if (is_string($amount) && strlen($amount) > 0 && $amount[0] == '$') {
                 $numericString = str_replace(['$', ','], '', $amount);
                 $formattedNumber = (float)$numericString;
                 $finalAmount = number_format($formattedNumber, 2, '.', '');
+            } elseif (is_numeric($amount)) {
+                $finalAmount = number_format((float)$amount, 2, '.', '');
             }
         }
 

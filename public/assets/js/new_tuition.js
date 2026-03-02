@@ -165,6 +165,13 @@ function showColegiaturaOptions() {
     }
 }
 
+function isIngresoType() {
+    var receiptTypeSelect = document.getElementById("receipt_type_id");
+    var selectedId = parseInt(receiptTypeSelect.value);
+    var type = receipt_types.find(function (t) { return t.id === selectedId; });
+    return type && type.name.toLowerCase() === 'ingreso';
+}
+
 function establish_elements(element) {
     selections = retrieveSelectedItems();
     var attrSelect = document.getElementById("attr_id");
@@ -172,6 +179,17 @@ function establish_elements(element) {
     var amountText = document.getElementById("amountDiv");
     var amountInput = document.getElementById("receipt_amount");
     var tuitionNumber = "";
+
+    if (isIngresoType()) {
+        attr.style.display = "none";
+        amountText.style.display = "none";
+        amountInput.style.display = "block";
+        amountInput.placeholder = "Ingrese el monto";
+        baseAmountNumeric = 0;
+        document.getElementById("conceptDiv").textContent = "Ingreso " + course.trim();
+        document.getElementById("amountDiv").value = "";
+        return;
+    }
 
     if (element == "type") {
         tuition_results = calculateTuitionNumber();

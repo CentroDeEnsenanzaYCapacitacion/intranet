@@ -18,7 +18,12 @@ function handleAmounts() {
         }
     }
 
-    if (student.tuition && parseFloat(receipt_amount) > parseFloat(student.tuition)) {
+    var selectedType = receipt_types.find(function (t) {
+        return t.id === parseInt(document.querySelector('select[name="receipt_type_id"]').value);
+    });
+    var isIngreso = selectedType && selectedType.name.toLowerCase() === 'ingreso';
+
+    if (!isIngreso && student.tuition && parseFloat(receipt_amount) > parseFloat(student.tuition)) {
         return "El monto no puede ser mayor al valor de la colegiatura";
     }
     return null;

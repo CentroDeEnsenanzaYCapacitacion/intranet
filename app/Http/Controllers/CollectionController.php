@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Utils;
+use App\Http\Requests\InsertReceiptRequest;
 use App\Models\Amount;
 use App\Models\Paybill;
 use App\Models\Receipt;
@@ -80,7 +81,7 @@ class CollectionController extends Controller
         return view('system.collection.paybills.new', compact('users'));
     }
 
-    public function insertReceipt(Request $request)
+    public function insertReceipt(InsertReceiptRequest $request)
     {
         $amount = $request->amount;
         $concept = $request->concept;
@@ -149,7 +150,18 @@ class CollectionController extends Controller
 
     public function receiptError(Request $request)
     {
+        $allowed = [
+            'El valor introducido no es correcto.',
+            'El monto no puede ser mayor al valor de la colegiatura',
+            'El campo de voucher es obligatorio cuando se selecciona pago con tarjeta',
+        ];
+
         $errorMessage = $request->input('error');
+
+        if (!in_array($errorMessage, $allowed, true)) {
+            $errorMessage = 'Ha ocurrido un error al procesar el recibo.';
+        }
+
         return redirect()->back()->with('error', $errorMessage);
     }
 
