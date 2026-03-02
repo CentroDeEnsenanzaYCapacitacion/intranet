@@ -141,6 +141,7 @@
                                         <option value="5">5%</option>
                                         <option value="10">10%</option>
                                         <option value="15">15%</option>
+                                        <option value="20">20%</option>
                                     </select>
                                 </div>
                             </div>
@@ -190,6 +191,7 @@
         var amounts = crew_course_amounts.concat(general_amounts);
         var receipt_attributes = @json($receipt_attributes);
         var student_tuition_receipts = @json($student_tuition_receipts);
+        var receipt_types = @json($receipt_types);
     </script>
 
     @include('includes.password-confirm-modal')
