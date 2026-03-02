@@ -11,7 +11,7 @@ Sistema de gestion academica y administrativa del Centro de Capacitacion CEC. Pl
 
 | Componente | Tecnologia |
 |------------|------------|
-| Backend | PHP 8.1 + Laravel 10 |
+| Backend | PHP 8.1 + Laravel 12 |
 | Base de datos | MySQL / MariaDB |
 | Frontend | Blade + assets estaticos en `public/assets` |
 | PDF | TCPDF + endroid/qr-code |
@@ -35,6 +35,8 @@ Sistema de gestion academica y administrativa del Centro de Capacitacion CEC. Pl
 - Solicitudes de cambio de importe para recibos y vales
 - Estadisticas de facturacion con filtros por plantel, fecha, tipo de pago y tipo de recibo
 - Cobranza y seguimiento de pagos de colegiaturas
+- Recargos por porcentaje (5%, 10%, 15%, 20%) y descuento por pronto pago
+- Tipo de recibo "Ingreso" con importe libre
 
 ### Reportes e informes
 - Reportes operativos por periodo (mensual, bimestral, semestral, anual)
@@ -164,7 +166,7 @@ php artisan migrate --seed
 El proyecto utiliza PHPUnit con SQLite in-memory para pruebas aisladas.
 
 ```bash
-# Suite completa (216 tests, 515 assertions)
+# Suite completa (226 tests, 533 assertions)
 php artisan test
 
 # Por modulo
@@ -185,7 +187,7 @@ php artisan test --filter=LoginTest
 | Percepciones | 13 | `Catalogues/PerceptionTest` |
 | Preguntas | 18 | `Catalogues/QuestionTest` |
 | Estudiantes | 20 | `Students/StudentAccessTest`, `Students/StudentDocumentsAndCalendarTest` |
-| Cobranza | 15 | `System/CollectionTest` |
+| Cobranza | 24 | `System/CollectionTest` |
 | Reportes | 13 | `System/ReportTest` |
 | Tickets | 8 | `Tickets/TicketFlowTest` |
 | Personal | 18 | `Admin/StaffTest` |
@@ -223,3 +225,4 @@ GET /internal/clear-cache?token=<CACHE_CLEAR_TOKEN>
 - **Modales**: sistema unificado con `modal_utils.js` (`openModal` / `closeModal` / `closeOnOverlay`)
 - **Solicitudes**: flujo estandarizado con `SysRequest` + `RequestType` para cualquier cambio que requiera aprobacion
 - **Validacion**: Form Requests para operaciones CRUD, validacion inline para flujos simples
+- **Seguridad**: `InsertReceiptRequest` verifica propiedad de crew/estudiante antes de crear recibos; `receiptError` valida mensajes contra lista blanca

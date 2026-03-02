@@ -142,10 +142,9 @@ function refresh_layout(tuitionNumber, isAdvance) {
 function showColegiaturaOptions() {
     var earlyDiscountContainer = document.getElementById("earlyDiscountContainer");
     var surchargeContainer = document.getElementById("surchargeContainer");
-    var receiptTypeSelect = document.getElementById("receipt_type_id");
-    var selectedValue = parseInt(receiptTypeSelect.value);
+    var isColegiatura = isColegiaturaType();
 
-    if (selectedValue === 2) {
+    if (isColegiatura) {
         earlyDiscountContainer.style.display = "block";
         surchargeContainer.style.display = "block";
     } else {
@@ -165,11 +164,19 @@ function showColegiaturaOptions() {
     }
 }
 
+function getSelectedReceiptType() {
+    var selectedId = parseInt(document.getElementById("receipt_type_id").value);
+    return receipt_types.find(function (t) { return t.id === selectedId; });
+}
+
 function isIngresoType() {
-    var receiptTypeSelect = document.getElementById("receipt_type_id");
-    var selectedId = parseInt(receiptTypeSelect.value);
-    var type = receipt_types.find(function (t) { return t.id === selectedId; });
+    var type = getSelectedReceiptType();
     return type && type.name.toLowerCase() === 'ingreso';
+}
+
+function isColegiaturaType() {
+    var type = getSelectedReceiptType();
+    return type && type.name.toLowerCase() === 'colegiatura';
 }
 
 function establish_elements(element) {
@@ -194,7 +201,7 @@ function establish_elements(element) {
     if (element == "type") {
         tuition_results = calculateTuitionNumber();
 
-        if (selections[0].selectedIndex == 1) {
+        if (isColegiaturaType()) {
             tuitionNumber = tuition_results.number;
         } else {
             tuition_results.isAdvance = false;
@@ -250,7 +257,7 @@ function establish_elements(element) {
             amountInput.style.display = "none";
         }
     } else {
-        if (selections[0].selectedIndex == 1) {
+        if (isColegiaturaType()) {
             tuitionNumber = tuition_results.number;
         }
 
@@ -348,8 +355,9 @@ function setAmount(isAdvance) {
     selections = retrieveSelectedItems();
     var amount = 0;
     var amountValue= 0;
+    var selectedTypeId = parseInt(document.getElementById("receipt_type_id").value);
 
-    if (selections[0].selectedIndex + 1 == 2) {
+    if (isColegiaturaType()) {
         if (isAdvance) {
             summatory = 0;
             for (const receipt of student_tuition_receipts){
@@ -366,7 +374,7 @@ function setAmount(isAdvance) {
     } else {
 
         amount = amounts.filter(function (item) {
-            return item.receipt_type_id == selections[0].selectedIndex + 1;
+            return item.receipt_type_id == selectedTypeId;
         });
         amountValue = parseFloat(amount[0].amount);
     }
